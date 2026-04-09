@@ -1,18 +1,16 @@
 # Copyright (C) Kumo inc. and its affiliates.
-# Author: Jeff.li lijippy@163.com
-# All rights reserved.
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published
-# by the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 
 list(APPEND KMCMAKE_CLANG_CL_FLAGS
@@ -255,155 +253,101 @@ endif ()
 ##############################################################################
 # default arch option
 ##############################################################################
-
-option(KMCMAKE_SIMD_LEVEL_NONE "" OFF)
-option(KMCMAKE_SIMD_LEVEL_SSE "" ON)
-option(KMCMAKE_SIMD_LEVEL_AVX "" ON)
-option(KMCMAKE_SIMD_LEVEL_AVX2 "" ON)
-option(KMCMAKE_SIMD_LEVEL_BMI "" OFF)
-option(KMCMAKE_SIMD_LEVEL_BMI2 "" OFF)
-option(KMCMAKE_SIMD_LEVEL_FMA "" ON)
-option(KMCMAKE_SIMD_LEVEL_MOVBE "" OFF)
-
-set_property(CACHE KMCMAKE_SIMD_LEVEL_NONE PROPERTY ADVANCED TRUE)
-set_property(CACHE KMCMAKE_SIMD_LEVEL_SSE PROPERTY ADVANCED TRUE)
-set_property(CACHE KMCMAKE_SIMD_LEVEL_AVX PROPERTY ADVANCED TRUE)
-set_property(CACHE KMCMAKE_SIMD_LEVEL_AVX2 PROPERTY ADVANCED TRUE)
-
-define_property(
-    GLOBAL PROPERTY KMCMAKE_SIMD_MUTEX_GROUP
-    BRIEF_DOCS "Mutually exclusive SIMD level options"
-    FULL_DOCS "Only one SIMD level can be enabled at a time"
-)
-set_property(GLOBAL PROPERTY KMCMAKE_SIMD_MUTEX_GROUP
-    KMCMAKE_SIMD_LEVEL_NONE
-    KMCMAKE_SIMD_LEVEL_SSE
-    KMCMAKE_SIMD_LEVEL_AVX
-    KMCMAKE_SIMD_LEVEL_AVX2
-)
-
-macro(varify_simd_level)
-    if(KMCMAKE_SIMD_LEVEL_NONE)
-        # 关闭所有 SIMD 选项（NONE 优先级最高）
-        set(KMCMAKE_SIMD_LEVEL_SSE OFF)
-        set(KMCMAKE_SIMD_LEVEL_AVX OFF)
-        set(KMCMAKE_SIMD_LEVEL_AVX2 OFF)
-        set(KMCMAKE_SIMD_LEVEL_BMI OFF)
-        set(KMCMAKE_SIMD_LEVEL_BMI2 OFF)
-        set(KMCMAKE_SIMD_LEVEL_FMA OFF)
-        set(KMCMAKE_SIMD_LEVEL_MOVBE OFF)
-    else()
-        if(KMCMAKE_SIMD_LEVEL_AVX AND NOT KMCMAKE_SIMD_LEVEL_SSE)
-            message(WARNING "AVX requires SSE enabled, automatically enabling SSE")
-            set(KMCMAKE_SIMD_LEVEL_SSE ON CACHE BOOL "" FORCE)
-        endif()
-        if(KMCMAKE_SIMD_LEVEL_AVX2 AND NOT KMCMAKE_SIMD_LEVEL_AVX)
-            message(WARNING "AVX2 requires AVX enabled, automatically enabling AVX")
-            set(KMCMAKE_SIMD_LEVEL_AVX ON CACHE BOOL "" FORCE)
-        endif()
-
-        if(KMCMAKE_SIMD_LEVEL_SSE AND NOT KMCMAKE_X86_SSE4_2)
-            kmcmake_error("Configure to build with SSE, but the CPU does not support SSE4.2")
-        endif()
-        if(KMCMAKE_SIMD_LEVEL_AVX AND NOT KMCMAKE_X86_AVX)
-            kmcmake_error("Configure to build with AVX, but the CPU does not support AVX")
-        endif()
-        if(KMCMAKE_SIMD_LEVEL_AVX2 AND NOT KMCMAKE_X86_AVX2)
-            kmcmake_error("Configure to build with AVX2, but the CPU does not support AVX2")
-        endif()
-        if(KMCMAKE_SIMD_LEVEL_FMA AND NOT KMCMAKE_X86_FMA)
-            kmcmake_error("Configure to build with FMA, but the CPU does not support FMA")
-        endif()
-    endif()
-endmacro(varify_simd_level)
-
 set(KMCMAKE_ARCH_OPTION)
 
-    
-macro(makeup_simd_flags)
-    if(KMCMAKE_SIMD_LEVEL_SSE)
-        list(APPEND KMCMAKE_ARCH_OPTION 
-        ${SSE1_FLAG} 
-        ${SSE2_FLAG} 
-        ${SSE3_FLAG} 
-        ${SSSE3_FLAG} 
-        ${SSE4_1_FLAG} 
-        ${SSE4_2_FLAG}
-        ${POPCNT_FLAG}
-        ${LZCNT_FLAG}
-        )
-    endif()
-    if(KMCMAKE_SIMD_LEVEL_AVX)
-        list(APPEND KMCMAKE_ARCH_OPTION ${AVX_FLAG})
-    endif()
+macro(kmcmake_apply_runtime_simd)
+    # Reset generated macro values.
+    set(KMCMAKE_SIMD_LEVEL_NONE_VAL 0)
+    set(KMCMAKE_SIMD_LEVEL_SSE_VAL 0)
+    set(KMCMAKE_SIMD_LEVEL_AVX_VAL 0)
+    set(KMCMAKE_SIMD_LEVEL_AVX2_VAL 0)
+    set(KMCMAKE_SIMD_LEVEL_BMI_VAL 0)
+    set(KMCMAKE_SIMD_LEVEL_BMI2_VAL 0)
+    set(KMCMAKE_SIMD_LEVEL_FMA_VAL 0)
+    set(KMCMAKE_SIMD_LEVEL_MOVBE_VAL 0)
 
-    if(KMCMAKE_SIMD_LEVEL_AVX2)
-        list(APPEND KMCMAKE_ARCH_OPTION ${AVX2_FLAG})
-    endif()
-
-    if(KMCMAKE_SIMD_LEVEL_BMI)
-        list(APPEND KMCMAKE_ARCH_OPTION ${BMI1_FLAG})
-    endif()
-
-    if(KMCMAKE_SIMD_LEVEL_BMI2)
-        list(APPEND KMCMAKE_ARCH_OPTION ${BMI2_FLAG})
-    endif()
-
-    if(KMCMAKE_SIMD_LEVEL_FMA)
-        list(APPEND KMCMAKE_ARCH_OPTION ${FMA_FLAG})
-    endif()
-
-    if(KMCMAKE_SIMD_LEVEL_MOVBE)
-        list(APPEND KMCMAKE_ARCH_OPTION ${MOVBE_FLAG})
-    endif()
-    list(REMOVE_DUPLICATES KMCMAKE_ARCH_OPTION)
-endmacro(makeup_simd_flags)
-
-macro(setting_for_gen_macros)
-    if(KMCMAKE_SIMD_LEVEL_NONE)
+    if (NOT "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64" AND NOT "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "AMD64")
         set(KMCMAKE_SIMD_LEVEL_NONE_VAL 1)
-    else()
-        set(KMCMAKE_SIMD_LEVEL_NONE_VAL 0)
-    endif()
-    if(KMCMAKE_SIMD_LEVEL_SSE)
+        return()
+    endif ()
+
+    if (NOT KMCMAKE_RUNTIME_SIMD_LEVEL)
+        set(KMCMAKE_RUNTIME_SIMD_LEVEL "AVX2")
+    endif ()
+    string(TOUPPER "${KMCMAKE_RUNTIME_SIMD_LEVEL}" _KMCMAKE_RUNTIME_SIMD_LEVEL)
+
+    if (_KMCMAKE_RUNTIME_SIMD_LEVEL STREQUAL "NONE")
+        set(KMCMAKE_SIMD_LEVEL_NONE_VAL 1)
+        return()
+    endif ()
+
+    set(_KMCMAKE_SIMD_LEVELS SSE SSE2 SSE3 SSSE3 SSE4_1 SSE4_2 AVX AVX2 AVX512)
+    list(FIND _KMCMAKE_SIMD_LEVELS "${_KMCMAKE_RUNTIME_SIMD_LEVEL}" _KMCMAKE_SIMD_LEVEL_IDX)
+    if (_KMCMAKE_SIMD_LEVEL_IDX EQUAL -1)
+        kmcmake_error("Unsupported KMCMAKE_RUNTIME_SIMD_LEVEL=${_KMCMAKE_RUNTIME_SIMD_LEVEL}")
+    endif ()
+
+    # Base SSE chain.
+    if (_KMCMAKE_SIMD_LEVEL_IDX GREATER_EQUAL 0 AND KMCMAKE_X86_SSE1)
+        list(APPEND KMCMAKE_ARCH_OPTION ${SSE1_FLAG})
         set(KMCMAKE_SIMD_LEVEL_SSE_VAL 1)
-    else()
-        set(KMCMAKE_SIMD_LEVEL_SSE_VAL 0)
-    endif()
-    if(KMCMAKE_SIMD_LEVEL_AVX)
+    endif ()
+    if (_KMCMAKE_SIMD_LEVEL_IDX GREATER_EQUAL 1 AND KMCMAKE_X86_SSE2)
+        list(APPEND KMCMAKE_ARCH_OPTION ${SSE2_FLAG})
+    endif ()
+    if (_KMCMAKE_SIMD_LEVEL_IDX GREATER_EQUAL 2 AND KMCMAKE_X86_SSE3)
+        list(APPEND KMCMAKE_ARCH_OPTION ${SSE3_FLAG})
+    endif ()
+    if (_KMCMAKE_SIMD_LEVEL_IDX GREATER_EQUAL 3 AND KMCMAKE_X86_SSSE3)
+        list(APPEND KMCMAKE_ARCH_OPTION ${SSSE3_FLAG})
+    endif ()
+    if (_KMCMAKE_SIMD_LEVEL_IDX GREATER_EQUAL 4 AND KMCMAKE_X86_SSE4_1)
+        list(APPEND KMCMAKE_ARCH_OPTION ${SSE4_1_FLAG})
+    endif ()
+    if (_KMCMAKE_SIMD_LEVEL_IDX GREATER_EQUAL 5 AND KMCMAKE_X86_SSE4_2)
+        list(APPEND KMCMAKE_ARCH_OPTION ${SSE4_2_FLAG})
+    endif ()
+
+    if (_KMCMAKE_SIMD_LEVEL_IDX GREATER_EQUAL 6 AND KMCMAKE_X86_AVX)
+        list(APPEND KMCMAKE_ARCH_OPTION ${AVX_FLAG})
         set(KMCMAKE_SIMD_LEVEL_AVX_VAL 1)
-    else()
-        set(KMCMAKE_SIMD_LEVEL_AVX_VAL 0)
-    endif()
-    if(KMCMAKE_SIMD_LEVEL_AVX2)
+    endif ()
+
+    if (_KMCMAKE_SIMD_LEVEL_IDX GREATER_EQUAL 7 AND KMCMAKE_X86_AVX2)
+        list(APPEND KMCMAKE_ARCH_OPTION ${AVX2_FLAG})
         set(KMCMAKE_SIMD_LEVEL_AVX2_VAL 1)
-    else()
-        set(KMCMAKE_SIMD_LEVEL_AVX2_VAL 0)
-    endif()
+        if (KMCMAKE_X86_BMI1)
+            list(APPEND KMCMAKE_ARCH_OPTION ${BMI1_FLAG})
+            set(KMCMAKE_SIMD_LEVEL_BMI_VAL 1)
+        endif ()
+        if (KMCMAKE_X86_BMI2)
+            list(APPEND KMCMAKE_ARCH_OPTION ${BMI2_FLAG})
+            set(KMCMAKE_SIMD_LEVEL_BMI2_VAL 1)
+        endif ()
+        if (KMCMAKE_X86_FMA)
+            list(APPEND KMCMAKE_ARCH_OPTION ${FMA_FLAG})
+            set(KMCMAKE_SIMD_LEVEL_FMA_VAL 1)
+        endif ()
+        if (KMCMAKE_X86_MOVBE)
+            list(APPEND KMCMAKE_ARCH_OPTION ${MOVBE_FLAG})
+            set(KMCMAKE_SIMD_LEVEL_MOVBE_VAL 1)
+        endif ()
+    endif ()
 
-    if(KMCMAKE_SIMD_LEVEL_BMI)
-        set(KMCMAKE_SIMD_LEVEL_BMI_VAL 1)
-    else()
-        set(KMCMAKE_SIMD_LEVEL_BMI_VAL 0)
-    endif()
-    
-    if(KMCMAKE_SIMD_LEVEL_BMI2)
-        set(KMCMAKE_SIMD_LEVEL_BMI2_VAL 1)
-    else()
-        set(KMCMAKE_SIMD_LEVEL_BMI2_VAL 0)
-    endif()
-        if(KMCMAKE_SIMD_LEVEL_FMA)
-        set(KMCMAKE_SIMD_LEVEL_FMA_VAL 1)
-    else()
-        set(KMCMAKE_SIMD_LEVEL_FMA_VAL 0)
-    endif()
+    if (_KMCMAKE_SIMD_LEVEL_IDX GREATER_EQUAL 8 AND KMCMAKE_X86_AVX512F)
+        if (WIN32)
+            list(APPEND KMCMAKE_ARCH_OPTION ${AVX512_FLAG})
+        else ()
+            list(APPEND KMCMAKE_ARCH_OPTION ${AVX512F_FLAG})
+        endif ()
+    endif ()
 
-    if(KMCMAKE_SIMD_LEVEL_MOVBE)
-        set(KMCMAKE_SIMD_LEVEL_MOVBE_VAL 1)
-    else()
-        set(KMCMAKE_SIMD_LEVEL_MOVBE_VAL 0)
-    endif()
-endmacro(setting_for_gen_macros)
+    if ("${KMCMAKE_ARCH_OPTION}" STREQUAL "")
+        kmcmake_warn("Requested SIMD level ${_KMCMAKE_RUNTIME_SIMD_LEVEL} but no matching SIMD flags were detected. Falling back to generic build.")
+        set(KMCMAKE_SIMD_LEVEL_NONE_VAL 1)
+    endif ()
+    list(REMOVE_DUPLICATES KMCMAKE_ARCH_OPTION)
+endmacro()
 
 
 
@@ -426,9 +370,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 
 
-varify_simd_level()
-makeup_simd_flags()
-setting_for_gen_macros()
+kmcmake_apply_runtime_simd()
 
 
 

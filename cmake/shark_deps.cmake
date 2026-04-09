@@ -1,28 +1,48 @@
 # Copyright (C) Kumo inc. and its affiliates.
-# Author: Jeff.li lijippy@163.com
-# All rights reserved.
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published
-# by the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 ############################################################
 # system pthread and rt, dl
 ############################################################
+set(KMCMAKE_CONFIG_PRIVATE_FIND_SNIPPETS "")
+
+# Record a private find_package(...) call for generated <Project>Config.cmake.
+# Usage:
+#   kmcmake_private_find_package(ZLIB REQUIRED)
+function(kmcmake_private_find_package)
+    string(JOIN " " _KMCMAKE_PRIVATE_FIND_PACKAGE_ARGS ${ARGV})
+    string(APPEND KMCMAKE_CONFIG_PRIVATE_FIND_SNIPPETS
+            "find_dependency(${_KMCMAKE_PRIVATE_FIND_PACKAGE_ARGS})\n")
+    set(KMCMAKE_CONFIG_PRIVATE_FIND_SNIPPETS "${KMCMAKE_CONFIG_PRIVATE_FIND_SNIPPETS}" PARENT_SCOPE)
+endfunction()
+
+# Record a private find_library(...) call for generated <Project>Config.cmake.
+# Usage:
+#   kmcmake_private_find_library(MYLIB NAMES mylib PATHS /opt/mylib/lib)
+function(kmcmake_private_find_library)
+    string(JOIN " " _KMCMAKE_PRIVATE_FIND_LIBRARY_ARGS ${ARGV})
+    string(APPEND KMCMAKE_CONFIG_PRIVATE_FIND_SNIPPETS
+            "find_library(${_KMCMAKE_PRIVATE_FIND_LIBRARY_ARGS})\n")
+    set(KMCMAKE_CONFIG_PRIVATE_FIND_SNIPPETS "${KMCMAKE_CONFIG_PRIVATE_FIND_SNIPPETS}" PARENT_SCOPE)
+endfunction()
+
 set(KMCMAKE_SYSTEM_DYLINK)
 if (APPLE)
     find_library(CoreFoundation CoreFoundation)
-    list(APPEND KMCMAKE_SYSTEM_DYLINK ${CoreFoundation} pthread)
-elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-    list(APPEND KMCMAKE_SYSTEM_DYLINK rt dl pthread)
+    list(APPEND KMCMAKE_SYSTEM_DYLINK ${CoreFoundation})
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    list(APPEND KMCMAKE_SYSTEM_DYLINK rt dl)
 endif ()
 
 if (KMCMAKE_BUILD_TEST)
@@ -37,6 +57,8 @@ if (KMCMAKE_BUILD_BENCHMARK)
 endif ()
 
 find_package(Threads REQUIRED)
+kmcmake_private_find_package(Threads REQUIRED)
+list(APPEND KMCMAKE_SYSTEM_DYLINK Threads::Threads)
 
 ############################################################
 #
@@ -54,7 +76,10 @@ kmcmake_print_list_label("Denpendcies:" KMCMAKE_DEPS_LINK)
 ############################################################
 # for binary
 ############################################################
-set(KMCMAKE_STATIC_BIN_OPTION -static-libgcc -static-libstdc++)
+set(KMCMAKE_STATIC_BIN_OPTION)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    list(APPEND KMCMAKE_STATIC_BIN_OPTION -static-libgcc -static-libstdc++)
+endif ()
 
 
 
