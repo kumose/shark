@@ -1,4 +1,4 @@
-// Copyright (C) Kumo inc. and its affiliates.
+// Copyright (C) 2024 Kumo inc.
 // Author: Jeff.li lijippy@163.com
 // All rights reserved.
 // This program is free software: you can redistribute it and/or modify
@@ -15,6 +15,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-#pragma once
+#include <shark/cpp/generator.h>
 
-int foo(int a);
+int main(int argc, char *argv[]) {
+    ::shark::CppGenerator generator;
+    return google::protobuf::compiler::PluginMain(argc, argv, &generator);
+}

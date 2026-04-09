@@ -1,0 +1,85 @@
+// Copyright (C) Kumo inc. and its affiliates.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+syntax = "proto3";
+package shark.option;
+
+message MessageOption {
+    bool   default_ctor = 1;
+    bool   singleton    = 2;
+    bool   strict_pod   = 3;
+    bool   private_ctor = 4;
+    string km_message_name = 5;
+}
+
+message MessageOpenapiOption {
+    string   alias = 1;
+}
+
+enum RepeatCType {
+    REP_VECTOR = 0;
+    REP_DEQUE  = 1;
+    REP_SET  = 2;
+    REP_UNORDERED_SET  = 3;
+}
+
+enum CType {
+    CAUTO = 0;
+    CINT8 = 1;
+    CINT16 = 2;
+    CINT32 = 3;
+    CINT64 = 4;
+    CUINT8 = 5;
+    CUINT16 = 6;
+    CUINT32 = 7;
+    CUINT64 = 8;
+    CFP16 = 9;
+    CFP32 = 10;
+    CFP64 = 11;
+}
+
+enum CMap {
+     MAP_AUTO = 0;
+     STD_MAP = 1;
+     STD_UNORDERED = 2;
+     BTREE_MAP = 3;
+     FLAT_MAP = 4;
+}
+
+message FieldOptions {
+    /// complex type no default value
+    /// it depends on it's own field default value.
+    oneof d {
+        string default_string = 1;
+        /// for 8 and 16 bits integer for compatable
+        int32 default_int = 2;
+        /// for 8 and 16 bits integer for compatable
+        uint32 default_uint = 3;
+        int32 default_int32 = 4;
+        uint32 default_uint32 = 5;
+        int64 default_int64 = 6;
+        uint64 default_uint64 = 7;
+        float default_float = 8;
+        double default_double = 9;
+        bool   default_bool  = 10;
+    }
+    bool             atomic = 20;
+    bool             protected_mutex = 21;
+    RepeatCType      crepeat = 22;
+    CType            ctype = 23;
+    CMap             cmap = 24;
+}

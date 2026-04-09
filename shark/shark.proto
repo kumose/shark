@@ -14,8 +14,34 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-#include <shark/foo.h>
 
-int foo(int a) {
-    return  a +1;
+syntax = "proto3";
+
+package shark;
+
+import "google/protobuf/descriptor.proto";
+import "shark/option/enum.proto";
+import "shark/option/message.proto";
+import "shark/option/file.proto";
+
+extend google.protobuf.FileOptions {
+    shark.option.KmOptions km_file = 2001;
+}
+
+
+extend google.protobuf.EnumOptions {
+  shark.option.Enum km_enum = 2021;
+}
+
+extend google.protobuf.EnumValueOptions {
+  /// km value
+  shark.option.EnumValue km_enumvalue = 2031;
+}
+
+extend google.protobuf.MessageOptions {
+    shark.option.MessageOption km_message = 2101;
+}
+
+extend google.protobuf.FieldOptions {
+    shark.option.FieldOptions km_field = 2201;
 }

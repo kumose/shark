@@ -14,13 +14,24 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-#include <signal.h>
-#include <stdio.h>
 
-int main()
-{
-    fprintf(stdout, "Passed\n");
-    fflush(stdout);  /* ensure the output buffer is seen */
-    //raise(SIGABRT);
-    return 0;
+syntax = "proto3";
+package shark.option;
+
+enum EnumUnderlying {
+    ENUM_INT8 = 0;
+    ENUM_INT16 = 1;
+    ENUM_INT32 = 2;
+}
+message Enum {
+    EnumUnderlying underlying = 1;
+    bool   as_bits    = 2;
+}
+
+message EnumValue {
+    string lower = 1;
+    string upper = 2;
+    string description = 3;
+    string message = 4;
+    bool   hidden  = 5;
 }

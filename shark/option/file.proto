@@ -15,11 +15,17 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+syntax = "proto3";
+package shark.option;
 
-#include <doctest/doctest.h>
-#include <shark/foo.h>
-
-TEST_CASE("foo") {
-    CHECK_EQ(foo(1), 2);
+enum KmEdition {
+    KM_ED2025 = 0;
 }
+
+message KmOptions {
+    /// kumo extension
+    KmEdition kumo_edition = 1;
+    repeated string c_include = 2;
+    string   c_namespace = 3;
+}
+

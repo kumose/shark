@@ -1,0 +1,71 @@
+// Copyright (C) 2024 Kumo inc.
+// Author: Jeff.li lijippy@163.com
+// All rights reserved.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+syntax="proto2";
+// for testing adding same named services in different packages into server
+package v1.pb;
+
+import "shark/shark.proto";
+
+option cc_generic_services = true;
+
+option (shark.km_file) = {
+    c_include:["turbo/base/macros.h","turbo/utility/status.h"]
+};
+
+message EchoRequest {
+    required string message = 1 [(shark.km_field) = {
+        default_string: "EchoRequestmsg",
+        crepeat: REP_DEQUE
+    }];
+    required int64 cnt = 2;
+    required int64 total = 3 [(shark.km_field) = {
+            protected_mutex: true,
+            default_int64: 20,
+            ctype: CINT8
+    }];
+
+    map<int64,int64> cnt_map = 5;
+
+    repeated string names = 4 [(shark.km_field) = {
+                protected_mutex: true,
+                crepeat: REP_DEQUE
+     }];
+
+    message Inner {
+         required string in_message = 1 [(shark.km_field) = {
+                default_string: "inner"
+            }];
+         required int64 in_cnt = 2 [(shark.km_field) = {
+                atomic: true
+            }];
+    };
+};
+
+message EchoResponse {
+    required string message = 1 [(shark.km_field) = {
+                                        default_string: "EchoResponseMsg"
+                                    }];
+};
+
+service EchoService {
+    rpc Echo(EchoRequest) returns (EchoResponse);
+    rpc Echo2(EchoRequest) returns (EchoResponse);
+    rpc Echo3(EchoRequest) returns (EchoResponse);
+    rpc Echo4(EchoRequest) returns (EchoResponse);
+    rpc Echo5(EchoRequest) returns (EchoResponse);
+};

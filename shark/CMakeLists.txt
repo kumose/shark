@@ -17,11 +17,48 @@
 # below are examples, after initialization, modify it to your own.
 ###########################################################################
 ###kmcmake_example
+
+
+set(PROTO_FILES
+        option/enum.proto
+        option/message.proto
+        option/file.proto
+        shark.proto
+)
+
+kmcmake_cc_proto(
+        NAME proto_obj
+        PROTOS
+        ${PROTO_FILES}
+        OUTDIR
+        ${PROJECT_SOURCE_DIR}
+)
+
+kmcmake_cc_object(
+        NAMESPACE shark
+        NAME proto_obj
+        SOURCES
+        ${proto_obj_SRCS}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+)
+
+
 kmcmake_cc_library(
         NAMESPACE ${PROJECT_NAME}
-        NAME foo
+        NAME shark
         SOURCES
-        foo.cc
+        cpp/code_block.cc
+        cpp/code_writer.cc
+        cpp/km_option.cc
+        cpp/message_option.cc
+        cpp/field_option.cc
+        cpp/generator.cc
+        cpp/field_generator.cc
+        cpp/message_generator.cc
+        names.cc
+        OBJECTS
+        proto_obj
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
         PLINKS
@@ -29,28 +66,19 @@ kmcmake_cc_library(
         PUBLIC
 )
 
-kmcmake_cc_interface(
-        NAMESPACE ${PROJECT_NAME}
-        NAME api
-        HEADERS
-        api.h
-        CXXOPTS
-        ${KMCMAKE_CXX_OPTIONS}
-        PUBLIC
-)
-
 kmcmake_cc_binary(
         NAMESPACE ${PROJECT_NAME}
-        NAME shared_main
+        NAME protoc-gen-shark
         SOURCES
-        main.cc
+        cpp_generator.cc
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
         DEPS
-        ${PROJECT_NAME}::foo
+        ${PROJECT_NAME}::shark_static
         LINKS
         ${KMCMAKE_DEPS_LINK}
-        ${PROJECT_NAME}::foo
+        ${PROJECT_NAME}::shark_static
+        ${KMCMAKE_STATIC_BIN_OPTION}
         PUBLIC
 )
 
