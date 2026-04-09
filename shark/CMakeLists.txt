@@ -16,6 +16,63 @@
 # below are examples, after initialization, modify it to your own.
 ###########################################################################
 ###kmcmake_example
+set(SHARK_IDL_PROTO_FILES
+        idl/shark_options.proto
+)
+
+kmcmake_cc_proto(
+        NAME shark_idl_proto_gen
+        PROTOS
+        ${SHARK_IDL_PROTO_FILES}
+        OUTDIR
+        ${PROJECT_SOURCE_DIR}
+)
+
+
+kmcmake_cc_library(
+        NAMESPACE ${PROJECT_NAME}
+        NAME idl_proto
+        SOURCES
+        ${shark_idl_proto_gen_SRCS}
+        PINCLUDES
+        ${PROTOBUF_INCLUDE_DIRS}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        PLINKS
+        ${KMCMAKE_DEPS_LINK}
+        PUBLIC
+)
+
+kmcmake_cc_library(
+        NAMESPACE ${PROJECT_NAME}
+        NAME generator_cc
+        SOURCES
+        generator/enum_codegen.cc
+        PINCLUDES
+        ${PROTOBUF_INCLUDE_DIRS}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        PLINKS
+        ${PROJECT_NAME}::idl_proto_static
+        ${KMCMAKE_DEPS_LINK}
+        PUBLIC
+)
+
+kmcmake_cc_binary(
+        NAMESPACE ${PROJECT_NAME}
+        NAME protoc_gen_shark
+        SOURCES
+        cpp_generator.cc
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        DEPS
+        ${PROJECT_NAME}::generator_cc_static
+        LINKS
+        ${PROJECT_NAME}::generator_cc_static
+        ${KMCMAKE_DEPS_LINK}
+        PUBLIC
+)
+
 kmcmake_cc_library(
         NAMESPACE ${PROJECT_NAME}
         NAME foo

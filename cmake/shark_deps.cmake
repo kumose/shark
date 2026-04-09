@@ -60,6 +60,73 @@ find_package(Threads REQUIRED)
 kmcmake_private_find_package(Threads REQUIRED)
 list(APPEND KMCMAKE_SYSTEM_DYLINK Threads::Threads)
 
+find_package(protobuf CONFIG QUIET)
+if (protobuf_FOUND)
+    # Prefer protobuf config packages (vcpkg/conan/system modern installs).
+    kmcmake_private_find_package(protobuf CONFIG REQUIRED)
+    if (NOT Protobuf_VERSION AND protobuf_VERSION)
+        set(Protobuf_VERSION "${protobuf_VERSION}")
+    endif ()
+
+    # Backward-compatible variables required by kmcmake_cc_proto.
+    if (TARGET protobuf::libprotobuf)
+        get_target_property(_PROTOBUF_INCLUDE_DIRS protobuf::libprotobuf INTERFACE_INCLUDE_DIRECTORIES)
+        set(PROTOBUF_INCLUDE_DIRS "${_PROTOBUF_INCLUDE_DIRS}")
+        set(Protobuf_INCLUDE_DIRS "${_PROTOBUF_INCLUDE_DIRS}")
+    endif ()
+
+    if (TARGET protobuf::protoc)
+        set(PROTOBUF_PROTOC_EXECUTABLE "$<TARGET_FILE:protobuf::protoc>")
+    else ()
+        find_program(PROTOBUF_PROTOC_EXECUTABLE protoc REQUIRED)
+    endif ()
+else ()
+    # Fallback to classic FindProtobuf module mode.
+    find_package(Protobuf REQUIRED)
+    kmcmake_private_find_package(Protobuf REQUIRED)
+endif ()
+if (Protobuf_VERSION VERSION_GREATER_EQUAL 4.25)
+    # Protobuf 4.25+ on some package builds requires explicit absl targets.
+    find_package(absl REQUIRED CONFIG)
+    kmcmake_private_find_package(absl REQUIRED CONFIG)
+    set(protobuf_ABSL_USED_TARGETS
+            absl::absl_check
+            absl::absl_log
+            absl::algorithm
+            absl::base
+            absl::bind_front
+            absl::bits
+            absl::btree
+            absl::cleanup
+            absl::cord
+            absl::core_headers
+            absl::debugging
+            absl::die_if_null
+            absl::dynamic_annotations
+            absl::flags
+            absl::flat_hash_map
+            absl::flat_hash_set
+            absl::function_ref
+            absl::hash
+            absl::layout
+            absl::log_initialize
+            absl::log_severity
+            absl::memory
+            absl::node_hash_map
+            absl::node_hash_set
+            absl::optional
+            absl::span
+            absl::status
+            absl::statusor
+            absl::strings
+            absl::synchronization
+            absl::time
+            absl::type_traits
+            absl::utility
+            absl::variant
+    )
+endif ()
+
 ############################################################
 #
 # add you libs to the KMCMAKE_DEPS_LINK variable eg as turbo
@@ -67,7 +134,9 @@ list(APPEND KMCMAKE_SYSTEM_DYLINK Threads::Threads)
 # KMCMAKE_SYSTEM_DYLINK, using it for fun.
 ##########################################################
 set(KMCMAKE_DEPS_LINK
-        #${TURBO_LIB}
+        protobuf::libprotobuf
+        ${protobuf_ABSL_USED_TARGETS}
+        protobuf::libprotoc
         ${KMCMAKE_SYSTEM_DYLINK}
         )
 list(REMOVE_DUPLICATES KMCMAKE_DEPS_LINK)

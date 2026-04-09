@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package shark.idl;
+
+import "google/protobuf/descriptor.proto";
+
+option cc_enable_arenas = true;
+
+// Enum codegen/runtime policy.
+enum EnumValueStyle {
+  ENUM_VALUE_STYLE_UNSPECIFIED = 0;
+  ENUM_VALUE_STYLE_STRICT = 1;  // Reject unknown numeric values.
+  ENUM_VALUE_STYLE_OPEN = 2;    // Preserve unknown numeric values.
+}
+
+// Enum storage strategy for Owned runtime objects.
+enum EnumStorageKind {
+  ENUM_STORAGE_KIND_UNSPECIFIED = 0;
+  ENUM_STORAGE_KIND_INT32 = 1;  // Store as raw int32.
+  ENUM_STORAGE_KIND_TYPED = 2;  // Store as generated C++ enum type.
+}
+
+// Underlying integer width used by generated runtime enum.
+enum EnumUnderlyingType {
+  ENUM_UNDERLYING_TYPE_UNSPECIFIED = 0;
+  ENUM_UNDERLYING_TYPE_U8 = 1;
+  ENUM_UNDERLYING_TYPE_U16 = 2;
+  ENUM_UNDERLYING_TYPE_U32 = 3;
+  ENUM_UNDERLYING_TYPE_U64 = 4;
+}
+
+// Strategy to provide enum-to-string conversion in generated code.
+enum EnumStringSource {
+  ENUM_STRING_SOURCE_UNSPECIFIED = 0;
+  ENUM_STRING_SOURCE_PROTO_REFLECTION = 1;  // Use protobuf descriptors/name table.
+  ENUM_STRING_SOURCE_CUSTOM_TABLE = 2;      // Use generated/custom static table.
+}
+
+// File-level generation controls for shark runtime output.
+message SharkFileOptions {
+  string runtime_namespace = 1;
+  bool gen_sk = 2;
+  EnumValueStyle enum_value_style = 3;
+  EnumStorageKind enum_storage = 4;
+  EnumUnderlyingType enum_underlying_type = 5;
+  EnumStringSource enum_string_source = 6;
+}
+
+// Enum-definition level controls.
+message SharkEnumOptions {
+  EnumValueStyle value_style = 1;
+  EnumStorageKind storage = 2;
+  EnumUnderlyingType underlying_type = 3;
+  bool bit_flags = 4;               // Generate bitwise operators: | & ~ ^.
+  bool gen_to_string = 5;           // Generate explicit ToString(enum) API.
+  bool gen_from_string = 6;         // Generate ParseEnum(string, enum*) API.
+  EnumStringSource string_source = 7;
+  bool preserve_unknown_numeric = 8;
+}
+
+// Message-level controls for owned/view runtime generation.
+message SharkMessageOptions {
+  bool gen_owned = 1;
+  bool gen_view = 2;
+}
+
+// Field-level controls for generated runtime code.
+message SharkFieldOptions {
+  string ctype = 1;
+  bool nullable = 2;
+  bool enum_use_alias_name = 3;
+  EnumValueStyle enum_value_style = 4;
+  EnumStorageKind enum_storage = 5;
+  EnumUnderlyingType enum_underlying_type = 6;
+  bool enum_bit_flags = 7;
+  bool enum_gen_to_string = 8;
+  EnumStringSource enum_string_source = 9;
+}
+
+extend google.protobuf.FileOptions {
+  SharkFileOptions shark_file = 52001;
+}
+
+extend google.protobuf.MessageOptions {
+  SharkMessageOptions shark_message = 52002;
+}
+
+extend google.protobuf.EnumOptions {
+  SharkEnumOptions shark_enum = 52004;
+}
+
+extend google.protobuf.FieldOptions {
+  SharkFieldOptions shark_field = 52003;
+}

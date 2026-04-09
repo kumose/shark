@@ -158,3 +158,64 @@ kmcmake_cc_test(
         SOURCES raw_test.cc
         CXXOPTS ${KMCMAKE_CXX_OPTIONS}
 )
+
+set(SHARK_ENUM_PROTO "${PROJECT_SOURCE_DIR}/tests/proto/enum_runtime.proto")
+set(SHARK_ENUM_GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+set(SHARK_ENUM_GEN_HEADER "${SHARK_ENUM_GEN_DIR}/tests/proto/enum_runtime.runtime.h")
+set(SHARK_ENUM_GEN_SOURCE "${SHARK_ENUM_GEN_DIR}/tests/proto/enum_runtime.runtime.cc")
+set(SHARK_ENUM_PB_HEADER "${SHARK_ENUM_GEN_DIR}/tests/proto/enum_runtime.pb.h")
+set(SHARK_ENUM_PB_SOURCE "${SHARK_ENUM_GEN_DIR}/tests/proto/enum_runtime.pb.cc")
+
+add_custom_command(
+        OUTPUT ${SHARK_ENUM_GEN_HEADER} ${SHARK_ENUM_GEN_SOURCE} ${SHARK_ENUM_PB_HEADER} ${SHARK_ENUM_PB_SOURCE}
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${SHARK_ENUM_GEN_DIR}/tests/proto"
+        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+        --plugin=protoc-gen-shark=$<TARGET_FILE:protoc_gen_shark>
+        -I${PROJECT_SOURCE_DIR}
+        -I${PROTOBUF_INCLUDE_DIRS}
+        --shark_out=${SHARK_ENUM_GEN_DIR}
+        --cpp_out=${SHARK_ENUM_GEN_DIR}
+        ${SHARK_ENUM_PROTO}
+        DEPENDS ${SHARK_ENUM_PROTO} protoc_gen_shark
+        VERBATIM
+)
+
+add_custom_target(enum_runtime_codegen
+        DEPENDS ${SHARK_ENUM_GEN_HEADER} ${SHARK_ENUM_GEN_SOURCE} ${SHARK_ENUM_PB_HEADER} ${SHARK_ENUM_PB_SOURCE}
+)
+
+kmcmake_cc_test(
+        NAME enum_runtime_test
+        MODULE runtime
+        SOURCES
+        enum_runtime_test.cc
+        ${SHARK_ENUM_GEN_SOURCE}
+        ${SHARK_ENUM_PB_SOURCE}
+        DEPS
+        enum_runtime_codegen
+        INCLUDES
+        ${SHARK_ENUM_GEN_DIR}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        LINKS
+        ${PROJECT_NAME}::idl_proto_static
+        ${KMCMAKE_DEPS_LINK}
+)
+
+kmcmake_cc_test(
+        NAME enum_runtime_golden_test
+        MODULE runtime
+        SOURCES
+        enum_runtime_golden_test.cc
+        DEPS
+        enum_runtime_codegen
+        INCLUDES
+        ${SHARK_ENUM_GEN_DIR}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        DEFINES
+        SHARK_ENUM_RUNTIME_HEADER="${SHARK_ENUM_GEN_HEADER}"
+        SHARK_ENUM_RUNTIME_SOURCE="${SHARK_ENUM_GEN_SOURCE}"
+        LINKS
+        ${KMCMAKE_DEPS_LINK}
+)
