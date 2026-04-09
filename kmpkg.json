@@ -1,0 +1,10 @@
+{
+  "dependencies": [
+    {
+      "name": "protobuf",
+      "features": [
+        "zlib"
+      ]
+    }
+  ]
+}
