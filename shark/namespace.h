@@ -13,6 +13,26 @@
 // limitations under the License.
 //
 
-#pragma once
 
-int foo(int a);
+#pragma once
+#include <string_view>
+
+#include <shark/ast/cpp_namespace.h>
+
+namespace cppast {
+
+    class NamespaceBuilder {
+    public:
+        explicit NamespaceBuilder(std::string name, bool is_inline, bool is_nested);
+
+        NamespaceBuilder &add_child(std::unique_ptr<CppEntity> child) noexcept;
+
+        NamespaceBuilder &comment(std::string_view comment) noexcept;
+
+        std::unique_ptr<CppNamespace> finish();
+
+    private:
+        CppEntityId _id;
+        CppNamespace::builder _builder;
+    };
+}  // namespace cppast

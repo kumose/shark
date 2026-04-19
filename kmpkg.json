@@ -5,6 +5,8 @@
       "features": [
         "zlib"
       ]
-    }
+    },
+    "turbo",
+    "typesafe"
   ]
 }

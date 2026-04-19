@@ -1,0 +1,837 @@
+W0419 14:35:58.268750  208219 shark.cc:61] Shark Generator 1
+E0419 14:35:58.269841  208219 shark.cc:25] Shark Generator 1
+E0419 14:35:58.269858  208219 file_generator.cc:137] FileGenerator constructor 1
+E0419 14:35:58.269867  208219 file_generator.cc:146] FileGenerator constructor 2
+E0419 14:35:58.269877  208219 file_generator.cc:163] FileGenerator constructor 3
+E0419 14:35:58.269882  208219 file_generator.cc:168] FileGenerator constructor 4
+E0419 14:35:58.269889  208219 file_generator.cc:175] FileGenerator constructor 5
+E0419 14:35:58.269892  208219 file_generator.cc:183] FileGenerator constructor 6
+E0419 14:35:58.269897  208219 shark.cc:27] Shark Generator 2
+E0419 14:35:58.269925  208219 shark.cc:30] Shark Generator 3
+E0419 14:35:58.269930  208219 shark.cc:33] Shark Generator 4
+E0419 14:35:58.269933  208219 shark.cc:37] Shark Generator 5
+E0419 14:35:58.269938  208219 shark.cc:41] Shark Generator 6
+E0419 14:35:58.269943  208219 shark.cc:44] Shark Generator 7
+E0419 14:35:58.269949  208219 shark.cc:47] Shark Generator 8
+E0419 14:35:58.269953  208219 shark.cc:49] Shark Generator 9
+E0419 14:35:58.269958  208219 shark.cc:51] Shark Generator 10
+E0419 14:35:58.269965  208219 shark.cc:53] Shark Generator 11
+W0419 14:42:37.742027  209679 shark.cc:61] Shark Generator 1
+E0419 14:42:37.743456  209679 shark.cc:25] Shark Generator 1
+E0419 14:42:37.743478  209679 file_generator.cc:137] FileGenerator constructor 1
+E0419 14:42:37.743488  209679 file_generator.cc:146] FileGenerator constructor 2
+E0419 14:42:37.743498  209679 file_generator.cc:163] FileGenerator constructor 3
+E0419 14:42:37.743504  209679 file_generator.cc:168] FileGenerator constructor 4
+E0419 14:42:37.743518  209679 file_generator.cc:175] FileGenerator constructor 5
+E0419 14:42:37.743528  209679 message_generator.cc:32] MessageGenerator::generate start: Person
+E0419 14:42:37.743534  209679 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:6
+E0419 14:42:37.743554  209679 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:42:37.743558  209679 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:42:37.743564  209679 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:42:37.743568  209679 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:42:37.743575  209679 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:42:37.743580  209679 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:42:37.743587  209679 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:42:37.743592  209679 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:42:37.743598  209679 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:42:37.743603  209679 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:42:37.743608  209679 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:42:37.743613  209679 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:42:37.743616  209679 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:42:37.743621  209679 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:42:37.743626  209679 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:42:37.743633  209679 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:42:37.743640  209679 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:42:37.743645  209679 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:42:37.743651  209679 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:42:37.743656  209679 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:42:37.743665  209679 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:42:37.743671  209679 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:42:37.743677  209679 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:42:37.743682  209679 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:42:37.743686  209679 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:42:37.743690  209679 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:42:37.743696  209679 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:42:37.743702  209679 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:42:37.743708  209679 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:42:37.743711  209679 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:42:37.743716  209679 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:42:37.743724  209679 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:42:37.743730  209679 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:42:37.743736  209679 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:42:37.743742  209679 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:42:37.743746  209679 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:42:37.743752  209679 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:42:37.743770  209679 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:42:37.743792  209679 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:42:37.743807  209679 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:42:37.743818  209679 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:42:37.743825  209679 message_generator.cc:32] MessageGenerator::generate start: ScoresEntry
+E0419 14:42:37.743831  209679 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:42:37.743839  209679 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:42:37.743845  209679 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:42:37.743854  209679 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:42:37.743861  209679 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:42:37.743869  209679 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:42:37.743875  209679 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:42:37.743881  209679 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:42:37.743887  209679 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:42:37.743895  209679 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:42:37.743901  209679 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:42:37.743911  209679 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:42:37.743917  209679 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:42:37.743923  209679 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:42:37.743931  209679 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:42:37.743941  209679 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:42:37.743952  209679 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:42:37.743960  209679 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:42:37.743966  209679 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:42:37.743973  209679 message_generator.cc:46] MessageGenerator finish done
+E0419 14:42:37.743980  209679 message_generator.cc:32] MessageGenerator::generate start: Address
+E0419 14:42:37.743986  209679 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:42:37.743993  209679 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:42:37.743999  209679 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:42:37.744004  209679 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:42:37.744010  209679 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:42:37.744017  209679 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:42:37.744022  209679 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:42:37.744027  209679 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:42:37.744035  209679 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:42:37.744041  209679 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:42:37.744047  209679 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:42:37.744052  209679 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:42:37.744057  209679 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:42:37.744064  209679 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:42:37.744073  209679 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:42:37.744082  209679 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:42:37.744090  209679 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:42:37.744098  209679 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:42:37.744103  209679 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:42:37.744110  209679 message_generator.cc:46] MessageGenerator finish done
+E0419 14:42:37.744116  209679 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:42:37.744123  209679 message_generator.cc:46] MessageGenerator finish done
+E0419 14:42:37.744130  209679 file_generator.cc:183] FileGenerator constructor 6
+E0419 14:42:37.744140  209679 shark.cc:27] Shark Generator 2
+E0419 14:42:37.744241  209679 shark.cc:30] Shark Generator 3
+E0419 14:42:37.744255  209679 shark.cc:33] Shark Generator 4
+E0419 14:42:37.744262  209679 shark.cc:37] Shark Generator 5
+E0419 14:42:37.744268  209679 shark.cc:41] Shark Generator 6
+E0419 14:42:37.744274  209679 shark.cc:44] Shark Generator 7
+E0419 14:42:37.744280  209679 shark.cc:47] Shark Generator 8
+E0419 14:42:37.744291  209679 shark.cc:49] Shark Generator 9
+E0419 14:42:37.744296  209679 shark.cc:51] Shark Generator 10
+E0419 14:42:37.744300  209679 shark.cc:53] Shark Generator 11
+W0419 14:45:27.934317  210078 shark.cc:61] Shark Generator 1
+E0419 14:45:27.935495  210078 shark.cc:25] Shark Generator 1
+E0419 14:45:27.935512  210078 file_generator.cc:137] FileGenerator constructor 1
+E0419 14:45:27.935523  210078 file_generator.cc:146] FileGenerator constructor 2
+E0419 14:45:27.935529  210078 file_generator.cc:163] FileGenerator constructor 3
+E0419 14:45:27.935533  210078 file_generator.cc:168] FileGenerator constructor 4
+E0419 14:45:27.935550  210078 file_generator.cc:175] FileGenerator constructor 5
+E0419 14:45:27.935557  210078 message_generator.cc:32] MessageGenerator::generate start: Person
+E0419 14:45:27.935561  210078 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:6
+E0419 14:45:27.935577  210078 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:27.935581  210078 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:27.935585  210078 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:27.935590  210078 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:27.935595  210078 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:27.935599  210078 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:27.935603  210078 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:27.935606  210078 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:27.935608  210078 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:27.935612  210078 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:27.935616  210078 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:27.935620  210078 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:27.935623  210078 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:27.935625  210078 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:27.935630  210078 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:27.935634  210078 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:27.935638  210078 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:27.935642  210078 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:27.935645  210078 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:27.935650  210078 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:27.935660  210078 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:27.935664  210078 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:27.935668  210078 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:27.935672  210078 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:27.935675  210078 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:27.935679  210078 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:27.935684  210078 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:27.935688  210078 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:27.935692  210078 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:27.935695  210078 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:27.935699  210078 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:27.935702  210078 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:27.935707  210078 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:27.935711  210078 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:27.935715  210078 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:27.935718  210078 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:27.935722  210078 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:45:27.935735  210078 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:45:27.935751  210078 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:45:27.935759  210078 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:45:27.935765  210078 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:45:27.935769  210078 message_generator.cc:32] MessageGenerator::generate start: ScoresEntry
+E0419 14:45:27.935772  210078 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:45:27.935776  210078 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:27.935780  210078 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:27.935783  210078 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:27.935787  210078 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:27.935791  210078 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:27.935794  210078 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:27.935798  210078 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:27.935802  210078 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:27.935806  210078 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:27.935808  210078 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:27.935813  210078 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:27.935817  210078 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:27.935821  210078 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:45:27.935826  210078 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:45:27.935833  210078 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:45:27.935839  210078 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:45:27.935844  210078 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:45:27.935847  210078 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:45:27.935852  210078 message_generator.cc:46] MessageGenerator finish done
+E0419 14:45:27.935855  210078 message_generator.cc:32] MessageGenerator::generate start: Address
+E0419 14:45:27.935859  210078 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:45:27.935863  210078 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:27.935867  210078 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:27.935871  210078 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:27.935874  210078 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:27.935878  210078 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:27.935881  210078 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:27.935884  210078 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:27.935887  210078 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:27.935891  210078 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:27.935895  210078 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:27.935898  210078 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:27.935902  210078 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:27.935905  210078 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:45:27.935909  210078 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:45:27.935913  210078 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:45:27.935917  210078 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:45:27.935922  210078 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:45:27.935925  210078 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:45:27.935929  210078 message_generator.cc:46] MessageGenerator finish done
+E0419 14:45:27.935933  210078 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:45:27.935936  210078 message_generator.cc:46] MessageGenerator finish done
+E0419 14:45:27.935940  210078 file_generator.cc:183] FileGenerator constructor 6
+E0419 14:45:27.935943  210078 shark.cc:27] Shark Generator 2
+E0419 14:45:27.936002  210078 shark.cc:30] Shark Generator 3
+E0419 14:45:27.936012  210078 shark.cc:33] Shark Generator 4
+E0419 14:45:27.936016  210078 shark.cc:37] Shark Generator 5
+E0419 14:45:27.936020  210078 shark.cc:41] Shark Generator 6
+E0419 14:45:27.936024  210078 shark.cc:44] Shark Generator 7
+E0419 14:45:27.936028  210078 shark.cc:47] Shark Generator 8
+E0419 14:45:27.936034  210078 shark.cc:49] Shark Generator 9
+E0419 14:45:27.936037  210078 shark.cc:51] Shark Generator 10
+E0419 14:45:27.936040  210078 shark.cc:53] Shark Generator 11
+W0419 14:45:41.475539  210110 shark.cc:61] Shark Generator 1
+E0419 14:45:41.476573  210110 shark.cc:25] Shark Generator 1
+E0419 14:45:41.476592  210110 file_generator.cc:137] FileGenerator constructor 1
+E0419 14:45:41.476601  210110 file_generator.cc:146] FileGenerator constructor 2
+E0419 14:45:41.476609  210110 file_generator.cc:163] FileGenerator constructor 3
+E0419 14:45:41.476613  210110 file_generator.cc:168] FileGenerator constructor 4
+E0419 14:45:41.476623  210110 file_generator.cc:175] FileGenerator constructor 5
+E0419 14:45:41.476631  210110 message_generator.cc:32] MessageGenerator::generate start: Person
+E0419 14:45:41.476635  210110 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:6
+E0419 14:45:41.476650  210110 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:41.476654  210110 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:41.476658  210110 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:41.476662  210110 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:41.476665  210110 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:41.476669  210110 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:41.476673  210110 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:41.476676  210110 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:41.476679  210110 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:41.476682  210110 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:41.476686  210110 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:41.476689  210110 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:41.476692  210110 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:41.476694  210110 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:41.476698  210110 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:41.476702  210110 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:41.476706  210110 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:41.476709  210110 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:41.476713  210110 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:41.476715  210110 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:41.476720  210110 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:41.476724  210110 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:41.476728  210110 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:41.476731  210110 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:41.476734  210110 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:41.476737  210110 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:41.476742  210110 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:41.476746  210110 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:41.476749  210110 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:41.476753  210110 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:41.476757  210110 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:41.476760  210110 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:41.476764  210110 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:41.476768  210110 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:41.476772  210110 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:41.476774  210110 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:41.476777  210110 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:45:41.476789  210110 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:45:41.476803  210110 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:45:41.476811  210110 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:45:41.476817  210110 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:45:41.476820  210110 message_generator.cc:32] MessageGenerator::generate start: ScoresEntry
+E0419 14:45:41.476824  210110 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:45:41.476827  210110 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:41.476832  210110 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:41.476835  210110 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:41.476838  210110 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:41.476844  210110 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:41.476847  210110 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:41.476850  210110 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:41.476854  210110 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:41.476857  210110 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:41.476861  210110 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:41.476867  210110 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:41.476874  210110 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:41.476880  210110 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:45:41.476892  210110 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:45:41.476902  210110 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:45:41.476914  210110 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:45:41.476922  210110 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:45:41.476928  210110 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:45:41.476935  210110 message_generator.cc:46] MessageGenerator finish done
+E0419 14:45:41.476942  210110 message_generator.cc:32] MessageGenerator::generate start: Address
+E0419 14:45:41.476948  210110 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:45:41.476955  210110 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:41.476961  210110 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:41.476972  210110 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:41.476976  210110 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:41.476983  210110 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:41.476989  210110 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:41.476995  210110 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:45:41.477001  210110 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:45:41.477013  210110 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:45:41.477022  210110 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:45:41.477031  210110 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:45:41.477039  210110 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:45:41.477048  210110 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:45:41.477060  210110 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:45:41.477074  210110 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:45:41.477086  210110 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:45:41.477094  210110 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:45:41.477101  210110 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:45:41.477110  210110 message_generator.cc:46] MessageGenerator finish done
+E0419 14:45:41.477119  210110 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:45:41.477129  210110 message_generator.cc:46] MessageGenerator finish done
+E0419 14:45:41.477136  210110 file_generator.cc:183] FileGenerator constructor 6
+E0419 14:45:41.477144  210110 shark.cc:27] Shark Generator 2
+E0419 14:45:41.477255  210110 shark.cc:30] Shark Generator 3
+E0419 14:45:41.477272  210110 shark.cc:33] Shark Generator 4
+E0419 14:45:41.477280  210110 shark.cc:37] Shark Generator 5
+E0419 14:45:41.477288  210110 shark.cc:41] Shark Generator 6
+E0419 14:45:41.477295  210110 shark.cc:44] Shark Generator 7
+E0419 14:45:41.477303  210110 shark.cc:47] Shark Generator 8
+E0419 14:45:41.477314  210110 shark.cc:49] Shark Generator 9
+E0419 14:45:41.477321  210110 shark.cc:51] Shark Generator 10
+E0419 14:45:41.477326  210110 shark.cc:53] Shark Generator 11
+W0419 14:47:02.910832  210370 shark.cc:61] Shark Generator 1
+E0419 14:47:02.912141  210370 shark.cc:25] Shark Generator 1
+E0419 14:47:02.912160  210370 file_generator.cc:137] FileGenerator constructor 1
+E0419 14:47:02.912172  210370 file_generator.cc:146] FileGenerator constructor 2
+E0419 14:47:02.912182  210370 file_generator.cc:163] FileGenerator constructor 3
+E0419 14:47:02.912191  210370 file_generator.cc:168] FileGenerator constructor 4
+E0419 14:47:02.912219  210370 file_generator.cc:175] FileGenerator constructor 5
+E0419 14:47:02.912231  210370 message_generator.cc:32] MessageGenerator::generate start: Person
+E0419 14:47:02.912238  210370 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:6
+E0419 14:47:02.912259  210370 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:47:02.912265  210370 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:47:02.912272  210370 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:47:02.912278  210370 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:47:02.912286  210370 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:47:02.912291  210370 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:47:02.912297  210370 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:47:02.912302  210370 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:47:02.912308  210370 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:47:02.912314  210370 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:47:02.912320  210370 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:47:02.912325  210370 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:47:02.912331  210370 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:47:02.912336  210370 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:47:02.912344  210370 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:47:02.912352  210370 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:47:02.912358  210370 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:47:02.912364  210370 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:47:02.912370  210370 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:47:02.912375  210370 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:47:02.912384  210370 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:47:02.912390  210370 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:47:02.912396  210370 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:47:02.912402  210370 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:47:02.912409  210370 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:47:02.912415  210370 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:47:02.912421  210370 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:47:02.912427  210370 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:47:02.912433  210370 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:47:02.912438  210370 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:47:02.912444  210370 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:47:02.912450  210370 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:47:02.912456  210370 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:47:02.912462  210370 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:47:02.912468  210370 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:47:02.912473  210370 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:47:02.912478  210370 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:47:02.912500  210370 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:47:02.912525  210370 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:47:02.912538  210370 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:47:02.912548  210370 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:47:02.912555  210370 message_generator.cc:32] MessageGenerator::generate start: ScoresEntry
+E0419 14:47:02.912561  210370 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:47:02.912568  210370 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:47:02.912574  210370 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:47:02.912580  210370 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:47:02.912585  210370 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:47:02.912592  210370 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:47:02.912597  210370 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:47:02.912603  210370 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:47:02.912609  210370 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:47:02.912614  210370 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:47:02.912620  210370 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:47:02.912628  210370 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:47:02.912633  210370 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:47:02.912640  210370 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:47:02.912651  210370 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:47:02.912660  210370 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:47:02.912671  210370 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:47:02.912678  210370 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:47:02.912683  210370 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:47:02.912689  210370 message_generator.cc:46] MessageGenerator finish done
+E0419 14:47:02.912694  210370 message_generator.cc:32] MessageGenerator::generate start: Address
+E0419 14:47:02.912700  210370 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:47:02.912706  210370 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:47:02.912711  210370 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:47:02.912716  210370 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:47:02.912722  210370 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:47:02.912728  210370 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:47:02.912733  210370 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:47:02.912739  210370 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:47:02.912744  210370 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:47:02.912749  210370 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:47:02.912754  210370 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:47:02.912760  210370 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:47:02.912765  210370 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:47:02.912770  210370 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:47:02.912778  210370 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:47:02.912786  210370 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:47:02.912792  210370 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:47:02.912799  210370 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:47:02.912803  210370 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:47:02.912808  210370 message_generator.cc:46] MessageGenerator finish done
+E0419 14:47:02.912813  210370 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:47:02.912818  210370 message_generator.cc:46] MessageGenerator finish done
+E0419 14:47:02.912824  210370 file_generator.cc:183] FileGenerator constructor 6
+E0419 14:47:02.912831  210370 shark.cc:27] Shark Generator 2
+E0419 14:47:02.912980  210370 shark.cc:30] Shark Generator 3
+E0419 14:47:02.913005  210370 shark.cc:33] Shark Generator 4
+E0419 14:47:02.913016  210370 shark.cc:37] Shark Generator 5
+E0419 14:47:02.913027  210370 shark.cc:41] Shark Generator 6
+E0419 14:47:02.913038  210370 shark.cc:44] Shark Generator 7
+E0419 14:47:02.913048  210370 shark.cc:47] Shark Generator 8
+E0419 14:47:02.913063  210370 shark.cc:49] Shark Generator 9
+E0419 14:47:02.913073  210370 shark.cc:51] Shark Generator 10
+E0419 14:47:02.913081  210370 shark.cc:53] Shark Generator 11
+W0419 14:56:04.683518  210803 shark.cc:61] Shark Generator 1
+E0419 14:56:04.684651  210803 shark.cc:25] Shark Generator 1
+E0419 14:56:04.684668  210803 file_generator.cc:137] FileGenerator constructor 1
+E0419 14:56:04.684678  210803 file_generator.cc:146] FileGenerator constructor 2
+E0419 14:56:04.684688  210803 file_generator.cc:163] FileGenerator constructor 3
+E0419 14:56:04.684692  210803 file_generator.cc:168] FileGenerator constructor 4
+E0419 14:56:04.684706  210803 file_generator.cc:175] FileGenerator constructor 5
+E0419 14:56:04.684714  210803 message_generator.cc:32] MessageGenerator::generate start: Person
+E0419 14:56:04.684718  210803 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:6
+E0419 14:56:04.684734  210803 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:56:04.684738  210803 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:56:04.684742  210803 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:56:04.684746  210803 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:56:04.684751  210803 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:56:04.684754  210803 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:56:04.684758  210803 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:56:04.684762  210803 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:56:04.684765  210803 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:56:04.684769  210803 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:56:04.684772  210803 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:56:04.684775  210803 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:56:04.684779  210803 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:56:04.684783  210803 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:56:04.684787  210803 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:56:04.684792  210803 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:56:04.684796  210803 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:56:04.684799  210803 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:56:04.684803  210803 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:56:04.684806  210803 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:56:04.684811  210803 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:56:04.684816  210803 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:56:04.684819  210803 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:56:04.684822  210803 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:56:04.684826  210803 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:56:04.684829  210803 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:56:04.684833  210803 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:56:04.684837  210803 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:56:04.684842  210803 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:56:04.684845  210803 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:56:04.684848  210803 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:56:04.684850  210803 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:56:04.684854  210803 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:56:04.684858  210803 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:56:04.684862  210803 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:56:04.684866  210803 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:56:04.684871  210803 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:56:04.684884  210803 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:56:04.684899  210803 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:56:04.684908  210803 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:56:04.684914  210803 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:56:04.684918  210803 message_generator.cc:32] MessageGenerator::generate start: ScoresEntry
+E0419 14:56:04.684921  210803 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:56:04.684925  210803 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:56:04.684929  210803 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:56:04.684931  210803 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:56:04.684935  210803 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:56:04.684939  210803 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:56:04.684944  210803 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:56:04.684948  210803 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:56:04.684954  210803 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:56:04.684962  210803 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:56:04.684968  210803 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:56:04.684976  210803 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:56:04.684982  210803 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:56:04.684988  210803 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:56:04.684998  210803 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:56:04.685009  210803 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:56:04.685021  210803 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:56:04.685030  210803 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:56:04.685035  210803 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:56:04.685042  210803 message_generator.cc:46] MessageGenerator finish done
+E0419 14:56:04.685049  210803 message_generator.cc:32] MessageGenerator::generate start: Address
+E0419 14:56:04.685059  210803 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:56:04.685066  210803 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:56:04.685072  210803 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:56:04.685078  210803 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:56:04.685085  210803 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:56:04.685092  210803 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:56:04.685099  210803 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:56:04.685103  210803 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:56:04.685109  210803 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:56:04.685115  210803 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:56:04.685122  210803 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:56:04.685127  210803 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:56:04.685133  210803 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:56:04.685140  210803 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:56:04.685148  210803 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:56:04.685158  210803 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:56:04.685165  210803 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:56:04.685173  210803 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:56:04.685179  210803 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:56:04.685186  210803 message_generator.cc:46] MessageGenerator finish done
+E0419 14:56:04.685190  210803 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:56:04.685197  210803 message_generator.cc:46] MessageGenerator finish done
+E0419 14:56:04.685203  210803 file_generator.cc:183] FileGenerator constructor 6
+E0419 14:56:04.685211  210803 shark.cc:27] Shark Generator 2
+E0419 14:56:04.685319  210803 shark.cc:30] Shark Generator 3
+E0419 14:56:04.685336  210803 shark.cc:33] Shark Generator 4
+E0419 14:56:04.685344  210803 shark.cc:37] Shark Generator 5
+E0419 14:56:04.685355  210803 shark.cc:41] Shark Generator 6
+E0419 14:56:04.685362  210803 shark.cc:44] Shark Generator 7
+E0419 14:56:04.685370  210803 shark.cc:47] Shark Generator 8
+E0419 14:56:04.685383  210803 shark.cc:49] Shark Generator 9
+E0419 14:56:04.685389  210803 shark.cc:51] Shark Generator 10
+E0419 14:56:04.685396  210803 shark.cc:53] Shark Generator 11
+W0419 14:57:14.832364  211085 shark.cc:61] Shark Generator 1
+E0419 14:57:14.833865  211085 shark.cc:25] Shark Generator 1
+E0419 14:57:14.833888  211085 file_generator.cc:137] FileGenerator constructor 1
+E0419 14:57:14.833898  211085 file_generator.cc:146] FileGenerator constructor 2
+E0419 14:57:14.833905  211085 file_generator.cc:163] FileGenerator constructor 3
+E0419 14:57:14.833910  211085 file_generator.cc:168] FileGenerator constructor 4
+E0419 14:57:14.833926  211085 file_generator.cc:175] FileGenerator constructor 5
+E0419 14:57:14.833935  211085 message_generator.cc:32] MessageGenerator::generate start: Person
+E0419 14:57:14.833941  211085 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:6
+E0419 14:57:14.833965  211085 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:57:14.833970  211085 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:57:14.833977  211085 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:57:14.833985  211085 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:57:14.833993  211085 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:57:14.834000  211085 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:57:14.834004  211085 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:57:14.834011  211085 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:57:14.834020  211085 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:57:14.834027  211085 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:57:14.834033  211085 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:57:14.834038  211085 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:57:14.834042  211085 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:57:14.834047  211085 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:57:14.834053  211085 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:57:14.834061  211085 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:57:14.834068  211085 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:57:14.834074  211085 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:57:14.834080  211085 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:57:14.834086  211085 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:57:14.834103  211085 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:57:14.834110  211085 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:57:14.834116  211085 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:57:14.834121  211085 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:57:14.834127  211085 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:57:14.834133  211085 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:57:14.834139  211085 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:57:14.834145  211085 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:57:14.834152  211085 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:57:14.834157  211085 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:57:14.834164  211085 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:57:14.834170  211085 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:57:14.834177  211085 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:57:14.834183  211085 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:57:14.834190  211085 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:57:14.834196  211085 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:57:14.834202  211085 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:57:14.834225  211085 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:57:14.834253  211085 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:57:14.834267  211085 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:57:14.834277  211085 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:57:14.834285  211085 message_generator.cc:32] MessageGenerator::generate start: ScoresEntry
+E0419 14:57:14.834291  211085 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:57:14.834298  211085 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:57:14.834304  211085 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:57:14.834310  211085 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:57:14.834315  211085 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:57:14.834320  211085 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:57:14.834326  211085 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:57:14.834332  211085 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:57:14.834338  211085 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:57:14.834344  211085 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:57:14.834350  211085 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:57:14.834358  211085 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:57:14.834364  211085 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:57:14.834370  211085 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:57:14.834379  211085 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:57:14.834389  211085 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:57:14.834401  211085 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:57:14.834410  211085 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:57:14.834417  211085 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:57:14.834424  211085 message_generator.cc:46] MessageGenerator finish done
+E0419 14:57:14.834431  211085 message_generator.cc:32] MessageGenerator::generate start: Address
+E0419 14:57:14.834437  211085 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:57:14.834444  211085 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:57:14.834450  211085 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:57:14.834456  211085 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:57:14.834463  211085 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:57:14.834469  211085 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:57:14.834475  211085 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:57:14.834481  211085 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:57:14.834487  211085 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:57:14.834493  211085 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:57:14.834500  211085 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:57:14.834507  211085 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:57:14.834513  211085 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:57:14.834519  211085 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:57:14.834527  211085 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:57:14.834538  211085 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:57:14.834546  211085 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:57:14.834553  211085 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:57:14.834559  211085 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:57:14.834566  211085 message_generator.cc:46] MessageGenerator finish done
+E0419 14:57:14.834572  211085 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:57:14.834578  211085 message_generator.cc:46] MessageGenerator finish done
+E0419 14:57:14.834585  211085 file_generator.cc:183] FileGenerator constructor 6
+E0419 14:57:14.834593  211085 shark.cc:27] Shark Generator 2
+E0419 14:57:14.834697  211085 shark.cc:30] Shark Generator 3
+E0419 14:57:14.834714  211085 shark.cc:33] Shark Generator 4
+E0419 14:57:14.834721  211085 shark.cc:37] Shark Generator 5
+E0419 14:57:14.834730  211085 shark.cc:41] Shark Generator 6
+E0419 14:57:14.834740  211085 shark.cc:44] Shark Generator 7
+E0419 14:57:14.834746  211085 shark.cc:47] Shark Generator 8
+E0419 14:57:14.834757  211085 shark.cc:49] Shark Generator 9
+E0419 14:57:14.834763  211085 shark.cc:51] Shark Generator 10
+E0419 14:57:14.834769  211085 shark.cc:53] Shark Generator 11
+W0419 14:59:58.953153  211356 shark.cc:61] Shark Generator 1
+E0419 14:59:58.953945  211356 shark.cc:25] Shark Generator 1
+E0419 14:59:58.953961  211356 file_generator.cc:137] FileGenerator constructor 1
+E0419 14:59:58.953969  211356 file_generator.cc:146] FileGenerator constructor 2
+E0419 14:59:58.953977  211356 file_generator.cc:163] FileGenerator constructor 3
+E0419 14:59:58.953981  211356 file_generator.cc:168] FileGenerator constructor 4
+E0419 14:59:58.954000  211356 file_generator.cc:175] FileGenerator constructor 5
+E0419 14:59:58.954008  211356 message_generator.cc:32] MessageGenerator::generate start: Person
+E0419 14:59:58.954013  211356 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:6
+E0419 14:59:58.954026  211356 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:59:58.954029  211356 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:59:58.954032  211356 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:59:58.954035  211356 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:59:58.954039  211356 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:59:58.954042  211356 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:59:58.954044  211356 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:59:58.954047  211356 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:59:58.954049  211356 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:59:58.954051  211356 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:59:58.954054  211356 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:59:58.954056  211356 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:59:58.954058  211356 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:59:58.954060  211356 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:59:58.954064  211356 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:59:58.954068  211356 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:59:58.954072  211356 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:59:58.954073  211356 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:59:58.954076  211356 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:59:58.954080  211356 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:59:58.954086  211356 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:59:58.954089  211356 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:59:58.954093  211356 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:59:58.954095  211356 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:59:58.954100  211356 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:59:58.954102  211356 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:59:58.954106  211356 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:59:58.954109  211356 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:59:58.954114  211356 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:59:58.954117  211356 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:59:58.954121  211356 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:59:58.954123  211356 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:59:58.954125  211356 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:59:58.954128  211356 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:59:58.954130  211356 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:59:58.954133  211356 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:59:58.954135  211356 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:59:58.954146  211356 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:59:58.954159  211356 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:59:58.954166  211356 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:59:58.954170  211356 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:59:58.954173  211356 message_generator.cc:32] MessageGenerator::generate start: ScoresEntry
+E0419 14:59:58.954176  211356 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:59:58.954179  211356 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:59:58.954182  211356 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:59:58.954186  211356 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:59:58.954189  211356 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:59:58.954192  211356 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:59:58.954195  211356 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:59:58.954199  211356 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:59:58.954201  211356 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:59:58.954205  211356 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:59:58.954208  211356 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:59:58.954212  211356 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:59:58.954214  211356 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:59:58.954216  211356 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:59:58.954220  211356 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:59:58.954224  211356 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:59:58.954229  211356 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:59:58.954232  211356 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:59:58.954235  211356 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:59:58.954238  211356 message_generator.cc:46] MessageGenerator finish done
+E0419 14:59:58.954241  211356 message_generator.cc:32] MessageGenerator::generate start: Address
+E0419 14:59:58.954243  211356 message_generator.cc:51] MessageGenerator::add_member_variables 1 field count:2
+E0419 14:59:58.954246  211356 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:59:58.954249  211356 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:59:58.954251  211356 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:59:58.954254  211356 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:59:58.954256  211356 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:59:58.954259  211356 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:59:58.954261  211356 message_generator.cc:53] MessageGenerator::add_member_variables f1
+E0419 14:59:58.954265  211356 message_generator.cc:55] MessageGenerator::add_member_variables f2
+E0419 14:59:58.954268  211356 message_generator.cc:57] MessageGenerator::add_member_variables f3
+E0419 14:59:58.954270  211356 message_generator.cc:59] MessageGenerator::add_member_variables f4
+E0419 14:59:58.954272  211356 message_generator.cc:69] MessageGenerator::add_member_variables f5
+E0419 14:59:58.954275  211356 message_generator.cc:71] MessageGenerator::add_member_variables f6
+E0419 14:59:58.954277  211356 message_generator.cc:34] MessageGenerator after add_member_variables
+E0419 14:59:58.954280  211356 message_generator.cc:36] MessageGenerator after add_getters
+E0419 14:59:58.954284  211356 message_generator.cc:38] MessageGenerator after add_setters
+E0419 14:59:58.954288  211356 message_generator.cc:40] MessageGenerator after add_from_proto
+E0419 14:59:58.954290  211356 message_generator.cc:42] MessageGenerator after add_to_proto
+E0419 14:59:58.954293  211356 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:59:58.954296  211356 message_generator.cc:46] MessageGenerator finish done
+E0419 14:59:58.954298  211356 message_generator.cc:44] MessageGenerator after add_nested_types
+E0419 14:59:58.954302  211356 message_generator.cc:46] MessageGenerator finish done
+E0419 14:59:58.954306  211356 file_generator.cc:183] FileGenerator constructor 6
+E0419 14:59:58.954310  211356 shark.cc:27] Shark Generator 2
+E0419 14:59:58.954360  211356 shark.cc:30] Shark Generator 3
+E0419 14:59:58.954368  211356 shark.cc:33] Shark Generator 4
+E0419 14:59:58.954371  211356 shark.cc:37] Shark Generator 5
+E0419 14:59:58.954375  211356 shark.cc:41] Shark Generator 6
+E0419 14:59:58.954378  211356 shark.cc:44] Shark Generator 7
+E0419 14:59:58.954381  211356 shark.cc:47] Shark Generator 8
+E0419 14:59:58.954387  211356 shark.cc:49] Shark Generator 9
+E0419 14:59:58.954389  211356 shark.cc:51] Shark Generator 10
+E0419 14:59:58.954392  211356 shark.cc:53] Shark Generator 11
+W0419 15:13:51.358710  212110 shark.cc:61] Shark Generator 1
+E0419 15:13:51.360283  212110 shark.cc:25] Shark Generator 1
+E0419 15:13:51.360306  212110 file_generator.cc:137] FileGenerator constructor 1
+E0419 15:13:51.360320  212110 file_generator.cc:146] FileGenerator constructor 2
+E0419 15:13:51.360332  212110 file_generator.cc:163] FileGenerator constructor 3
+E0419 15:13:51.360339  212110 file_generator.cc:168] FileGenerator constructor 4
+E0419 15:13:51.360361  212110 file_generator.cc:175] FileGenerator constructor 5
+E0419 15:13:51.360374  212110 message_generator.cc:33] MessageGenerator::generate start: Person
+E0419 15:13:51.360381  212110 message_generator.cc:52] MessageGenerator::add_member_variables 1 field count:6
+E0419 15:13:51.360403  212110 message_generator.cc:54] MessageGenerator::add_member_variables f1
+E0419 15:13:51.360409  212110 message_generator.cc:56] MessageGenerator::add_member_variables f2
+E0419 15:13:51.360416  212110 message_generator.cc:58] MessageGenerator::add_member_variables f3
+E0419 15:13:51.360423  212110 message_generator.cc:60] MessageGenerator::add_member_variables f4
+E0419 15:13:51.360431  212110 message_generator.cc:70] MessageGenerator::add_member_variables f5
+E0419 15:13:51.360438  212110 message_generator.cc:72] MessageGenerator::add_member_variables f6
+E0419 15:13:51.360444  212110 message_generator.cc:54] MessageGenerator::add_member_variables f1
+E0419 15:13:51.360449  212110 message_generator.cc:56] MessageGenerator::add_member_variables f2
+E0419 15:13:51.360456  212110 message_generator.cc:58] MessageGenerator::add_member_variables f3
+E0419 15:13:51.360462  212110 message_generator.cc:60] MessageGenerator::add_member_variables f4
+E0419 15:13:51.360468  212110 message_generator.cc:70] MessageGenerator::add_member_variables f5
+E0419 15:13:51.360474  212110 message_generator.cc:72] MessageGenerator::add_member_variables f6
+E0419 15:13:51.360480  212110 message_generator.cc:54] MessageGenerator::add_member_variables f1
+E0419 15:13:51.360488  212110 message_generator.cc:56] MessageGenerator::add_member_variables f2
+E0419 15:13:51.360495  212110 message_generator.cc:58] MessageGenerator::add_member_variables f3
+E0419 15:13:51.360501  212110 message_generator.cc:60] MessageGenerator::add_member_variables f4
+E0419 15:13:51.360507  212110 message_generator.cc:70] MessageGenerator::add_member_variables f5
+E0419 15:13:51.360511  212110 message_generator.cc:72] MessageGenerator::add_member_variables f6
+E0419 15:13:51.360517  212110 message_generator.cc:54] MessageGenerator::add_member_variables f1
+E0419 15:13:51.360520  212110 message_generator.cc:56] MessageGenerator::add_member_variables f2
+E0419 15:13:51.360529  212110 message_generator.cc:58] MessageGenerator::add_member_variables f3
+E0419 15:13:51.360535  212110 message_generator.cc:60] MessageGenerator::add_member_variables f4
+E0419 15:13:51.360541  212110 message_generator.cc:70] MessageGenerator::add_member_variables f5
+E0419 15:13:51.360545  212110 message_generator.cc:72] MessageGenerator::add_member_variables f6
+E0419 15:13:51.360549  212110 message_generator.cc:54] MessageGenerator::add_member_variables f1
+E0419 15:13:51.360553  212110 message_generator.cc:56] MessageGenerator::add_member_variables f2
+E0419 15:13:51.360559  212110 message_generator.cc:58] MessageGenerator::add_member_variables f3
+E0419 15:13:51.360565  212110 message_generator.cc:60] MessageGenerator::add_member_variables f4
+E0419 15:13:51.360569  212110 message_generator.cc:70] MessageGenerator::add_member_variables f5
+E0419 15:13:51.360573  212110 message_generator.cc:72] MessageGenerator::add_member_variables f6
+E0419 15:13:51.360578  212110 message_generator.cc:54] MessageGenerator::add_member_variables f1
+E0419 15:13:51.360586  212110 message_generator.cc:56] MessageGenerator::add_member_variables f2
+E0419 15:13:51.360594  212110 message_generator.cc:58] MessageGenerator::add_member_variables f3
+E0419 15:13:51.360600  212110 message_generator.cc:60] MessageGenerator::add_member_variables f4
+E0419 15:13:51.360605  212110 message_generator.cc:70] MessageGenerator::add_member_variables f5
+E0419 15:13:51.360610  212110 message_generator.cc:72] MessageGenerator::add_member_variables f6
+E0419 15:13:51.360615  212110 message_generator.cc:35] MessageGenerator after add_member_variables
+E0419 15:13:51.360633  212110 message_generator.cc:37] MessageGenerator after add_getters
+E0419 15:13:51.360654  212110 message_generator.cc:39] MessageGenerator after add_setters
+E0419 15:13:51.360665  212110 message_generator.cc:41] MessageGenerator after add_from_proto
+E0419 15:13:51.360673  212110 message_generator.cc:43] MessageGenerator after add_to_proto
+E0419 15:13:51.360679  212110 message_generator.cc:33] MessageGenerator::generate start: Address
+E0419 15:13:51.360684  212110 message_generator.cc:52] MessageGenerator::add_member_variables 1 field count:2
+E0419 15:13:51.360690  212110 message_generator.cc:54] MessageGenerator::add_member_variables f1
+E0419 15:13:51.360698  212110 message_generator.cc:56] MessageGenerator::add_member_variables f2
+E0419 15:13:51.360704  212110 message_generator.cc:58] MessageGenerator::add_member_variables f3
+E0419 15:13:51.360711  212110 message_generator.cc:60] MessageGenerator::add_member_variables f4
+E0419 15:13:51.360717  212110 message_generator.cc:70] MessageGenerator::add_member_variables f5
+E0419 15:13:51.360723  212110 message_generator.cc:72] MessageGenerator::add_member_variables f6
+E0419 15:13:51.360729  212110 message_generator.cc:54] MessageGenerator::add_member_variables f1
+E0419 15:13:51.360734  212110 message_generator.cc:56] MessageGenerator::add_member_variables f2
+E0419 15:13:51.360740  212110 message_generator.cc:58] MessageGenerator::add_member_variables f3
+E0419 15:13:51.360745  212110 message_generator.cc:60] MessageGenerator::add_member_variables f4
+E0419 15:13:51.360753  212110 message_generator.cc:70] MessageGenerator::add_member_variables f5
+E0419 15:13:51.360759  212110 message_generator.cc:72] MessageGenerator::add_member_variables f6
+E0419 15:13:51.360765  212110 message_generator.cc:35] MessageGenerator after add_member_variables
+E0419 15:13:51.360774  212110 message_generator.cc:37] MessageGenerator after add_getters
+E0419 15:13:51.360783  212110 message_generator.cc:39] MessageGenerator after add_setters
+E0419 15:13:51.360794  212110 message_generator.cc:41] MessageGenerator after add_from_proto
+E0419 15:13:51.360801  212110 message_generator.cc:43] MessageGenerator after add_to_proto
+E0419 15:13:51.360807  212110 message_generator.cc:45] MessageGenerator after add_nested_types
+E0419 15:13:51.360814  212110 message_generator.cc:47] MessageGenerator finish done
+E0419 15:13:51.360819  212110 message_generator.cc:45] MessageGenerator after add_nested_types
+E0419 15:13:51.360826  212110 message_generator.cc:47] MessageGenerator finish done
+E0419 15:13:51.360832  212110 file_generator.cc:183] FileGenerator constructor 6
+E0419 15:13:51.360840  212110 shark.cc:27] Shark Generator 2
+E0419 15:13:51.360924  212110 shark.cc:30] Shark Generator 3
+E0419 15:13:51.360931  212110 shark.cc:33] Shark Generator 4
+E0419 15:13:51.360939  212110 shark.cc:37] Shark Generator 5
+E0419 15:13:51.360949  212110 shark.cc:41] Shark Generator 6
+E0419 15:13:51.360959  212110 shark.cc:44] Shark Generator 7
+E0419 15:13:51.360967  212110 shark.cc:47] Shark Generator 8
+E0419 15:13:51.360982  212110 shark.cc:49] Shark Generator 9
+E0419 15:13:51.361004  212110 shark.cc:51] Shark Generator 10
+E0419 15:13:51.361010  212110 shark.cc:53] Shark Generator 11

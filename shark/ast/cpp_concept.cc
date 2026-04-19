@@ -13,10 +13,23 @@
 // limitations under the License.
 //
 
-#include <shark/foo.h>
-#include <iostream>
 
-int main() {
-    std::cout<<foo( 10)<<std::endl;
-    return 0;
+#include <shark/ast/cpp_concept.h>
+
+#include <shark/ast/cpp_entity_kind.h>
+
+using namespace cppast;
+
+CppEntityKind cppast::CppConcept::kind() noexcept {
+    return CppEntityKind::concept_t;
+}
+
+CppEntityKind CppConcept::do_get_entity_kind() const noexcept {
+    return CppEntityKind::concept_t;
+}
+
+std::unique_ptr<CppConcept> CppConcept::builder::finish(const CppEntityIndex &idx,
+                                                        CppEntityId id) {
+    idx.register_definition(id, type_safe::ref(*concept_));
+    return std::move(concept_);
 }

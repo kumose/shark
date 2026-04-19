@@ -12,8 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <shark/foo.h>
 
-int foo(int a) {
-    return  a +1;
+
+#include <shark/ast/cpp_variable_template.h>
+
+#include <shark/ast/cpp_entity_kind.h>
+
+using namespace cppast;
+
+CppEntityKind CppVariableTemplate::kind() noexcept {
+    return CppEntityKind::variable_template_t;
+}
+
+CppEntityKind CppVariableTemplate::do_get_entity_kind() const noexcept {
+    return kind();
 }

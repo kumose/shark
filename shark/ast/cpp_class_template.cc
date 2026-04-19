@@ -13,6 +13,26 @@
 // limitations under the License.
 //
 
-#pragma once
 
-inline int sub(int a, int b) { return a - b; }
+
+#include <shark/ast/cpp_class_template.h>
+
+#include <shark/ast/cpp_entity_kind.h>
+
+using namespace cppast;
+
+CppEntityKind CppClassTemplate::kind() noexcept {
+    return CppEntityKind::class_template_t;
+}
+
+CppEntityKind CppClassTemplate::do_get_entity_kind() const noexcept {
+    return kind();
+}
+
+CppEntityKind CppClassTemplateSpecialization::kind() noexcept {
+    return CppEntityKind::class_template_specialization_t;
+}
+
+CppEntityKind CppClassTemplateSpecialization::do_get_entity_kind() const noexcept {
+    return kind();
+}

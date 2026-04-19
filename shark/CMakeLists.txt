@@ -34,6 +34,42 @@ kmcmake_cc_library(
         NAME idl_proto
         SOURCES
         ${shark_idl_proto_gen_SRCS}
+        ast/code_generator.cc
+        ast/cpp_alias_template.cc
+        ast/cpp_attribute.cc
+        ast/cpp_class.cc
+        ast/cpp_class_template.cc
+        ast/cpp_concept.cc
+        ast/cpp_entity.cc
+        ast/cpp_entity_index.cc
+        ast/cpp_entity_kind.cc
+        ast/cpp_enum.cc
+        ast/cpp_expression.cc
+        ast/cpp_file.cc
+        ast/cpp_forward_declarable.cc
+        ast/cpp_friend.cc
+        ast/cpp_function.cc
+        ast/cpp_function_template.cc
+        ast/cpp_language_linkage.cc
+        ast/cpp_member_function.cc
+        ast/cpp_member_variable.cc
+        ast/cpp_namespace.cc
+        ast/cpp_preprocessor.cc
+        ast/cpp_static_assert.cc
+        ast/cpp_template_parameter.cc
+        ast/cpp_token.cc
+        ast/cpp_type.cc
+        ast/cpp_type_alias.cc
+        ast/cpp_variable.cc
+        ast/cpp_variable_template.cc
+        ast/diagnostic_logger.cc
+        ast/visitor.cc
+        generator/type.cc
+        generator/type_mapper.cc
+        generator/include_manager.cc
+        generator/message_generator.cc
+        generator/enum_generator.cc
+        generator/file_generator.cc
         PINCLUDES
         ${PROTOBUF_INCLUDE_DIRS}
         CXXOPTS
@@ -73,42 +109,19 @@ kmcmake_cc_binary(
         PUBLIC
 )
 
-kmcmake_cc_library(
-        NAMESPACE ${PROJECT_NAME}
-        NAME foo
-        SOURCES
-        foo.cc
-        CXXOPTS
-        ${KMCMAKE_CXX_OPTIONS}
-        PLINKS
-        ${KMCMAKE_DEPS_LINK}
-        PUBLIC
-)
-
-kmcmake_cc_interface(
-        NAMESPACE ${PROJECT_NAME}
-        NAME api
-        HEADERS
-        api.h
-        CXXOPTS
-        ${KMCMAKE_CXX_OPTIONS}
-        PUBLIC
-)
-
 kmcmake_cc_binary(
         NAMESPACE ${PROJECT_NAME}
-        NAME shared_main
+        NAME protoc-gen-sk
         SOURCES
-        main.cc
+        shark.cc
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
         DEPS
-        ${PROJECT_NAME}::foo
+        ${PROJECT_NAME}::generator_cc_static
         LINKS
+        ${PROJECT_NAME}::generator_cc_static
         ${KMCMAKE_DEPS_LINK}
-        ${PROJECT_NAME}::foo
         PUBLIC
 )
-
 
 ###kmcmake_example

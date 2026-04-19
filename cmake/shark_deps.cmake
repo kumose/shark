@@ -59,8 +59,8 @@ endif ()
 find_package(Threads REQUIRED)
 kmcmake_private_find_package(Threads REQUIRED)
 list(APPEND KMCMAKE_SYSTEM_DYLINK Threads::Threads)
-
-find_package(protobuf CONFIG QUIET)
+find_package(turbo REQUIRED)
+find_package(Protobuf CONFIG QUIET)
 if (protobuf_FOUND)
     # Prefer protobuf config packages (vcpkg/conan/system modern installs).
     kmcmake_private_find_package(protobuf CONFIG REQUIRED)
@@ -134,6 +134,7 @@ endif ()
 # KMCMAKE_SYSTEM_DYLINK, using it for fun.
 ##########################################################
 set(KMCMAKE_DEPS_LINK
+        turbo::turbo_static
         protobuf::libprotobuf
         ${protobuf_ABSL_USED_TARGETS}
         protobuf::libprotoc
