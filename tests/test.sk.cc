@@ -7,6 +7,82 @@
 #include <google/protobuf/json/json.h>
 
 namespace my::custom::ns {
+  Person::Address::Detail::Detail() {
+  }
+
+  Person::Address::Detail::~Detail() {
+  }
+
+  Person::Address::Detail::Detail(const Detail& rhs) {
+    _region = rhs._region;
+    _prcode = rhs._prcode;
+  }
+
+  Person::Address::Detail& Person::Address::Detail::operator= (const Detail& rhs) {
+    _region = rhs._region;
+    _prcode = rhs._prcode;
+    return *this;
+  }
+
+  Person::Address::Detail::Detail(Detail&& rhs) noexcept {
+    _region = std::move(rhs._region);
+    _prcode = std::move(rhs._prcode);
+  }
+
+  Person::Address::Detail& Person::Address::Detail::operator= (Detail&& rhs) noexcept {
+    _region = std::move(rhs._region);
+    _prcode = std::move(rhs._prcode);
+    return *this;
+  }
+
+  ///////////////////////////////////////////////////////////////////////// 
+  /// metas 
+  const google::protobuf::Descriptor* Person::Address::Detail::get_descriptor() {
+    return test::pb::pa::Person::Address::Detail::descriptor();
+  }
+
+  ///////////////////////////////////////////////////////////////////////// 
+  /// transfers 
+  void Person::Address::Detail::parse_from_proto(const test::pb::pa::Person::Address::Detail& pb) {
+    _region = pb.region();
+    _prcode = pb.prcode();
+  }
+
+  void Person::Address::Detail::serialize_to_proto(test::pb::pa::Person::Address::Detail& pb) const {
+    pb.set_region(_region);
+    pb.set_prcode(_prcode);
+  }
+
+  bool Person::Address::Detail::parse_from_json(const std::string& json) {
+    test::pb::pa::Person::Address::Detail pb;
+    if(!google::protobuf::json::JsonStringToMessage(json, &pb, google::protobuf::json::ParseOptions()).ok()) {
+      return false;
+    }
+
+    parse_from_proto(pb);
+    return true;
+  }
+
+  bool Person::Address::Detail::serialize_to_json(std::string& json) const {
+    test::pb::pa::Person::Address::Detail pb;
+    serialize_to_proto(pb);
+    if(!google::protobuf::json::MessageToJsonString(pb, &json).ok()) {
+      return false;
+    }
+
+    return true;
+  }
+
+  std::string Person::Address::Detail::to_string() const {
+    std::string json;
+    auto b = serialize_to_json(json);
+    if(b) {
+      return json;
+    }
+
+    return "";
+  }
+
   Person::Address::Address() {
   }
 
@@ -16,22 +92,26 @@ namespace my::custom::ns {
   Person::Address::Address(const Address& rhs) {
     _street = rhs._street;
     _number = rhs._number;
+    _detail = rhs._detail;
   }
 
   Person::Address& Person::Address::operator= (const Address& rhs) {
     _street = rhs._street;
     _number = rhs._number;
+    _detail = rhs._detail;
     return *this;
   }
 
   Person::Address::Address(Address&& rhs) noexcept {
     _street = std::move(rhs._street);
     _number = rhs._number;
+    _detail = std::move(rhs._detail);
   }
 
   Person::Address& Person::Address::operator= (Address&& rhs) noexcept {
     _street = std::move(rhs._street);
     _number = rhs._number;
+    _detail = std::move(rhs._detail);
     return *this;
   }
 
@@ -46,11 +126,13 @@ namespace my::custom::ns {
   void Person::Address::parse_from_proto(const test::pb::pa::Person::Address& pb) {
     _street = pb.street();
     _number = pb.number();
+    _detail.parse_from_proto(pb.detail());
   }
 
   void Person::Address::serialize_to_proto(test::pb::pa::Person::Address& pb) const {
     pb.set_street(_street);
     pb.set_number(_number);
+    _detail.serialize_to_proto(*pb.mutable_detail());
   }
 
   bool Person::Address::parse_from_json(const std::string& json) {
@@ -107,7 +189,7 @@ namespace my::custom::ns {
     _any_one = rhs._any_one;
     _any_two = rhs._any_two;
     _name = rhs._name;
-    _age.store(rhs._age.load());
+    _age = rhs._age;
     _emails = rhs._emails;
     _ages = rhs._ages;
     _scores = rhs._scores;
@@ -131,7 +213,7 @@ namespace my::custom::ns {
     _any_one = rhs._any_one;
     _any_two = rhs._any_two;
     _name = rhs._name;
-    _age.store(rhs._age.load());
+    _age = rhs._age;
     _emails = rhs._emails;
     _ages = rhs._ages;
     _scores = rhs._scores;
@@ -156,7 +238,7 @@ namespace my::custom::ns {
     _any_one = std::move(rhs._any_one);
     _any_two = std::move(rhs._any_two);
     _name = std::move(rhs._name);
-    _age.store(rhs._age.load());
+    _age = rhs._age;
     _emails = std::move(rhs._emails);
     _ages = std::move(rhs._ages);
     _scores = std::move(rhs._scores);
@@ -180,7 +262,7 @@ namespace my::custom::ns {
     _any_one = std::move(rhs._any_one);
     _any_two = std::move(rhs._any_two);
     _name = std::move(rhs._name);
-    _age.store(rhs._age.load());
+    _age = rhs._age;
     _emails = std::move(rhs._emails);
     _ages = std::move(rhs._ages);
     _scores = std::move(rhs._scores);
@@ -206,7 +288,7 @@ namespace my::custom::ns {
       _any_two[i].second = pb.any_two(i).value();
     }
     _name = pb.name();
-    _age.store(pb.age());
+    _age = pb.age();
     _emails.reserve(pb.emails_size());
     for(size_t i = 0; i < pb.emails_size(); ++i) {
       _emails.push_back(pb.emails(i));
@@ -247,7 +329,7 @@ namespace my::custom::ns {
       ptr->set_value(_any_two[i].second);
     }
     pb.set_name(_name);
-    pb.set_age(_age.load());
+    pb.set_age(_age);
     pb.mutable_emails()->Reserve(_emails.size());
     for(size_t i = 0; i < _emails.size(); ++i) {
       *pb.mutable_emails()->Add() = _emails[i];

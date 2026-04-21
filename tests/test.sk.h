@@ -17,6 +17,7 @@ namespace my::custom::ns {
 
   class Person;
   class Address;
+  class Detail;
 
 
   /// --- enums ---
@@ -83,6 +84,54 @@ namespace my::custom::ns {
 
       const google::protobuf::Descriptor *descriptor() const;
 
+      class  Detail {
+      public:
+        /// constructor
+        Detail();
+
+        /// destructor
+        ~Detail();
+
+        Detail(const Detail& rhs);
+
+        Detail& operator= (const Detail& rhs);
+
+        Detail(Detail&& rhs) noexcept;
+
+        Detail& operator= (Detail&& rhs) noexcept;
+
+        /////////////////////////////////////////////////////////////////////// 
+        /// meta describe 
+        static const google::protobuf::Descriptor* get_descriptor();
+
+        const google::protobuf::Descriptor *descriptor() const;
+
+        /// -----enums-------- 
+      public:
+        ////////////////////// getters/setters
+
+         inline const std::string& region() const;
+         inline void set_region(const std::string &v);
+         inline const std::string& prcode() const;
+         inline void set_prcode(const std::string &v);
+        ///////////////////////////////////////////////////////////////////////// 
+        /// transfers 
+        void parse_from_proto(const test::pb::pa::Person::Address::Detail& pb);
+
+        void serialize_to_proto(test::pb::pa::Person::Address::Detail& pb) const;
+
+        bool parse_from_json(const std::string& json);
+
+        bool serialize_to_json(std::string& json) const;
+
+        std::string to_string() const;
+
+      private:
+        ////////////////////// members
+        std::string _region;
+        std::string _prcode;
+        ////////////////////// unions
+      };
       /// -----enums-------- 
     public:
       ////////////////////// getters/setters
@@ -91,6 +140,9 @@ namespace my::custom::ns {
        inline void set_street(const std::string &v);
        inline int32_t number() const;
        inline void number(int32_t value);
+       inline const Person::Address& detail() const;
+       inline void set_detail(const Person::Address& val);
+       inline void set_detail(Person::Address&& val);
       ///////////////////////////////////////////////////////////////////////// 
       /// transfers 
       void parse_from_proto(const test::pb::pa::Person::Address& pb);
@@ -106,7 +158,8 @@ namespace my::custom::ns {
     private:
       ////////////////////// members
       std::string _street;
-      int32_t _number{20};
+      int32_t _number;
+      Person::Address _detail;
       ////////////////////// unions
     };
     enum class kindCase {
@@ -142,9 +195,9 @@ namespace my::custom::ns {
      inline void set_scores(const absl::flat_hash_map<std::string,int32_t> &v);
      inline Color favorite_color() const;
     inline void set_favorite_color(Color value);
-     inline const Person::Address& address() const;
-     inline void set_address(const Person::Address& val);
-     inline void set_address(Person::Address&& val);
+     inline const Person& address() const;
+     inline void set_address(const Person& val);
+     inline void set_address(Person&& val);
     inline kindCase kind_case() const;
     inline bool has_kind() const;
     inline void clear_kind();
@@ -170,13 +223,13 @@ namespace my::custom::ns {
     ////////////////////// members
     std::pair<std::string,std::string> _any_one;
     std::vector<std::pair<std::string,std::string>> _any_two;
-    std::string _name{"Lothar"};
-    std::atomic<int8_t> _age{0};
+    std::string _name;
+    int8_t _age;
     std::vector<std::string> _emails;
     std::vector<int32_t> _ages;
      absl::flat_hash_map<std::string,int32_t> _scores;
-    Color _favorite_color{Color::GREEN};
-    Person::Address _address;
+    Color _favorite_color;
+    Person _address;
     ////////////////////// unions
     union kind {
       int64_t _kind_placeholder{0};
@@ -224,6 +277,26 @@ namespace my::custom::ns {
 
   ///////////////////////////////////////////////////////////
   /// --- inlines ---
+  inline const google::protobuf::Descriptor* Person::Address::Detail::descriptor() const {
+    return get_descriptor();
+  }
+
+  /// getter
+  inline const std::string& Person::Address::Detail::region() const {
+    return _region;
+  }
+  /// setter
+  inline void Person::Address::Detail::set_region(const std::string &v) {
+    _region = v;
+  }
+  /// getter
+  inline const std::string& Person::Address::Detail::prcode() const {
+    return _prcode;
+  }
+  /// setter
+  inline void Person::Address::Detail::set_prcode(const std::string &v) {
+    _prcode = v;
+  }
   inline const google::protobuf::Descriptor* Person::Address::descriptor() const {
     return get_descriptor();
   }
@@ -241,6 +314,15 @@ namespace my::custom::ns {
   }
   inline void Person::Address::number(int32_t value) {
     _number = value;
+  }
+  inline const Person::Address& Person::Address::detail() const {
+    return _detail;
+  }
+  inline void Person::Address::set_detail(const Person::Address& val) {
+    _detail = val;
+  }
+  inline void Person::Address::set_detail(Person::Address&& val) {
+    _detail = std::move(val);
   }
   inline const google::protobuf::Descriptor* Person::descriptor() const {
     return get_descriptor();
@@ -273,10 +355,10 @@ namespace my::custom::ns {
     _name = v;
   }
   inline int8_t Person::age() const {
-    return _age.load();
+    return _age;
   }
   inline void Person::age(int8_t value) {
-    _age.store(value);
+    _age = value;
   }
   /// getter
   inline const std::vector<std::string>& Person::emails() const {
@@ -308,13 +390,13 @@ namespace my::custom::ns {
   inline void Person::set_favorite_color(Color value) {
     _favorite_color = value;
   }
-  inline const Person::Address& Person::address() const {
+  inline const Person& Person::address() const {
     return _address;
   }
-  inline void Person::set_address(const Person::Address& val) {
+  inline void Person::set_address(const Person& val) {
     _address = val;
   }
-  inline void Person::set_address(Person::Address&& val) {
+  inline void Person::set_address(Person&& val) {
     _address = std::move(val);
   }
   inline Person::kindCase Person::kind_case() const {

@@ -31,8 +31,8 @@
 #include <google/protobuf/compiler/plugin.h>
 
 #include <shark/generator/generator.h>
-#include <shark/generator/helpers.h>
-#include <shark/generator/compat.h>
+#include <shark/utility/helpers.h>
+#include <shark/utility/compat.h>
 
 #include "shark/version.h"
 

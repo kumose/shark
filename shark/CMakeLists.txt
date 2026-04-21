@@ -30,24 +30,28 @@ kmcmake_cc_proto(
 
 
 set(GENERATOR_SRC
-        generator/any_field.cc
-        generator/bytes_field.cc
-        generator/enum.cc
-        generator/enum_field.cc
-        generator/extension.cc
-        generator/field.cc
-        generator/file.cc
+        meta/global_state.cc
+        meta/field_base.cc
+        meta/field_meta.cc
         generator/generator.cc
-        generator/global_state.cc
-        generator/helpers.cc
-        generator/map_field.cc
-        generator/message.cc
-        generator/message_field.cc
-        generator/oneof_field.cc
-        generator/primitive_field.cc
-        generator/service.cc
-        generator/string_field.cc
+        rt/any_field.cc
+        rt/bytes_field.cc
+        rt/enum.cc
+        rt/enum_field.cc
+        rt/extension.cc
+        rt/field_map.cc
+        rt/file.cc
+        rt/map_field.cc
+        rt/message.cc
+        rt/message_field.cc
+        rt/oneof_field.cc
+        rt/primitive_field.cc
+        rt/service.cc
+        rt/string_field.cc
+        utility/helpers.cc
+        utility/uri.cc
 )
+
 kmcmake_cc_library(
         NAMESPACE ${PROJECT_NAME}
         NAME idl_proto
@@ -56,13 +60,12 @@ kmcmake_cc_library(
         ${GENERATOR_SRC}
         PINCLUDES
         ${PROTOBUF_INCLUDE_DIRS}
-        DEFINES
-        -DCAPNP_LITE
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
         PLINKS
         ${KMCMAKE_DEPS_LINK}
         PUBLIC
+        UNITY
 )
 
 

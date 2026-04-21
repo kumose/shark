@@ -59,6 +59,11 @@ message Person {
   message Address {
     optional string street = 1;
     optional int32 number = 2 [default = 20];
+    optional Detail detail = 3;
+    message Detail {
+      optional string region = 1;
+      optional string prcode = 2;
+    }
   }
   oneof kind {
     string aaa = 10;

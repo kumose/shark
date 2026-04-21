@@ -26,9 +26,9 @@
 #include <google/protobuf/io/zero_copy_stream.h>
 
 #include <shark/idl/shark_options.pb.h>
-#include <shark/generator/file.h>
+#include <shark/rt/file.h>
 #include <shark/generator/generator.h>
-#include <shark/generator/helpers.h>
+#include <shark/utility/helpers.h>
 
 namespace shark {
     // Parses a set of comma-delimited name/value pairs, e.g.:
@@ -36,8 +36,7 @@ namespace shark {
     // parses to the pairs:
     //   ("foo", "bar"), ("baz", ""), ("qux", "corge")
     void ParseOptions(const std::string &text, std::vector<std::pair<std::string, std::string> > *output) {
-        std::vector<std::string> parts;
-        SplitStringUsing(text, ",", &parts);
+        std::vector<std::string> parts = turbo::str_split(text, ",", turbo::SkipEmpty());
 
         for (unsigned i = 0; i < parts.size(); i++) {
             std::string::size_type equals_pos = parts[i].find_first_of('=');
