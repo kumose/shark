@@ -36,6 +36,12 @@ namespace my::custom::ns {
   }
 
   ///////////////////////////////////////////////////////////////////////// 
+  /// metas 
+  const google::protobuf::Descriptor* Person::Address::get_descriptor() {
+    return test::pb::pa::Person::Address::descriptor();
+  }
+
+  ///////////////////////////////////////////////////////////////////////// 
   /// transfers 
   void Person::Address::parse_from_proto(const test::pb::pa::Person::Address& pb) {
     _street = pb.street();
@@ -181,6 +187,12 @@ namespace my::custom::ns {
     _favorite_color = rhs._favorite_color;
     _address = std::move(rhs._address);
     return *this;
+  }
+
+  ///////////////////////////////////////////////////////////////////////// 
+  /// metas 
+  const google::protobuf::Descriptor* Person::get_descriptor() {
+    return test::pb::pa::Person::descriptor();
   }
 
   ///////////////////////////////////////////////////////////////////////// 

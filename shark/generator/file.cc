@@ -95,6 +95,7 @@ namespace shark {
             "#include <cstdint>\n"
             "#include <string>\n"
             "#include <optional>\n"
+            "#include <google/protobuf/descriptor.h>\n"
             "#include <$basename$.pb.h>\n"
             "$INC$"
             "\n"
@@ -160,7 +161,7 @@ namespace shark {
             service_generators_[i]->GenerateDescriptorDeclarations(printer);
         }
         printer->Print("\n///////////////////////////////////////////////////////////\n");
-        printer->Print("/// --- inlines --- ");
+        printer->Print("/// --- inlines ---\n");
         //////// inlines
         for (int i = 0; i < file_->message_type_count(); i++) {
             message_generators_[i]->generate_struct_inl(printer);

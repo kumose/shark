@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <string>
 #include <optional>
+#include <google/protobuf/descriptor.h>
 #include <tests/test.pb.h>
 #include <atomic>
 #include <turbo/container/flat_hash_map.h>
@@ -54,6 +55,12 @@ namespace my::custom::ns {
 
     Person& operator= (Person&& rhs) noexcept;
 
+    /////////////////////////////////////////////////////////////////////// 
+    /// meta describe 
+    static const google::protobuf::Descriptor* get_descriptor();
+
+    const google::protobuf::Descriptor *descriptor() const;
+
     class  Address {
     public:
       /// constructor
@@ -69,6 +76,12 @@ namespace my::custom::ns {
       Address(Address&& rhs) noexcept;
 
       Address& operator= (Address&& rhs) noexcept;
+
+      /////////////////////////////////////////////////////////////////////// 
+      /// meta describe 
+      static const google::protobuf::Descriptor* get_descriptor();
+
+      const google::protobuf::Descriptor *descriptor() const;
 
       /// -----enums-------- 
     public:
@@ -210,7 +223,12 @@ namespace my::custom::ns {
   }
 
   ///////////////////////////////////////////////////////////
-  /// --- inlines --- /// getter
+  /// --- inlines ---
+  inline const google::protobuf::Descriptor* Person::Address::descriptor() const {
+    return get_descriptor();
+  }
+
+  /// getter
   inline const std::string& Person::Address::street() const {
     return _street;
   }
@@ -224,6 +242,10 @@ namespace my::custom::ns {
   inline void Person::Address::number(int32_t value) {
     _number = value;
   }
+  inline const google::protobuf::Descriptor* Person::descriptor() const {
+    return get_descriptor();
+  }
+
   /// getter
   inline const std::pair<std::string,std::string>& Person::any_one() const {
     return _any_one;

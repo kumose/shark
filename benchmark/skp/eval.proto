@@ -1,0 +1,40 @@
+// Copyright (c) 2013-2016 Sandstorm Development Group, Inc. and contributors
+// SPDX-License-Identifier: MIT
+// Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+package capnp.benchmark.protobuf;
+
+enum Operation {
+  ADD = 0;
+  SUBTRACT = 1;
+  MULTIPLY = 2;
+  DIVIDE = 3;
+  MODULUS = 4;
+}
+
+message Expression {
+  required Operation op = 1;
+
+  optional int32 left_value = 2;
+  optional Expression left_expression = 3;
+
+  optional int32 right_value = 4;
+  optional Expression right_expression = 5;
+}
+
+message EvaluationResult {
+  required sint32 value = 1;
+}

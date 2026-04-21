@@ -97,6 +97,12 @@ namespace shark {
             nested_generators_[i]->generate_struct_inl(printer);
         }
 
+        printer->Print(_vars,"inline const google::protobuf::Descriptor* $domian$::descriptor() const {\n");
+        printer->Indent();
+        printer->Print(_vars,"return get_descriptor();\n");
+        printer->Outdent();
+        printer->Print(_vars,"}\n\n");
+
         for (int i = 0; i < descriptor_->field_count(); i++) {
             const google::protobuf::FieldDescriptor *field = descriptor_->field(i);
             if (field->containing_oneof() == NULL) {
@@ -145,7 +151,10 @@ namespace shark {
         printer->Print(_vars,"$classname$($classname$&& rhs) noexcept;\n\n");
         printer->Print(_vars,"$classname$& operator= ($classname$&& rhs) noexcept;\n\n");
 
-
+        printer->Print("/////////////////////////////////////////////////////////////////////// \n");
+        printer->Print("/// meta describe \n");
+        printer->Print(_vars,"static const google::protobuf::Descriptor* get_descriptor();\n\n");
+        printer->Print(_vars,"const google::protobuf::Descriptor *descriptor() const;\n\n");
 
         for (int i = 0; i < nested_generators_.size(); i++) {
             nested_generators_[i]->generate_struct_definition(printer);
@@ -279,6 +288,13 @@ namespace shark {
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
 
+        printer->Print("///////////////////////////////////////////////////////////////////////// \n");
+        printer->Print("/// metas \n");
+        printer->Print(_vars,"const google::protobuf::Descriptor* $domian$::get_descriptor() {\n");
+        printer->Indent();
+        printer->Print(_vars, "return $PBTYPE$::descriptor();\n");
+        printer->Outdent();
+        printer->Print(_vars, "}\n\n");
         printer->Print("///////////////////////////////////////////////////////////////////////// \n");
         printer->Print("/// transfers \n");
         printer->Print(_vars, "void $domian$::parse_from_proto(const $PBTYPE$& pb) {\n");

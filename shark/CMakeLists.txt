@@ -29,30 +29,35 @@ kmcmake_cc_proto(
 )
 
 
+set(GENERATOR_SRC
+        generator/any_field.cc
+        generator/bytes_field.cc
+        generator/enum.cc
+        generator/enum_field.cc
+        generator/extension.cc
+        generator/field.cc
+        generator/file.cc
+        generator/generator.cc
+        generator/global_state.cc
+        generator/helpers.cc
+        generator/map_field.cc
+        generator/message.cc
+        generator/message_field.cc
+        generator/oneof_field.cc
+        generator/primitive_field.cc
+        generator/service.cc
+        generator/string_field.cc
+)
 kmcmake_cc_library(
         NAMESPACE ${PROJECT_NAME}
         NAME idl_proto
         SOURCES
         ${shark_idl_proto_gen_SRCS}
-        generator/message.cc
-        generator/generator.cc
-        generator/field.cc
-        generator/enum.cc
-        generator/helpers.cc
-        generator/extension.cc
-        generator/enum_field.cc
-        generator/file.cc
-        generator/bytes_field.cc
-        generator/message_field.cc
-        generator/primitive_field.cc
-        generator/service.cc
-        generator/string_field.cc
-        generator/map_field.cc
-        generator/global_state.cc
-        generator/oneof_field.cc
-        generator/any_field.cc
+        ${GENERATOR_SRC}
         PINCLUDES
         ${PROTOBUF_INCLUDE_DIRS}
+        DEFINES
+        -DCAPNP_LITE
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
         PLINKS
