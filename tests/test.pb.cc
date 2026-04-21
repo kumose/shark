@@ -191,26 +191,26 @@ const char descriptor_table_protodef_tests_2ftest_2eproto[] ABSL_ATTRIBUTE_SECTI
     protodesc_cold) = {
     "\n\020tests/test.proto\022\ntest.pb.pa\032\035shark/id"
     "l/shark_options.proto\032\031google/protobuf/a"
-    "ny.proto\"\340\003\n\006Person\022%\n\007any_one\030d \001(\0132\024.g"
+    "ny.proto\"\350\003\n\006Person\022%\n\007any_one\030d \001(\0132\024.g"
     "oogle.protobuf.Any\022%\n\007any_two\030e \003(\0132\024.go"
     "ogle.protobuf.Any\022\030\n\004name\030\001 \001(\t:\006LotharB"
-    "\002\030\001\022\023\n\003age\030\002 \001(\005B\006\262\262\031\002\020\001\022\016\n\006emails\030\003 \003(\t"
-    "\022\014\n\004ages\030\010 \003(\005\022.\n\006scores\030\004 \003(\0132\036.test.pb"
-    ".pa.Person.ScoresEntry\0220\n\016favorite_color"
-    "\030\005 \001(\0162\021.test.pb.pa.Color:\005GREEN\022\r\n\003aaa\030"
-    "\n \001(\tH\000\022\r\n\003bbb\030\014 \001(\rH\000\022+\n\007address\030\006 \001(\0132"
-    "\032.test.pb.pa.Person.Address\032-\n\013ScoresEnt"
-    "ry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\032-\n\007Ad"
-    "dress\022\016\n\006street\030\001 \001(\t\022\022\n\006number\030\002 \001(\005:\0022"
-    "0\"(\n\005Dolor\022\010\n\004DRED\020\000\022\n\n\006DGREEN\020\001\022\t\n\005DBLU"
-    "E\020\002B\006\n\004kind*-\n\005Color\022\007\n\003RED\020\000\022\t\n\005GREEN\020\001"
-    "\022\010\n\004BLUE\020\002\032\006\242\262\031\002\010\001*6\n\010ColorU16\022\t\n\005RED16\020"
-    "\000\022\013\n\007GREEN16\020\001\022\n\n\006BLUE16\020\002\032\006\242\262\031\002\010\002*6\n\010Co"
-    "lorU32\022\t\n\005RED32\020\000\022\013\n\007GREEN32\020\001\022\n\n\006BLUE32"
-    "\020\002\032\006\242\262\031\002\010\003Bq\212\262\031m\n\016my::custom::ns\022\037turbo/"
-    "container/flat_hash_map.h\032\034absl::flat_ha"
-    "sh_map< %s, %s>\"\032absl::InlinedVector<%s,"
-    " 2>(\002"
+    "\002\030\001\022\033\n\003age\030\002 \001(\005B\016\262\262\031\n\n\006int8_t\020\001\022\016\n\006emai"
+    "ls\030\003 \003(\t\022\014\n\004ages\030\010 \003(\005\022.\n\006scores\030\004 \003(\0132\036"
+    ".test.pb.pa.Person.ScoresEntry\0220\n\016favori"
+    "te_color\030\005 \001(\0162\021.test.pb.pa.Color:\005GREEN"
+    "\022\r\n\003aaa\030\n \001(\tH\000\022\r\n\003bbb\030\014 \001(\rH\000\022+\n\007addres"
+    "s\030\006 \001(\0132\032.test.pb.pa.Person.Address\032-\n\013S"
+    "coresEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\002"
+    "8\001\032-\n\007Address\022\016\n\006street\030\001 \001(\t\022\022\n\006number\030"
+    "\002 \001(\005:\00220\"(\n\005Dolor\022\010\n\004DRED\020\000\022\n\n\006DGREEN\020\001"
+    "\022\t\n\005DBLUE\020\002B\006\n\004kind*-\n\005Color\022\007\n\003RED\020\000\022\t\n"
+    "\005GREEN\020\001\022\010\n\004BLUE\020\002\032\006\242\262\031\002\010\001*6\n\010ColorU16\022\t"
+    "\n\005RED16\020\000\022\013\n\007GREEN16\020\001\022\n\n\006BLUE16\020\002\032\006\242\262\031\002"
+    "\010\002*6\n\010ColorU32\022\t\n\005RED32\020\000\022\013\n\007GREEN32\020\001\022\n"
+    "\n\006BLUE32\020\002\032\006\242\262\031\002\010\003Bq\212\262\031m\n\016my::custom::ns"
+    "\022\037turbo/container/flat_hash_map.h\032\034absl:"
+    ":flat_hash_map< %s, %s>\"\032absl::InlinedVe"
+    "ctor<%s, 2>(\002"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_tests_2ftest_2eproto_deps[2] =
     {
@@ -221,7 +221,7 @@ static ::absl::once_flag descriptor_table_tests_2ftest_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_tests_2ftest_2eproto = {
     false,
     false,
-    845,
+    853,
     descriptor_table_protodef_tests_2ftest_2eproto,
     "tests/test.proto",
     &descriptor_table_tests_2ftest_2eproto_once,

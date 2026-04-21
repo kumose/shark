@@ -51,7 +51,7 @@ message Person {
   optional google.protobuf.Any any_one = 100;
   repeated google.protobuf.Any any_two = 101;
   optional string name = 1 [default = "Lothar", deprecated = true];
-  optional int32 age = 2 [(shark.idl.shark_field).is_atomic = true];
+  optional int32 age = 2 [(shark.idl.shark_field) = {is_atomic : true, ctype : "int8_t"}];
   repeated string emails = 3;
   repeated int32  ages = 8;
   map<string, int32> scores = 4;

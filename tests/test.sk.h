@@ -119,8 +119,8 @@ namespace my::custom::ns {
      inline std::vector<std::pair<std::string,std::string>>& mutable_any_two();
     [[deprecated]] inline const std::string& name() const;
     [[deprecated]] inline void set_name(const std::string &v);
-     inline int32_t age() const;
-     inline void age(int32_t value);
+     inline int8_t age() const;
+     inline void age(int8_t value);
      inline const std::vector<std::string>& emails() const;
      inline std::vector<std::string>& mutable_emails();
      inline const std::vector<int32_t>& ages() const;
@@ -158,7 +158,7 @@ namespace my::custom::ns {
     std::pair<std::string,std::string> _any_one;
     std::vector<std::pair<std::string,std::string>> _any_two;
     std::string _name{"Lothar"};
-    std::atomic<int32_t> _age{0};
+    std::atomic<int8_t> _age{0};
     std::vector<std::string> _emails;
     std::vector<int32_t> _ages;
      absl::flat_hash_map<std::string,int32_t> _scores;
@@ -250,10 +250,10 @@ namespace my::custom::ns {
   inline void Person::set_name(const std::string &v) {
     _name = v;
   }
-  inline int32_t Person::age() const {
+  inline int8_t Person::age() const {
     return _age.load();
   }
-  inline void Person::age(int32_t value) {
+  inline void Person::age(int8_t value) {
     _age.store(value);
   }
   /// getter
