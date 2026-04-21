@@ -34,42 +34,23 @@ kmcmake_cc_library(
         NAME idl_proto
         SOURCES
         ${shark_idl_proto_gen_SRCS}
-        ast/code_generator.cc
-        ast/cpp_alias_template.cc
-        ast/cpp_attribute.cc
-        ast/cpp_class.cc
-        ast/cpp_class_template.cc
-        ast/cpp_concept.cc
-        ast/cpp_entity.cc
-        ast/cpp_entity_index.cc
-        ast/cpp_entity_kind.cc
-        ast/cpp_enum.cc
-        ast/cpp_expression.cc
-        ast/cpp_file.cc
-        ast/cpp_forward_declarable.cc
-        ast/cpp_friend.cc
-        ast/cpp_function.cc
-        ast/cpp_function_template.cc
-        ast/cpp_language_linkage.cc
-        ast/cpp_member_function.cc
-        ast/cpp_member_variable.cc
-        ast/cpp_namespace.cc
-        ast/cpp_preprocessor.cc
-        ast/cpp_static_assert.cc
-        ast/cpp_template_parameter.cc
-        ast/cpp_token.cc
-        ast/cpp_type.cc
-        ast/cpp_type_alias.cc
-        ast/cpp_variable.cc
-        ast/cpp_variable_template.cc
-        ast/diagnostic_logger.cc
-        ast/visitor.cc
-        generator/type.cc
-        generator/type_mapper.cc
-        generator/include_manager.cc
-        generator/message_generator.cc
-        generator/enum_generator.cc
-        generator/file_generator.cc
+        generator/message.cc
+        generator/generator.cc
+        generator/field.cc
+        generator/enum.cc
+        generator/helpers.cc
+        generator/extension.cc
+        generator/enum_field.cc
+        generator/file.cc
+        generator/bytes_field.cc
+        generator/message_field.cc
+        generator/primitive_field.cc
+        generator/service.cc
+        generator/string_field.cc
+        generator/map_field.cc
+        generator/global_state.cc
+        generator/oneof_field.cc
+        generator/any_field.cc
         PINCLUDES
         ${PROTOBUF_INCLUDE_DIRS}
         CXXOPTS
@@ -79,21 +60,23 @@ kmcmake_cc_library(
         PUBLIC
 )
 
-kmcmake_cc_library(
+
+kmcmake_cc_binary(
         NAMESPACE ${PROJECT_NAME}
-        NAME generator_cc
+        NAME protoc-gen-sk
         SOURCES
-        generator/enum_codegen.cc
-        PINCLUDES
-        ${PROTOBUF_INCLUDE_DIRS}
+        generator/main.cc
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
-        PLINKS
+        -fsanitize=address
+        LINKS
         ${PROJECT_NAME}::idl_proto_static
         ${KMCMAKE_DEPS_LINK}
+        LINKOPTS
+        -fsanitize=address
         PUBLIC
 )
-
+#[[
 kmcmake_cc_binary(
         NAMESPACE ${PROJECT_NAME}
         NAME protoc_gen_shark
@@ -123,5 +106,6 @@ kmcmake_cc_binary(
         ${KMCMAKE_DEPS_LINK}
         PUBLIC
 )
+]]
 
 ###kmcmake_example

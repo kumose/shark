@@ -47,5 +47,8 @@ docs/xml
 shark/version.h
 tests/config.h
 Testing
-__pychache__
+__pycache__
 _skbuild
+*.egg-info
+dist
+1.txt

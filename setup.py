@@ -12,35 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from skbuild import setup
+from setuptools import setup, find_packages
 import os
 
-from wheel.cli import pack_f
-
-cmake_args_list = []
-km_root = os.getenv('KMPKG_CMAKE', 'no')
-km_tool=''
-if km_root != 'no':
-    km_tool = '-DCMAKE_TOOLCHAIN_FILE=' + km_root
-
-if km_tool != '':
-    cmake_args_list.append(km_tool)
-
 setup(
-    name="shark",
-    version="1.1.5",
+    name="protoc-gen-sk",
+    version="0.1.5",
     description="shark python binding",
     author="Kumo Ins",
-    license="A-GPL",
-    packages=["shark"],
+    license="Apache 2",
+    packages=find_packages("python"),
+    entry_points={
+        "console_scripts": [
+            "protoc-gen-sk = proto_gen_sk.plugin:main",
+        ],
+    },
     package_dir={"": "python"},
-    cmake_install_dir="python/shark",
     python_requires=">=3.8",
-    cmake_args=cmake_args_list,
-    cmake_executable='cmake',
-    language="c++",
     include_package_data=True,
-    package_data={"shark": ["*.pxd"]},
+    package_data={"protoc-gen-sk": ["*.*"]},
     classifiers=[
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
@@ -55,5 +45,4 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
     ],
-    compiler_directives={'language_level': "3"}
 )

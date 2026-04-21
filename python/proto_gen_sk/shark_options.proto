@@ -4,11 +4,6 @@ package shark.idl;
 
 import "google/protobuf/descriptor.proto";
 
-option (shark.idl.shark_file) = {
-  runtime_namespace: "shark::rt"
-  sk_stand: CXX_17
-};
-
 option cc_enable_arenas = true;
 
 // Underlying integer width used by generated runtime enum.
@@ -17,6 +12,7 @@ enum EnumUnderlyingType {
   ENUM_UNDERLYING_U8 = 1;
   ENUM_UNDERLYING_U16 = 2;
   ENUM_UNDERLYING_U32 = 3;
+  ENUM_UNDERLYING_U64 = 4;
 }
 
 // Strategy to provide enum-to-string conversion in generated code.
@@ -45,16 +41,6 @@ message SharkFileOptions {
   optional string                   sk_vector   = 4 [default = "std::vector<%s>"];
   optional CppStand                 sk_stand          = 5 [ default = CXX_17];
   optional SharkEdition             edition           = 6 [ default = SK_EDITION];
-
-  // Suppresses sk.{cc,h} file output completely.
-  optional bool no_generate = 10 [default = false];
-
-  // For oneof fields, set ProtobufCFieldDescriptor name field to the
-  // name of the containing oneof, instead of the field name
-  optional bool use_oneof_field_name = 14 [default = false];
-
-  // Overrides the package name, if present
-  optional string c_package = 15;
 }
 
 // Enum-definition level controls.
@@ -74,8 +60,6 @@ message SharkMessageOptions {
 message SharkFieldOptions {
   optional string            ctype     = 1;
   optional bool              is_atomic = 2;
-  // Treat string as bytes in generated code
-  optional bool string_as_bytes = 11 [default = false];
 }
 
 message SharkEnumValueOptions {
