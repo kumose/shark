@@ -20,23 +20,23 @@
 #include <google/protobuf/wire_format.h>
 
 #include <shark/utility/helpers.h>
-#include <shark/rt/primitive_field.h>
+#include <shark/builder/primitive_field.h>
 #include <shark/utility/compat.h>
 #include <shark/generator/global_state.h>
 
 namespace shark {
-    PrimitiveFieldGenerator::
-    PrimitiveFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
+    PrimitiveFieldSkbGenerator::
+    PrimitiveFieldSkbGenerator(const google::protobuf::FieldDescriptor *descriptor)
         : FieldMetaGenerator(descriptor) {
-        std::string c_type = get_ctype(descriptor_, descriptor->containing_type());
+        std::string c_type = get_ctype(descriptor_, descriptor_->containing_type());
         variables_["c_type"] = c_type;
         is_atomic = _ext_option.is_atomic();
     }
 
-    PrimitiveFieldGenerator::~PrimitiveFieldGenerator() {
+    PrimitiveFieldSkbGenerator::~PrimitiveFieldSkbGenerator() {
     }
 
-    void PrimitiveFieldGenerator::generate_members(google::protobuf::io::Printer *printer) const {
+    void PrimitiveFieldSkbGenerator::generate_members(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
@@ -53,7 +53,7 @@ namespace shark {
         }
     }
 
-    void PrimitiveFieldGenerator::generate_members_declares(google::protobuf::io::Printer *printer) const {
+    void PrimitiveFieldSkbGenerator::generate_members_declares(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
@@ -67,12 +67,12 @@ namespace shark {
         }
     }
 
-    void PrimitiveFieldGenerator::generate_members_inline_implementations(
+    void PrimitiveFieldSkbGenerator::generate_members_inline_implementations(
         google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "inline $c_type$ $domain$::$name$$deprecated$() const {\n");
+                printer->Print(variables_, "inline $c_type$ $domain_skb$::$name$$deprecated$() const {\n");
                 printer->Indent();
                 if (is_atomic) {
                     printer->Print(variables_, "return _$name$.load();\n");
@@ -81,7 +81,7 @@ namespace shark {
                 }
                 printer->Outdent();
                 printer->Print(variables_, "}\n");
-                printer->Print(variables_, "inline void $domain$::$name$$deprecated$($c_type$ value) {\n");
+                printer->Print(variables_, "inline void $domain_skb$::$name$$deprecated$($c_type$ value) {\n");
                 printer->Indent();
                 if (is_atomic) {
                     printer->Print(variables_, "_$name$.store(value);\n");
@@ -94,12 +94,12 @@ namespace shark {
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
                 printer->Print(
-                    variables_, "inline const std::vector<$c_type$>& $domain$::$name$$deprecated$() const {\n");
+                    variables_, "inline const std::vector<$c_type$>& $domain_skb$::$name$$deprecated$() const {\n");
                 printer->Indent();
                 printer->Print(variables_, "return _$name$$deprecated$;\n");
                 printer->Outdent();
                 printer->Print(variables_, "}\n");
-                printer->Print(variables_, "inline std::vector<$c_type$>& $domain$::mutable_$name$$deprecated$() {\n");
+                printer->Print(variables_, "inline std::vector<$c_type$>& $domain_skb$::mutable_$name$$deprecated$() {\n");
                 printer->Indent();
                 printer->Print(variables_, "return _$name$;\n");
                 printer->Outdent();
@@ -108,7 +108,7 @@ namespace shark {
         }
     }
 
-    void PrimitiveFieldGenerator::generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const {
+    void PrimitiveFieldSkbGenerator::generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
@@ -132,7 +132,7 @@ namespace shark {
 
     }
 
-    void PrimitiveFieldGenerator::generate_move_ctor_define(google::protobuf::io::Printer *printer) const {
+    void PrimitiveFieldSkbGenerator::generate_move_ctor_define(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
@@ -148,7 +148,7 @@ namespace shark {
                 break;
         }
     }
-    void PrimitiveFieldGenerator::generate_copy_ctor_define(google::protobuf::io::Printer *printer) const {
+    void PrimitiveFieldSkbGenerator::generate_copy_ctor_define(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
@@ -165,7 +165,7 @@ namespace shark {
         }
     }
 
-    void PrimitiveFieldGenerator::generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const {
+    void PrimitiveFieldSkbGenerator::generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
@@ -186,7 +186,7 @@ namespace shark {
         }
     }
 
-    std::string PrimitiveFieldGenerator::do_get_default_value(void) const {
+    std::string PrimitiveFieldSkbGenerator::do_get_default_value(void) const {
         switch (descriptor_->cpp_type()) {
             case google::protobuf::FieldDescriptor::CPPTYPE_INT32:
                 return turbo::str_cat(descriptor_->default_value_int32());
@@ -208,14 +208,14 @@ namespace shark {
         }
     }
 
-    std::string PrimitiveFieldGenerator::get_default_value() const {
+    std::string PrimitiveFieldSkbGenerator::get_default_value() const {
         return do_get_default_value();
     }
 
 
-    void PrimitiveFieldGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
+    void PrimitiveFieldSkbGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
     }
 
-    void PrimitiveFieldGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
+    void PrimitiveFieldSkbGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
     }
 } // namespace shark

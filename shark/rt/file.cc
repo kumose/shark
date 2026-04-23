@@ -28,7 +28,7 @@
 #include <shark/rt/service.h>
 #include <shark/version.h>
 #include <turbo/strings/str_replace.h>
-#include <shark/meta/global_state.h>
+#include <shark/generator/global_state.h>
 
 namespace shark {
     // ===================================================================

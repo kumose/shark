@@ -20,16 +20,16 @@
 
 #include <shark/idl/shark_options.pb.h>
 
-#include <shark/skb/builder/enum.h>
-#include <shark/skb/builder/extension.h>
+#include <shark/builder/enum.h>
+#include <shark/builder/extension.h>
 #include <shark/skb/file.h>
 #include <shark/utility/helpers.h>
-#include <shark/skb/builder/message.h>
-#include <shark/skb/view/message.h>
-#include <shark/skb/builder/service.h>
+#include <shark/builder/message.h>
+#include <shark/view/message.h>
+#include <shark/builder/service.h>
 #include <shark/version.h>
 #include <turbo/strings/str_replace.h>
-#include <shark/meta/global_state.h>
+#include <shark/generator/global_state.h>
 
 namespace shark {
     // ===================================================================

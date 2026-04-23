@@ -26,17 +26,17 @@
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/stubs/common.h>
 
-#include <shark/skb/builder/enum.h>
-#include <shark/skb/builder/extension.h>
+#include <shark/builder/enum.h>
+#include <shark/builder/extension.h>
 #include <shark/generator/field_map.h>
-#include <shark/skb/builder/message.h>
-#include <shark/skb/builder/service.h>
+#include <shark/builder/message.h>
+#include <shark/builder/service.h>
 
-#include <shark/skb/view/enum.h>
-#include <shark/skb/view/extension.h>
+#include <shark/view/enum.h>
+#include <shark/view/extension.h>
 #include <shark/generator/field_map.h>
-#include <shark/skb/view/message.h>
-#include <shark/skb/view/service.h>
+#include <shark/view/message.h>
+#include <shark/view/service.h>
 
 namespace shark {
     class FileSkbGenerator {

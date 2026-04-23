@@ -32,9 +32,9 @@ kmcmake_cc_proto(
 
 
 set(GENERATOR_SRC
-        meta/global_state.cc
-        meta/field_base.cc
-        meta/field_meta.cc
+        generator/global_state.cc
+        generator/field_base.cc
+        generator/field_meta.cc
         generator/generator.cc
         generator/field_map.cc
         rt/any_field.cc
@@ -50,30 +50,30 @@ set(GENERATOR_SRC
         rt/primitive_field.cc
         rt/service.cc
         rt/string_field.cc
-        skb/builder/bytes_field.cc
-        skb/builder/enum.cc
-        skb/builder/enum_field.cc
-        skb/builder/extension.cc
-        skb/builder/any_field.cc
-        skb/builder/map_field.cc
-        skb/builder/message.cc
-        skb/builder/message_field.cc
-        skb/builder/oneof_field.cc
-        skb/builder/primitive_field.cc
-        skb/builder/service.cc
-        skb/builder/string_field.cc
-        skb/view/bytes_field.cc
-        skb/view/enum.cc
-        skb/view/enum_field.cc
-        skb/view/extension.cc
-        skb/view/any_field.cc
-        skb/view/map_field.cc
-        skb/view/message.cc
-        skb/view/message_field.cc
-        skb/view/oneof_field.cc
-        skb/view/primitive_field.cc
-        skb/view/service.cc
-        skb/view/string_field.cc
+        builder/bytes_field.cc
+        builder/enum.cc
+        builder/enum_field.cc
+        builder/extension.cc
+        builder/any_field.cc
+        builder/map_field.cc
+        builder/message.cc
+        builder/message_field.cc
+        builder/oneof_field.cc
+        builder/primitive_field.cc
+        builder/service.cc
+        builder/string_field.cc
+        view/bytes_field.cc
+        view/enum.cc
+        view/enum_field.cc
+        view/extension.cc
+        view/any_field.cc
+        view/map_field.cc
+        view/message.cc
+        view/message_field.cc
+        view/oneof_field.cc
+        view/primitive_field.cc
+        view/service.cc
+        view/string_field.cc
         skb/file.cc
         utility/helpers.cc
         utility/uri.cc

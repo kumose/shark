@@ -18,7 +18,7 @@
 #include <turbo/strings/str_split.h>
 #include <turbo/strings/str_replace.h>
 #include <turbo/strings/strip.h>
-#include <shark/meta/global_state.h>
+#include <shark/generator/global_state.h>
 
 namespace shark {
     const char *const kKeywordList[] = {

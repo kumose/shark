@@ -26,8 +26,8 @@
 #include <shark/idl/shark_options.pb.h>
 #include <turbo/utility/status.h>
 #include <shark/utility/helpers.h>
-#include <shark/meta/global_state.h>
-#include <shark/meta/field_meta.h>
+#include <shark/generator/global_state.h>
+#include <shark/generator/field_meta.h>
 namespace shark {
 
     // Convenience class which constructs FieldGenerators for a Descriptor.
