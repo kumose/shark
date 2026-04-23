@@ -48,12 +48,6 @@ namespace shark {
 
         // Source file stuff.
 
-        // Generate the ProtobufCEnumDescriptor for this enum
-        void GenerateEnumDescriptor(google::protobuf::io::Printer *printer);
-
-        // Generate static initializer for a ProtobufCEnumValue
-        // given the index of the value in the enum.
-        void GenerateValueInitializer(google::protobuf::io::Printer *printer, int index);
 
     private:
         const google::protobuf::EnumDescriptor *descriptor_;

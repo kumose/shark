@@ -190,9 +190,7 @@ namespace shark {
         for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->GenerateMessageDescriptor(printer);
         }
-        for (int i = 0; i < _file->enum_type_count(); i++) {
-            enum_generators_[i]->GenerateEnumDescriptor(printer);
-        }
+
         for (int i = 0; i < _file->service_count(); i++) {
             service_generators_[i]->GenerateCFile(printer);
         }

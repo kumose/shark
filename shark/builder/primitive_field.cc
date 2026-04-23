@@ -213,9 +213,4 @@ namespace shark {
     }
 
 
-    void PrimitiveFieldSkbGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
-    }
-
-    void PrimitiveFieldSkbGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
-    }
 } // namespace shark

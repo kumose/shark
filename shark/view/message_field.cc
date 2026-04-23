@@ -102,9 +102,5 @@ namespace shark {
         return "";
     }
 
-    void MessageFieldViewGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
-    }
 
-    void MessageFieldViewGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
-    }
 } // namespace shark

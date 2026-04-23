@@ -162,9 +162,5 @@ namespace shark {
     }
 
 
-    void PrimitiveFieldViewGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
-    }
 
-    void PrimitiveFieldViewGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
-    }
 } // namespace shark

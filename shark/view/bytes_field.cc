@@ -137,10 +137,6 @@ namespace shark {
        return  "\"" + CEscape(descriptor_->default_value_string()) + "\"";
     }
 
-    void BytesFieldViewGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
 
-    }
 
-    void BytesFieldViewGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
-    }
 } // namespace shark

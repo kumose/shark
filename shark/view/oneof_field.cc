@@ -326,9 +326,5 @@ namespace shark {
         return do_get_default_value();
     }
 
-    void OneofFieldViewGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
-    }
 
-    void OneofFieldViewGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
-    }
 } // namespace shark

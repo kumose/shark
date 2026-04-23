@@ -13,7 +13,7 @@
 // limitations under the License.
 //
 
-#include <shark/meta/meta_file.h>
+#include <shark/descriptor/meta_file.h>
 
 namespace shark {
 

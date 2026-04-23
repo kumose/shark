@@ -45,8 +45,6 @@ namespace shark {
 
         void generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const override;
 
-        void GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const;
-
 
         void GenerateDefaultValueImplementations(google::protobuf::io::Printer *printer) const;
 
@@ -55,6 +53,5 @@ namespace shark {
 
         std::string get_default_value(void) const override;
 
-        void GenerateStaticInit(google::protobuf::io::Printer *printer) const;
     };
 } // namespace shark

@@ -21,10 +21,28 @@
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/stubs/common.h>
-#include <shark/meta/meta_message.h>
+#include <shark/descriptor/meta_message.h>
 
 namespace shark {
+    MetaMessageGenerator::MetaMessageGenerator(const google::protobuf::Descriptor *descriptor,
+                                               const std::string &dllexport_decl)
+        : MessageGeneratorBase(descriptor, dllexport_decl),
+          _field_generators(descriptor) {
+    }
 
+    void MetaMessageGenerator::generate_fwd_typedef(google::protobuf::io::Printer *printer) {
+        printer->Print("///////////////////////////////////////////////////////////////////////// \n");
+        printer->Print("/// serialize meta \n");
+        printer->Print("class $classname$Meta;\n");
+    }
+
+    void MetaMessageGenerator::generate_definition(google::protobuf::io::Printer *printer) {
+        printer->Print("///////////////////////////////////////////////////////////////////////// \n");
+        printer->Print("/// serialize meta \n");
+        printer->Print(_variables, "class $classname$Meta {\n");
+        printer->Print("public:\n");
+        printer->Print("};\n");
+    }
 } // namespace shark
 
 /*

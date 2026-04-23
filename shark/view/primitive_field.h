@@ -41,11 +41,9 @@ namespace shark {
         void generate_members_inline_implementations(google::protobuf::io::Printer *printer) const override;
         void generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const override;
         void generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const;
-        void GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const;
 
         std::string get_default_value(void) const override;
 
-        void GenerateStaticInit(google::protobuf::io::Printer *printer) const;
         std::string do_get_default_value(void) const;
     private:
         bool is_atomic{false};

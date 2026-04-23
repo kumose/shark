@@ -146,11 +146,7 @@ namespace shark {
         return "";
     }
 
-    void MessageFieldSkbGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
 
-    }
 
-    void MessageFieldSkbGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
 
-    }
 } // namespace shark

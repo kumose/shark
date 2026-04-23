@@ -111,10 +111,5 @@ namespace shark {
         return "";
     }
 
-    void AnyFieldViewGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
 
-    }
-
-    void AnyFieldViewGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
-    }
 } // namespace shark

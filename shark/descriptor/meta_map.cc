@@ -20,17 +20,9 @@
 #include <google/protobuf/stubs/common.h>
 
 #include <shark/idl/shark_options.pb.h>
-
-#include <shark/rt/bytes_field.h>
-#include <shark/rt/enum_field.h>
-#include <shark/meta/meta_map.h>
+#include <shark/descriptor/meta_map.h>
 #include <shark/utility/helpers.h>
-#include <shark/rt/message_field.h>
-#include <shark/rt/primitive_field.h>
-#include <shark/rt/string_field.h>
 #include <shark/utility/compat.h>
-#include <shark/rt/map_field.h>
-#include <shark/rt/any_field.h>
 
 namespace shark {
 

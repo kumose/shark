@@ -155,10 +155,5 @@ namespace shark {
         return "";
     }
 
-    void AnyFieldGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
 
-    }
-
-    void AnyFieldGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
-    }
 } // namespace shark

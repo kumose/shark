@@ -221,9 +221,7 @@ namespace shark {
         for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->GenerateMessageDescriptor(printer);
         }
-        for (int i = 0; i < _file->enum_type_count(); i++) {
-            enum_generators_[i]->GenerateEnumDescriptor(printer);
-        }
+
 
         printer->Outdent();
         printer->Print("}  // $NS$\n\n",

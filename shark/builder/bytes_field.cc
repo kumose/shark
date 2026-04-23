@@ -149,10 +149,6 @@ namespace shark {
        return  "\"" + CEscape(descriptor_->default_value_string()) + "\"";
     }
 
-    void BytesFieldSkbGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
 
-    }
 
-    void BytesFieldSkbGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
-    }
 } // namespace shark

@@ -20,7 +20,7 @@
 #include <string_view>
 #include <shark/generator/field_map.h>
 
-#include "shark/utility/uri.h"
+#include <shark/utility/uri.h>
 
 
 namespace shark {
@@ -53,7 +53,6 @@ namespace shark {
 
         void generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const;
 
-        void GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const;
 
 
         void GenerateDefaultValueImplementations(google::protobuf::io::Printer *printer) const;
@@ -63,7 +62,6 @@ namespace shark {
 
         std::string get_default_value(void) const;
 
-        void GenerateStaticInit(google::protobuf::io::Printer *printer) const;
 
     private:
         std::string get_field_view(const google::protobuf::FieldDescriptor *field) const;

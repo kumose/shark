@@ -21,38 +21,42 @@
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/stubs/common.h>
+#include <shark/descriptor/meta_map.h>
+#include <shark/generator/message.h>
 
 namespace shark {
     class MetaMessageGenerator : public MessageGeneratorBase {
     public:
         // See generator.cc for the meaning of dllexport_decl.
         explicit MetaMessageGenerator(const google::protobuf::Descriptor *descriptor,
-                                      const std::string &dllexport_decl) : MessageGeneratorBase(
-            descriptor, dllexport_decl) {
-        }
+                                      const std::string &dllexport_decl);
 
-        virtual ~MetaMessageGenerator() = default;
+        ~MetaMessageGenerator() override = default;
 
         /// header region
-        virtual void generate_fwd_typedef(google::protobuf::io::Printer *printer) = 0;
+        void generate_fwd_typedef(google::protobuf::io::Printer *printer) override;
 
-        virtual void generate_definition(google::protobuf::io::Printer *printer) = 0;
+        void generate_definition(google::protobuf::io::Printer *printer) override;
 
-        virtual void generate_inline_implement(google::protobuf::io::Printer *printer) = 0;
+        void generate_inline_implement(google::protobuf::io::Printer *printer) override {
+
+        }
 
 
         /// source range
-        virtual void generate_static_variable(google::protobuf::io::Printer *printer) = 0;
+        void generate_static_variable(google::protobuf::io::Printer *printer) override {
 
-        virtual void generate_static_functions(google::protobuf::io::Printer *printer) = 0;
+        }
 
-        virtual void generate_implement(google::protobuf::io::Printer *printer) = 0;
+        void generate_static_functions(google::protobuf::io::Printer *printer) override {
 
-        bool have_oneof() const {
-            return _have_one_of;
+        }
+
+        void generate_implement(google::protobuf::io::Printer *printer) override {
+
         }
 
     private:
-
+        FieldMetaMap _field_generators;
     };
 } // namespace shark

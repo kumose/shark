@@ -114,10 +114,5 @@ namespace shark {
         return do_get_default_value();
     }
 
-    void EnumFieldViewGenerator::GenerateStaticInit(google::protobuf::io::Printer *printer) const {
-    }
 
-    void EnumFieldViewGenerator::GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const {
-
-    }
 } // namespace shark

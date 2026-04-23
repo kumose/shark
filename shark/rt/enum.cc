@@ -127,11 +127,5 @@ namespace shark {
         compat::StringView name;
     };
 
-    void EnumGenerator::GenerateValueInitializer(google::protobuf::io::Printer *printer, int index) {
 
-    }
-
-    void EnumGenerator::GenerateEnumDescriptor(google::protobuf::io::Printer *printer) {
-
-    }
 } // namespace shark

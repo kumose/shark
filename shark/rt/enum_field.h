@@ -46,12 +46,9 @@ namespace shark {
         void generate_move_ctor_define(google::protobuf::io::Printer *printer) const override;
         void generate_copy_ctor_define(google::protobuf::io::Printer *printer) const override;
 
-        void GenerateDescriptorInitializer(google::protobuf::io::Printer *printer) const;
 
         std::string do_get_default_value(void) const;
         std::string get_default_value(void) const override;
-
-        void GenerateStaticInit(google::protobuf::io::Printer *printer) const;
 
     };
 } // namespace shark

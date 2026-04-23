@@ -40,9 +40,10 @@ set(GENERATOR_SRC
         generator/rt_file.cc
         generator/skb_file.cc
         generator/message.cc
-        meta/meta_map.cc
-        meta/meta_file.cc
-        meta/meta_message.cc
+        generator/oneof_field.cc
+        descriptor/meta_map.cc
+        descriptor/meta_file.cc
+        descriptor/meta_message.cc
         rt/any_field.cc
         rt/bytes_field.cc
         rt/enum.cc
