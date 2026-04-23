@@ -21,7 +21,7 @@
 #include <map>
 #include <string>
 
-#include <shark/skb/view/field_map.h>
+#include <shark/generator/field_map.h>
 
 namespace shark {
     class PrimitiveFieldViewGenerator : public FieldMetaGenerator {

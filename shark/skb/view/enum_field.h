@@ -24,7 +24,7 @@
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 
-#include <shark/skb/view/field_map.h>
+#include <shark/generator/field_map.h>
 
 namespace shark {
     class EnumFieldViewGenerator : public FieldMetaGenerator {

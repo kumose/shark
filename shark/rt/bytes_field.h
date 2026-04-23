@@ -22,7 +22,7 @@
 
 #include <google/protobuf/io/printer.h>
 
-#include <shark/rt/field_map.h>
+#include <shark/generator/field_map.h>
 
 namespace shark {
     class BytesFieldGenerator : public FieldMetaGenerator {

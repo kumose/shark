@@ -14,7 +14,6 @@
 //
 
 
-
 #pragma once
 
 
@@ -39,30 +38,19 @@
 #include <shark/skb/view/service.h>
 
 namespace shark {
-    class FileSkbGenerator {
+    class FileGeneratorBase {
     public:
         // See generator.cc for the meaning of dllexport_decl.
-        explicit FileSkbGenerator(const google::protobuf::FileDescriptor *file,
-                               const std::string &dllexport_decl);
+        explicit FileGeneratorBase(const google::protobuf::FileDescriptor *file) : _file(file) {
+        }
 
-        ~FileSkbGenerator();
+        virtual ~FileGeneratorBase() = default;
 
-        void GenerateHeader(google::protobuf::io::Printer *printer);
+        virtual void generate_header(google::protobuf::io::Printer *printer) = 0;
 
-        void GenerateSource(google::protobuf::io::Printer *printer);
+        virtual void GenerateSource(google::protobuf::io::Printer *printer) = 0;
 
-    private:
-        const google::protobuf::FileDescriptor *file_;
-        bool  _have_one_of{false};
-
-        std::vector<std::unique_ptr<MessageSkbGenerator>> message_generators_;
-        std::vector<std::unique_ptr<EnumSkbGenerator>> enum_generators_;
-        std::vector<std::unique_ptr<ServiceSkbGenerator>> service_generators_;
-        std::vector<std::unique_ptr<ExtensionSkbGenerator>> extension_generators_;
-
-        std::vector<std::unique_ptr<MessageViewGenerator>> message_view_generators_;
-        std::vector<std::unique_ptr<EnumViewGenerator>> enum_view_generators_;
-        std::vector<std::unique_ptr<ServiceViewGenerator>> service_view_generators_;
-        std::vector<std::unique_ptr<ExtensionViewGenerator>> extension_view_generators_;
+    protected:
+        const google::protobuf::FileDescriptor *_file{nullptr};
     };
 } // namespace shark

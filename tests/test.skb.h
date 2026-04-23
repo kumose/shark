@@ -10,8 +10,8 @@
 #include <tests/test.pb.h>
 #include <tests/test.sk.h>
 #include <shark/shark.h>
-#include <turbo/container/flat_hash_map.h>
 #include <atomic>
+#include <turbo/container/flat_hash_map.h>
 
 
 
@@ -182,26 +182,32 @@ namespace my::custom::ns {
       public:
         ////////////////////// getters
 
-        inline shark::StringView region() const;
-        inline shark::StringView prcode() const;
+        inline const std::string& region() const;
+        inline void set_region(const std::string &v);
+        inline const std::string& prcode() const;
+        inline void set_prcode(const std::string &v);
       private:
         ////////////////////// members
-        shark::StringView _region;
-        shark::StringView _prcode;
+        std::string _region;
+        std::string _prcode;
         ////////////////////// unions
       };
       /// -----enums-------- 
     public:
       ////////////////////// getters
 
-      inline shark::StringView street() const;
-      inline shark::PrimitiveView<int32_t> number() const;
-      inline shark::MessageView<DetailView> detail() const;
+      inline const std::string& street() const;
+      inline void set_street(const std::string &v);
+      inline int32_t number() const;
+      inline void number(int32_t value);
+      inline const Detail& detail() const;
+      inline void set_detail(const Detail& val);
+      inline void set_detail(Detail&& val);
     private:
       ////////////////////// members
-      shark::StringView _street;
-      shark::PrimitiveView<int32_t> _number;
-      shark::MessageView<DetailView> _detail;
+      std::string _street;
+      int32_t _number;
+      Detail _detail;
       ////////////////////// unions
     };
     using kindCase = Person::kindCase;
@@ -226,17 +232,30 @@ namespace my::custom::ns {
   public:
     ////////////////////// getters
 
-    inline shark::AnyView any_one() const;
-    inline shark::AnyView any_two() const;
-    [[deprecated]] inline shark::StringView name() const;
-    inline shark::PrimitiveView<int8_t> age() const;
-    inline shark::StringView emails() const;
-    inline shark::PrimitiveView<int32_t> ages() const;
-    inline shark::MapView<std::string,int32_t> scores() const;
-    inline shark::EnumView<Color> favorite_color() const;
-    inline shark::MessageView<AddressView> address() const;
-    inline shark::MessageView<AddressView> address2() const;
-    inline shark::StringView long_name() const;
+    inline const std::pair<std::string,std::string>& any_one() const;
+    inline void set_any_one(const std::pair<std::string,std::string> &v);
+    inline const std::vector<std::pair<std::string,std::string>>& any_two() const;
+    inline std::vector<std::pair<std::string,std::string>>& mutable_any_two();
+    [[deprecated]] inline const std::string& name() const;
+    [[deprecated]] inline void set_name(const std::string &v);
+    inline int8_t age() const;
+    inline void age(int8_t value);
+    inline const std::vector<std::string>& emails() const;
+    inline std::vector<std::string>& mutable_emails();
+    inline const std::vector<int32_t>& ages() const;
+    inline std::vector<int32_t>& mutable_ages();
+    inline const absl::flat_hash_map<std::string,int32_t>& scores() const;
+    inline void set_scores(const absl::flat_hash_map<std::string,int32_t> &v);
+    inline Color favorite_color() const;
+    inline void set_favorite_color(Color value);
+    inline const Address& address() const;
+    inline void set_address(const Address& val);
+    inline void set_address(Address&& val);
+    inline const Address& address2() const;
+    inline void set_address2(const Address& val);
+    inline void set_address2(Address&& val);
+    inline const std::string& long_name() const;
+    inline void set_long_name(const std::string &v);
     inline shark::OneOfView<Kind> kind() const;
     ///////////////////////////////////////////////////////////////////////// 
     /// serialize meta 
@@ -276,17 +295,17 @@ namespace my::custom::ns {
 
   private:
     ////////////////////// members
-    shark::AnyView _any_one;
-    shark::AnyView _any_two;
-    shark::StringView _name;
-    shark::PrimitiveView<int8_t> _age;
-    shark::StringView _emails;
-    shark::PrimitiveView<int32_t> _ages;
-    shark::MapView<std::string,int32_t> _scores;
-    shark::EnumView<Color> _favorite_color;
-    shark::MessageView<AddressView> _address;
-    shark::MessageView<AddressView> _address2;
-    shark::StringView _long_name;
+    std::pair<std::string,std::string> _any_one;
+    std::vector<std::pair<std::string,std::string>> _any_two;
+    std::string _name;
+    int8_t _age;
+    std::vector<std::string> _emails;
+    std::vector<int32_t> _ages;
+    absl::flat_hash_map<std::string,int32_t> _scores;
+    Color _favorite_color;
+    Address _address;
+    Address _address2;
+    std::string _long_name;
     ////////////////////// unions
     shark::OneOfView<Kind> _kind;
 
@@ -310,69 +329,139 @@ namespace my::custom::ns {
   }
 
   /// getter
-  inline shark::StringView PersonView::AddressView::DetailView::region() const {
+  inline const std::string& Person::Address::Detail::region() const {
     return _region;
   }
+  /// setter
+  inline void Person::Address::Detail::set_region(const std::string &v) {
+    _region = v;
+  }
   /// getter
-  inline shark::StringView PersonView::AddressView::DetailView::prcode() const {
+  inline const std::string& Person::Address::Detail::prcode() const {
     return _prcode;
+  }
+  /// setter
+  inline void Person::Address::Detail::set_prcode(const std::string &v) {
+    _prcode = v;
   }
   inline const google::protobuf::Descriptor* PersonView::AddressView::descriptor() const {
     return get_descriptor();
   }
 
   /// getter
-  inline shark::StringView PersonView::AddressView::street() const {
+  inline const std::string& Person::Address::street() const {
     return _street;
   }
-  inline shark::PrimitiveView<int32_t> PersonView::AddressView::number() const {
+  /// setter
+  inline void Person::Address::set_street(const std::string &v) {
+    _street = v;
+  }
+  inline int32_t Person::Address::number() const {
     return _number;
   }
-  inline shark::MessageView<PersonView::AddressView::DetailView> PersonView::AddressView::detail() const {
+  inline void Person::Address::number(int32_t value) {
+    _number = value;
+  }
+  inline const Person::Address::Detail& Person::Address::detail() const {
     return _detail;
+  }
+  inline void Person::Address::set_detail(const Detail& val) {
+    _detail = val;
+  }
+  inline void Person::Address::set_detail(Detail&& val) {
+    _detail = std::move(val);
   }
   inline const google::protobuf::Descriptor* PersonView::descriptor() const {
     return get_descriptor();
   }
 
   /// getter
-  inline shark::AnyView PersonView::any_one() const {
+  inline const std::pair<std::string,std::string>& Person::any_one() const {
     return _any_one;
   }
+  /// setter
+  inline void Person::set_any_one(const std::pair<std::string,std::string> &v) {
+    _any_one = v;
+  }
   /// getter
-  inline shark::AnyView PersonView::any_two() const {
+  inline const std::vector<std::pair<std::string,std::string>>& Person::any_two() const {
     return _any_two;
   }
+
+  /// setter
+  inline std::vector<std::pair<std::string,std::string>>& Person::mutable_any_two() {
+    return _any_two;
+  }
+
   /// getter
-  inline shark::StringView PersonView::name() const {
+  inline const std::string& Person::name() const {
     return _name;
   }
-  inline shark::PrimitiveView<int8_t> PersonView::age() const {
+  /// setter
+  inline void Person::set_name(const std::string &v) {
+    _name = v;
+  }
+  inline int8_t Person::age() const {
     return _age;
   }
+  inline void Person::age(int8_t value) {
+    _age = value;
+  }
   /// getter
-  inline shark::StringView PersonView::emails() const {
+  inline const std::vector<std::string>& Person::emails() const {
     return _emails;
   }
-  inline shark::PrimitiveView<int32_t> PersonView::ages() const {
+
+  /// setter
+  inline std::vector<std::string>& Person::mutable_emails() {
+    return _emails;
+  }
+
+  inline const std::vector<int32_t>& Person::ages() const {
+    return _ages;
+  }
+  inline std::vector<int32_t>& Person::mutable_ages() {
     return _ages;
   }
   /// getter
-  inline shark::MapView<std::string,int32_t> PersonView::scores() const {
+  inline const absl::flat_hash_map<std::string,int32_t>& Person::scores() const {
     return _scores;
   }
-  inline shark::EnumView<Color> PersonView::favorite_color() const {
+  /// setter
+  inline void Person::set_scores(const absl::flat_hash_map<std::string,int32_t> &v) {
+    _scores = v;
+  }
+  inline Color Person::favorite_color() const {
     return _favorite_color;
   }
-  inline shark::MessageView<PersonView::AddressView> PersonView::address() const {
+  inline void Person::set_favorite_color(Color value) {
+    _favorite_color = value;
+  }
+  inline const Person::Address& Person::address() const {
     return _address;
   }
-  inline shark::MessageView<PersonView::AddressView> PersonView::address2() const {
+  inline void Person::set_address(const Address& val) {
+    _address = val;
+  }
+  inline void Person::set_address(Address&& val) {
+    _address = std::move(val);
+  }
+  inline const Person::Address& Person::address2() const {
     return _address2;
   }
+  inline void Person::set_address2(const Address& val) {
+    _address2 = val;
+  }
+  inline void Person::set_address2(Address&& val) {
+    _address2 = std::move(val);
+  }
   /// getter
-  inline shark::StringView PersonView::long_name() const {
+  inline const std::string& Person::long_name() const {
     return _long_name;
+  }
+  /// setter
+  inline void Person::set_long_name(const std::string &v) {
+    _long_name = v;
   }
   inline shark::OneOfView<PersonView::Kind> PersonView::kind() const {;
     return _kind;

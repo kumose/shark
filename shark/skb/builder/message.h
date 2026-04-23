@@ -26,7 +26,7 @@
 #include <shark/skb/builder/oneof_field.h>
 #include <shark/skb/builder/enum.h>
 #include <shark/skb/builder/extension.h>
-#include <shark/skb/builder/field_map.h>
+#include <shark/generator/field_map.h>
 
 namespace shark {
     class MessageSkbGenerator {
@@ -65,7 +65,7 @@ namespace shark {
 
         const google::protobuf::Descriptor *descriptor_;
         std::string dllexport_decl_;
-        FieldSkbGeneratorMap field_generators_;
+        FieldGeneratorMap field_generators_;
         std::vector<std::unique_ptr<MessageSkbGenerator> > nested_generators_;
         std::vector<std::unique_ptr<EnumSkbGenerator> > enum_generators_;
         std::vector<std::unique_ptr<ExtensionSkbGenerator> > extension_generators_;

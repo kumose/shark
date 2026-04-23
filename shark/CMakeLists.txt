@@ -36,12 +36,12 @@ set(GENERATOR_SRC
         meta/field_base.cc
         meta/field_meta.cc
         generator/generator.cc
+        generator/field_map.cc
         rt/any_field.cc
         rt/bytes_field.cc
         rt/enum.cc
         rt/enum_field.cc
         rt/extension.cc
-        rt/field_map.cc
         rt/file.cc
         rt/map_field.cc
         rt/message.cc
@@ -54,7 +54,6 @@ set(GENERATOR_SRC
         skb/builder/enum.cc
         skb/builder/enum_field.cc
         skb/builder/extension.cc
-        skb/builder/field_map.cc
         skb/builder/any_field.cc
         skb/builder/map_field.cc
         skb/builder/message.cc
@@ -67,7 +66,6 @@ set(GENERATOR_SRC
         skb/view/enum.cc
         skb/view/enum_field.cc
         skb/view/extension.cc
-        skb/view/field_map.cc
         skb/view/any_field.cc
         skb/view/map_field.cc
         skb/view/message.cc
@@ -117,7 +115,7 @@ kmcmake_cc_binary(
         NAMESPACE ${PROJECT_NAME}
         NAME protoc-gen-sk
         SOURCES
-        generator/main.cc
+        main.cc
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
         -fsanitize=address

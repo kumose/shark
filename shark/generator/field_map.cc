@@ -23,7 +23,7 @@
 
 #include <shark/rt/bytes_field.h>
 #include <shark/rt/enum_field.h>
-#include <shark/rt/field_map.h>
+#include <shark/generator/field_map.h>
 #include <shark/utility/helpers.h>
 #include <shark/rt/message_field.h>
 #include <shark/rt/primitive_field.h>

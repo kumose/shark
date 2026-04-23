@@ -26,7 +26,7 @@
 #include <shark/rt/oneof_field.h>
 #include <shark/rt/enum.h>
 #include <shark/rt/extension.h>
-#include <shark/rt/field_map.h>
+#include <shark/generator/field_map.h>
 
 namespace shark {
     class MessageGenerator {

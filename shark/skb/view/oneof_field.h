@@ -18,7 +18,7 @@
 #include <map>
 #include <string>
 #include <string_view>
-#include <shark/skb/view/field_map.h>
+#include <shark/generator/field_map.h>
 
 #include "shark/utility/uri.h"
 

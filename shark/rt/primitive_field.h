@@ -21,7 +21,7 @@
 #include <map>
 #include <string>
 
-#include <shark/rt/field_map.h>
+#include <shark/generator/field_map.h>
 
 namespace shark {
     class PrimitiveFieldGenerator : public FieldMetaGenerator {
