@@ -68,6 +68,9 @@ message Person {
   oneof kind {
     string aaa = 10;
     uint32  bbb = 12;
+    Address ddd  = 13;
   }
   optional Address address = 6;
+  optional Address address2 = 17;
+  optional string long_name = 18;
 }

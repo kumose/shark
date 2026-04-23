@@ -20,6 +20,8 @@ set(SHARK_IDL_PROTO_FILES
         idl/shark_options.proto
 )
 
+include_directories(include)
+
 kmcmake_cc_proto(
         NAME shark_idl_proto_gen
         PROTOS
@@ -48,8 +50,36 @@ set(GENERATOR_SRC
         rt/primitive_field.cc
         rt/service.cc
         rt/string_field.cc
+        skb/builder/bytes_field.cc
+        skb/builder/enum.cc
+        skb/builder/enum_field.cc
+        skb/builder/extension.cc
+        skb/builder/field_map.cc
+        skb/builder/any_field.cc
+        skb/builder/map_field.cc
+        skb/builder/message.cc
+        skb/builder/message_field.cc
+        skb/builder/oneof_field.cc
+        skb/builder/primitive_field.cc
+        skb/builder/service.cc
+        skb/builder/string_field.cc
+        skb/view/bytes_field.cc
+        skb/view/enum.cc
+        skb/view/enum_field.cc
+        skb/view/extension.cc
+        skb/view/field_map.cc
+        skb/view/any_field.cc
+        skb/view/map_field.cc
+        skb/view/message.cc
+        skb/view/message_field.cc
+        skb/view/oneof_field.cc
+        skb/view/primitive_field.cc
+        skb/view/service.cc
+        skb/view/string_field.cc
+        skb/file.cc
         utility/helpers.cc
         utility/uri.cc
+        utility/type.cc
 )
 
 kmcmake_cc_library(
@@ -68,6 +98,20 @@ kmcmake_cc_library(
         UNITY
 )
 
+kmcmake_cc_library(
+        NAMESPACE ${PROJECT_NAME}
+        NAME shark
+        SOURCES
+        lib/shark.cc
+        PINCLUDES
+        ${PROTOBUF_INCLUDE_DIRS}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        PLINKS
+        ${KMCMAKE_DEPS_LINK}
+        PUBLIC
+        UNITY
+)
 
 kmcmake_cc_binary(
         NAMESPACE ${PROJECT_NAME}

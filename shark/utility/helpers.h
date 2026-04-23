@@ -1,7 +1,3 @@
-// SPDX-License-Identifier: BSD-3-Clause
-// Based on Google Protobuf (https://github.com/protocolbuffers/protobuf) and protobuf-c
-// (https://github.com/protobuf-c/protobuf-c)
-// Copyright 2008 Google Inc., 2008-2025 protobuf-c authors. Modifications for C++ generation.
 // Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 
 
 #pragma once
@@ -33,22 +30,9 @@
 #include <turbo/strings/str_format.h>
 #include <turbo/strings/match.h>
 #include <shark/utility/compat.h>
+#include <shark/utility/type.h>
 
 namespace shark {
-    static constexpr std::string_view KEY_NAME = "key";
-    static constexpr std::string_view VALUE_NAME = "value";
-    static constexpr int KEY_INDEX = 0;
-    static constexpr int VALUE_INDEX = 1;
-
-    static constexpr std::string_view TYPE_URL = "type_url";
-    static constexpr std::string_view A_TYPE_URL = "@type";
-
-    bool is_protobuf_map(const google::protobuf::FieldDescriptor *field);
-
-    bool is_protobuf_any(const google::protobuf::FieldDescriptor *field);
-
-
-
 
     std::string CEscape(compat::StringView src);
 

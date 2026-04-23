@@ -24,6 +24,9 @@
 
 namespace shark {
     // ===================================================================
+    OneofFieldGenerator::OneofFieldGenerator(const google::protobuf::Descriptor *mdes) : mdes_(mdes) {
+        _variable["domain"] = message_type(mdes_);
+    }
 
     OneofFieldGenerator::~OneofFieldGenerator() {
     }
@@ -68,7 +71,7 @@ namespace shark {
             printer->Print(_vars, "int64_t _$foneofname$_placeholder{0};\n");
             for (int j = 0; j < oneof->field_count(); j++) {
                 const google::protobuf::FieldDescriptor *field = oneof->field(j);
-                auto type = GlobalState::get_ctype(field);
+                auto type = get_ctype(field, mdes_);
                 _vars["fieldname"] = field->name();
                 _vars["type"] = type;
                 printer->Print(_vars, "$type$ _$fieldname$;\n");
@@ -93,7 +96,7 @@ namespace shark {
             printer->Print(_vars, "inline void clear_$foneofname$();\n");
             for (int j = 0; j < oneof->field_count(); j++) {
                 const google::protobuf::FieldDescriptor *field = oneof->field(j);
-                auto type = GlobalState::get_ctype(field);
+                auto type = get_ctype(field, mdes_);
                 _vars["fieldname"] = field->name();
                 _vars["type"] = type;
                 printer->Print(_vars, "inline bool has_$fieldname$() const;\n");
@@ -109,19 +112,17 @@ namespace shark {
             const google::protobuf::OneofDescriptor *oneof = mdes_->oneof_decl(i);
 
             _vars["foneofname"] = oneof->name();
-            _vars["msg"] = msg_;
             printer->Print(_vars, "clear_$foneofname$(); \n");
         }
     }
 
     void OneofFieldGenerator::generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const {
-        std::map<std::string, std::string> _vars;
+        std::map<std::string, std::string> _vars = _variable;
         auto pb_uri = turbo::str_replace_all(mdes_->full_name(), {{".", "::"}});
         for (int i = 0; i < mdes_->oneof_decl_count(); i++) {
             const google::protobuf::OneofDescriptor *oneof = mdes_->oneof_decl(i);
 
             _vars["foneofname"] = oneof->name();
-            _vars["msg"] = msg_;
             _vars["pb_uri"] = pb_uri;
             _vars["Coneofname"] = ToCamel(oneof->name());
             /// clear
@@ -130,7 +131,7 @@ namespace shark {
             printer->Indent();
             for (int j = 0; j < oneof->field_count(); j++) {
                 const google::protobuf::FieldDescriptor *field = oneof->field(j);
-                auto type = GlobalState::get_ctype(field);
+                auto type = get_ctype(field, mdes_);
                 _vars["fieldname"] = field->name();
                 _vars["pbenumname"] = turbo::str_cat("k", ToCamel(field->name()));
                 _vars["enumname"] = CamelToUpper(field->name());
@@ -138,7 +139,7 @@ namespace shark {
                 _vars["type"] = type;
                 printer->Print(_vars, "case $pb_uri$::$Coneofname$Case::$pbenumname$:\n");
                 printer->Indent();
-                if (!GlobalState::is_primitive_type(field->type())) {
+                if (!is_primitive_type(field->type())) {
                     printer->Print(
                         _vars,
                         "new (&_$foneofname$._$fieldname$) decltype(_$foneofname$._$fieldname$)(pb.$fieldname$());\n");
@@ -159,19 +160,18 @@ namespace shark {
     }
 
     void OneofFieldGenerator::generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const {
-        std::map<std::string, std::string> _vars;
+        std::map<std::string, std::string> _vars = _variable;
         for (int i = 0; i < mdes_->oneof_decl_count(); i++) {
             const google::protobuf::OneofDescriptor *oneof = mdes_->oneof_decl(i);
 
             _vars["foneofname"] = oneof->name();
-            _vars["msg"] = msg_;
 
             /// clear
             printer->Print(_vars, "switch($foneofname$_case()) {\n");
             printer->Indent();
             for (int j = 0; j < oneof->field_count(); j++) {
                 const google::protobuf::FieldDescriptor *field = oneof->field(j);
-                auto type = GlobalState::get_ctype(field);
+                auto type = get_ctype(field, mdes_);
                 _vars["fieldname"] = field->name();
                 _vars["enumname"] = CamelToUpper(field->name());
                 _vars["type"] = type;
@@ -191,12 +191,11 @@ namespace shark {
     }
 
     void OneofFieldGenerator::generate_copy_ctor_define(google::protobuf::io::Printer *printer) const {
-        std::map<std::string, std::string> _vars;
+        std::map<std::string, std::string> _vars = _variable;
         for (int i = 0; i < mdes_->oneof_decl_count(); i++) {
             const google::protobuf::OneofDescriptor *oneof = mdes_->oneof_decl(i);
 
             _vars["foneofname"] = oneof->name();
-            _vars["msg"] = msg_;
 
             /// clear
             printer->Print(_vars, "clear_$foneofname$();\n");
@@ -204,13 +203,13 @@ namespace shark {
             printer->Indent();
             for (int j = 0; j < oneof->field_count(); j++) {
                 const google::protobuf::FieldDescriptor *field = oneof->field(j);
-                auto type = GlobalState::get_ctype(field);
+                auto type = get_ctype(field, mdes_);
                 _vars["fieldname"] = field->name();
                 _vars["enumname"] = CamelToUpper(field->name());
                 _vars["type"] = type;
                 printer->Print(_vars, "case $foneofname$Case::$enumname$:\n");
                 printer->Indent();
-                if (!GlobalState::is_primitive_type(field->type())) {
+                if (!is_primitive_type(field->type())) {
                     printer->Print(
                         _vars,
                         "new (&_$foneofname$._$fieldname$) decltype(_$foneofname$._$fieldname$)(rhs._$foneofname$._$fieldname$);\n");
@@ -231,12 +230,11 @@ namespace shark {
     }
 
     void OneofFieldGenerator::generate_move_ctor_define(google::protobuf::io::Printer *printer) const {
-        std::map<std::string, std::string> _vars;
+        std::map<std::string, std::string> _vars = _variable;
         for (int i = 0; i < mdes_->oneof_decl_count(); i++) {
             const google::protobuf::OneofDescriptor *oneof = mdes_->oneof_decl(i);
 
             _vars["foneofname"] = oneof->name();
-            _vars["msg"] = msg_;
 
             /// clear
             printer->Print(_vars, "clear_$foneofname$();\n");
@@ -244,13 +242,13 @@ namespace shark {
             printer->Indent();
             for (int j = 0; j < oneof->field_count(); j++) {
                 const google::protobuf::FieldDescriptor *field = oneof->field(j);
-                auto type = GlobalState::get_ctype(field);
+                auto type = get_ctype(field, mdes_);
                 _vars["fieldname"] = field->name();
                 _vars["enumname"] = CamelToUpper(field->name());
                 _vars["type"] = type;
                 printer->Print(_vars, "case $foneofname$Case::$enumname$:\n");
                 printer->Indent();
-                if (!GlobalState::is_primitive_type(field->type())) {
+                if (!is_primitive_type(field->type())) {
                     printer->Print(
                         _vars,
                         "new (&_$foneofname$._$fieldname$) decltype(_$foneofname$._$fieldname$)(std::move(rhs._$foneofname$._$fieldname$));\n");
@@ -271,50 +269,48 @@ namespace shark {
     }
 
     void OneofFieldGenerator::generate_dtor_define(google::protobuf::io::Printer *printer) const {
-        std::map<std::string, std::string> _vars;
+        std::map<std::string, std::string> _vars = _variable;
         for (int i = 0; i < mdes_->oneof_decl_count(); i++) {
             const google::protobuf::OneofDescriptor *oneof = mdes_->oneof_decl(i);
 
             _vars["foneofname"] = oneof->name();
-            _vars["msg"] = msg_;
             printer->Print(_vars, "clear_$foneofname$(); \n");
         }
     }
 
     void OneofFieldGenerator::generate_members_inline_implementations(google::protobuf::io::Printer *printer) const {
-        std::map<std::string, std::string> _vars;
+        std::map<std::string, std::string> _vars = _variable;
         for (int i = 0; i < mdes_->oneof_decl_count(); i++) {
             const google::protobuf::OneofDescriptor *oneof = mdes_->oneof_decl(i);
 
             _vars["foneofname"] = oneof->name();
-            _vars["msg"] = msg_;
 
-            printer->Print(_vars, "inline $msg$::$foneofname$Case $msg$::$foneofname$_case() const {\n");
+            printer->Print(_vars, "inline $domain$::$foneofname$Case $domain$::$foneofname$_case() const {\n");
             printer->Indent();
             printer->Print(_vars, "return _$foneofname$_case;\n");
             printer->Outdent();
             printer->Print(_vars, "}\n");
 
-            printer->Print(_vars, "inline bool $msg$::has_$foneofname$() const {\n");
+            printer->Print(_vars, "inline bool $domain$::has_$foneofname$() const {\n");
             printer->Indent();
             printer->Print(_vars, "return _$foneofname$_case != $foneofname$Case::NONE;\n");
             printer->Outdent();
             printer->Print(_vars, "}\n");
             {
                 /// clear
-                printer->Print(_vars, "inline void $msg$::clear_$foneofname$() {\n");
+                printer->Print(_vars, "inline void $domain$::clear_$foneofname$() {\n");
                 printer->Indent();
                 printer->Print(_vars, "switch(_$foneofname$_case) {\n");
                 printer->Indent();
                 for (int j = 0; j < oneof->field_count(); j++) {
                     const google::protobuf::FieldDescriptor *field = oneof->field(j);
-                    auto type = GlobalState::get_ctype(field);
+                    auto type = get_ctype(field, mdes_);
                     _vars["fieldname"] = field->name();
                     _vars["enumname"] = CamelToUpper(field->name());
                     _vars["type"] = type;
                     printer->Print(_vars, "case $foneofname$Case::$enumname$:\n");
                     printer->Indent();
-                    if (!GlobalState::is_primitive_type(field->type())) {
+                    if (!is_primitive_type(field->type())) {
                         printer->Print(_vars, "_$foneofname$._$fieldname$.~decltype(_$foneofname$._$fieldname$)();\n");
                     }
                     printer->Print(_vars, "break;\n");
@@ -333,19 +329,21 @@ namespace shark {
             }
             for (int j = 0; j < oneof->field_count(); j++) {
                 const google::protobuf::FieldDescriptor *field = oneof->field(j);
-                auto type = GlobalState::get_ctype(field);
+                auto type = get_ctype(field, mdes_);
+                auto g_type = get_ctype(field, nullptr);
                 _vars["fieldname"] = field->name();
                 _vars["enumname"] = CamelToUpper(field->name());
                 _vars["type"] = type;
-                printer->Print(_vars, "inline bool $msg$::has_$fieldname$() const {\n");
+                _vars["g_type"] = g_type;
+                printer->Print(_vars, "inline bool $domain$::has_$fieldname$() const {\n");
                 printer->Indent();
                 printer->Print(_vars, "return _$foneofname$_case == $foneofname$Case::$enumname$;\n");
                 printer->Outdent();
                 printer->Print(_vars, "}\n");
-                printer->Print(_vars, "inline void $msg$::set_$fieldname$($type$ val) {\n");
+                printer->Print(_vars, "inline void $domain$::set_$fieldname$($type$ val) {\n");
                 printer->Indent();
                 printer->Print(_vars, "clear_$foneofname$();\n");
-                if (GlobalState::is_primitive_type(field->type())) {
+                if (is_primitive_type(field->type())) {
                     printer->Print(_vars, "_$foneofname$._$fieldname$ = val;\n");
                 } else {
                     printer->Print(_vars, "new (&_$foneofname$._$fieldname$) $type$(std::move(val));\n");
@@ -353,7 +351,7 @@ namespace shark {
                 printer->Print(_vars, "_$foneofname$_case = $foneofname$Case::$enumname$;\n");
                 printer->Outdent();
                 printer->Print(_vars, "}\n");
-                printer->Print(_vars, "inline std::optional<$type$> $msg$::$fieldname$() const {\n");
+                printer->Print(_vars, "inline std::optional<$g_type$> $domain$::$fieldname$() const {\n");
                 printer->Indent();
                 printer->Print(_vars, "if(_$foneofname$_case != $foneofname$Case::$enumname$) {\n");
                 printer->Indent();

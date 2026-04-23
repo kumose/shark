@@ -1,7 +1,3 @@
-// SPDX-License-Identifier: BSD-3-Clause
-// Based on Google Protobuf (https://github.com/protocolbuffers/protobuf) and protobuf-c
-// (https://github.com/protobuf-c/protobuf-c)
-// Copyright 2008 Google Inc., 2008-2025 protobuf-c authors. Modifications for C++ generation.
 // Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 
 
 #include <cstdint>
@@ -47,62 +44,6 @@ namespace shark {
 #pragma warning(disable:4800)
 #pragma warning(disable:4996)
 #endif
-
-
-    bool is_protobuf_map(const google::protobuf::FieldDescriptor *field) {
-        if (field->type() != google::protobuf::FieldDescriptor::TYPE_MESSAGE || !field->is_repeated()) {
-            return false;
-        }
-        const google::protobuf::Descriptor *entry_desc = field->message_type();
-        if (entry_desc == nullptr) {
-            return false;
-        }
-        if (entry_desc->field_count() != 2) {
-            return false;
-        }
-        const google::protobuf::FieldDescriptor *key_desc = entry_desc->field(KEY_INDEX);
-        if (nullptr == key_desc
-            || key_desc->is_repeated()
-            || key_desc->cpp_type() != google::protobuf::FieldDescriptor::CPPTYPE_STRING
-            || KEY_NAME != key_desc->name()) {
-            return false;
-        }
-        const google::protobuf::FieldDescriptor *value_desc = entry_desc->field(VALUE_INDEX);
-        if (nullptr == value_desc
-            || VALUE_NAME != value_desc->name()) {
-            return false;
-        }
-        return true;
-    }
-
-    bool is_protobuf_any(const google::protobuf::FieldDescriptor *field) {
-        if (field->type() != google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
-            return false;
-        }
-        const google::protobuf::Descriptor *entry_desc = field->message_type();
-        if (entry_desc == nullptr) {
-            return false;
-        }
-        if (entry_desc->field_count() != 2) {
-            return false;
-        }
-        const google::protobuf::FieldDescriptor *key_desc = entry_desc->field(KEY_INDEX);
-        if (nullptr == key_desc
-            || key_desc->is_repeated()
-            || key_desc->cpp_type() != google::protobuf::FieldDescriptor::CPPTYPE_STRING
-            || TYPE_URL != key_desc->name()) {
-            return false;
-        }
-
-        const google::protobuf::FieldDescriptor *value_desc = entry_desc->field(VALUE_INDEX);
-        if (nullptr == value_desc
-            || VALUE_NAME != value_desc->name()) {
-            return false;
-        }
-
-        return true;
-    }
-
 
 
     std::string CamelToUpper(compat::StringView name) {

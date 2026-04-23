@@ -37,14 +37,31 @@ enum SharkEdition {
   SK_EDITION = 2026;
 }
 
+enum SharkFormat {
+  /// Pure compact binary message format.
+  /// Only supports primitive types, string, enum, and fixed-size numeric types.
+  /// No indirect pointers, no nested expansion, ideal for RocksDB key generation.
+  SKB_PURE = 0;
+
+  /// Fully flattened single-block memory layout.
+  /// Recursively unfolds all nested structures into continuous linear memory.
+  /// Suitable for zero-copy access and mmap direct mapping.
+  SKB_FLAT = 1;
+
+  /// Columnar flattened storage format.
+  /// Groups fields with identical name into independent contiguous columns.
+  /// Optimized for CPU cache locality and random field access performance.
+  SKB_COLUMN = 3;
+}
+
 // File-level generation controls for shark runtime output.
 message SharkFileOptions {
   optional string                   runtime_namespace = 1;
-  repeated string                   cpp_includes      = 2;
+  repeated string                   cpp_includes = 2;
   optional string                   sk_map_type = 3 [default = "std::unordered_map<%s, %s>"];
-  optional string                   sk_vector   = 4 [default = "std::vector<%s>"];
-  optional CppStand                 sk_stand          = 5 [ default = CXX_17];
-  optional SharkEdition             edition           = 6 [ default = SK_EDITION];
+  optional string                   sk_vector = 4 [default = "std::vector<%s>"];
+  optional CppStand                 sk_stand = 5 [default = CXX_17];
+  optional SharkEdition             edition = 6 [default = SK_EDITION];
 
   // Suppresses sk.{cc,h} file output completely.
   optional bool no_generate = 10 [default = false];
@@ -65,16 +82,33 @@ message SharkEnumOptions {
 
 // Message-level controls for owned/view runtime generation.
 message SharkMessageOptions {
+  /// Generate a virtual destructor for the message class
   optional bool virtual_dtor = 1;
+
+  /// Make the message constructor private
   optional bool private_ctor = 2;
-  optional bool is_instance  = 3;
+
+  /// Mark this message type as a singleton/instance
+  optional bool is_instance = 3;
+
+  /// Serialization format for the message (SKB_PURE/SKB_FLAT/SKB_COLUMN)
+  /// Priority order:
+  /// 1. User command-line input parameters (highest)
+  /// 2. skb_format defined on the ROOT message
+  /// 3. skb_format on nested child messages (IGNORED)
+  optional SharkFormat skb_format = 4;
 }
 
-// Field-level controls for generated runtime code.
+// Per-field customization options for runtime code generation.
 message SharkFieldOptions {
-  optional string            ctype     = 1;
+  /// Override C++ type for this field (custom type mapping)
+  optional string            ctype = 1;
+
+  /// Generate atomic type for this field
   optional bool              is_atomic = 2;
-  // Treat string as bytes in generated code
+
+  /// Treat string field as raw byte sequence in generated code
+  /// Disables string-specific logic and treats data as pure bytes
   optional bool string_as_bytes = 11 [default = false];
 }
 

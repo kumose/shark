@@ -1,7 +1,3 @@
-// SPDX-License-Identifier: BSD-3-Clause
-// Based on Google Protobuf (https://github.com/protocolbuffers/protobuf) and protobuf-c
-// (https://github.com/protobuf-c/protobuf-c)
-// Copyright 2008 Google Inc., 2008-2025 protobuf-c authors. Modifications for C++ generation.
 // Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,8 +13,6 @@
 // limitations under the License.
 //
 
-
-// Generates C code for a given .proto file.
 
 #pragma once
 

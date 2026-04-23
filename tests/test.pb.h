@@ -752,6 +752,7 @@ class Person final : public ::google::protobuf::Message
   enum KindCase {
     kAaa = 10,
     kBbb = 12,
+    kDdd = 13,
     KIND_NOT_SET = 0,
   };
   static inline const Person* internal_default_instance() {
@@ -871,12 +872,15 @@ class Person final : public ::google::protobuf::Message
     kAgesFieldNumber = 8,
     kAnyTwoFieldNumber = 101,
     kNameFieldNumber = 1,
+    kLongNameFieldNumber = 18,
     kAddressFieldNumber = 6,
+    kAddress2FieldNumber = 17,
     kAnyOneFieldNumber = 100,
     kAgeFieldNumber = 2,
     kFavoriteColorFieldNumber = 5,
     kAaaFieldNumber = 10,
     kBbbFieldNumber = 12,
+    kDddFieldNumber = 13,
   };
   // repeated string emails = 3;
   int emails_size() const;
@@ -967,6 +971,23 @@ class Person final : public ::google::protobuf::Message
   std::string* _internal_mutable_name();
 
   public:
+  // optional string long_name = 18;
+  bool has_long_name() const;
+  void clear_long_name() ;
+  const std::string& long_name() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_long_name(Arg_&& arg, Args_... args);
+  std::string* mutable_long_name();
+  PROTOBUF_NODISCARD std::string* release_long_name();
+  void set_allocated_long_name(std::string* value);
+
+  private:
+  const std::string& _internal_long_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_long_name(
+      const std::string& value);
+  std::string* _internal_mutable_long_name();
+
+  public:
   // optional .test.pb.pa.Person.Address address = 6;
   bool has_address() const;
   void clear_address() ;
@@ -980,6 +1001,21 @@ class Person final : public ::google::protobuf::Message
   private:
   const ::test::pb::pa::Person_Address& _internal_address() const;
   ::test::pb::pa::Person_Address* _internal_mutable_address();
+
+  public:
+  // optional .test.pb.pa.Person.Address address2 = 17;
+  bool has_address2() const;
+  void clear_address2() ;
+  const ::test::pb::pa::Person_Address& address2() const;
+  PROTOBUF_NODISCARD ::test::pb::pa::Person_Address* release_address2();
+  ::test::pb::pa::Person_Address* mutable_address2();
+  void set_allocated_address2(::test::pb::pa::Person_Address* value);
+  void unsafe_arena_set_allocated_address2(::test::pb::pa::Person_Address* value);
+  ::test::pb::pa::Person_Address* unsafe_arena_release_address2();
+
+  private:
+  const ::test::pb::pa::Person_Address& _internal_address2() const;
+  ::test::pb::pa::Person_Address* _internal_mutable_address2();
 
   public:
   // optional .google.protobuf.Any any_one = 100;
@@ -1047,6 +1083,25 @@ class Person final : public ::google::protobuf::Message
   void _internal_set_bbb(::uint32_t value);
 
   public:
+  // .test.pb.pa.Person.Address ddd = 13;
+  bool has_ddd() const;
+  private:
+  bool _internal_has_ddd() const;
+
+  public:
+  void clear_ddd() ;
+  const ::test::pb::pa::Person_Address& ddd() const;
+  PROTOBUF_NODISCARD ::test::pb::pa::Person_Address* release_ddd();
+  ::test::pb::pa::Person_Address* mutable_ddd();
+  void set_allocated_ddd(::test::pb::pa::Person_Address* value);
+  void unsafe_arena_set_allocated_ddd(::test::pb::pa::Person_Address* value);
+  ::test::pb::pa::Person_Address* unsafe_arena_release_ddd();
+
+  private:
+  const ::test::pb::pa::Person_Address& _internal_ddd() const;
+  ::test::pb::pa::Person_Address* _internal_mutable_ddd();
+
+  public:
   void clear_kind();
   KindCase kind_case() const;
   // @@protoc_insertion_point(class_scope:test.pb.pa.Person)
@@ -1054,12 +1109,13 @@ class Person final : public ::google::protobuf::Message
   class _Internal;
   void set_has_aaa();
   void set_has_bbb();
+  void set_has_ddd();
   inline bool has_kind() const;
   inline void clear_has_kind();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      3, 11, 5,
-      53, 7>
+      3, 14, 7,
+      62, 7>
       _table_;
 
   friend class ::google::protobuf::MessageLite;
@@ -1087,7 +1143,9 @@ class Person final : public ::google::protobuf::Message
     ::google::protobuf::RepeatedPtrField< ::google::protobuf::Any > any_two_;
     static const ::google::protobuf::internal::LazyString _i_give_permission_to_break_this_code_default_name_;
     ::google::protobuf::internal::ArenaStringPtr name_;
+    ::google::protobuf::internal::ArenaStringPtr long_name_;
     ::test::pb::pa::Person_Address* address_;
+    ::test::pb::pa::Person_Address* address2_;
     ::google::protobuf::Any* any_one_;
     ::int32_t age_;
     int favorite_color_;
@@ -1096,6 +1154,7 @@ class Person final : public ::google::protobuf::Message
       ::google::protobuf::internal::ConstantInitialized _constinit_;
       ::google::protobuf::internal::ArenaStringPtr aaa_;
       ::uint32_t bbb_;
+      ::test::pb::pa::Person_Address* ddd_;
     } kind_;
     ::uint32_t _oneof_case_[1];
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -1463,7 +1522,7 @@ inline void Person_Address::set_allocated_detail(::test::pb::pa::Person_Address_
 
 // optional .google.protobuf.Any any_one = 100;
 inline bool Person::has_any_one() const {
-  bool value = (_impl_._has_bits_[0] & 0x00000004u) != 0;
+  bool value = (_impl_._has_bits_[0] & 0x00000010u) != 0;
   PROTOBUF_ASSUME(!value || _impl_.any_one_ != nullptr);
   return value;
 }
@@ -1483,16 +1542,16 @@ inline void Person::unsafe_arena_set_allocated_any_one(::google::protobuf::Any* 
   }
   _impl_.any_one_ = reinterpret_cast<::google::protobuf::Any*>(value);
   if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000004u;
+    _impl_._has_bits_[0] |= 0x00000010u;
   } else {
-    _impl_._has_bits_[0] &= ~0x00000004u;
+    _impl_._has_bits_[0] &= ~0x00000010u;
   }
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:test.pb.pa.Person.any_one)
 }
 inline ::google::protobuf::Any* Person::release_any_one() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
-  _impl_._has_bits_[0] &= ~0x00000004u;
+  _impl_._has_bits_[0] &= ~0x00000010u;
   ::google::protobuf::Any* released = _impl_.any_one_;
   _impl_.any_one_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
@@ -1512,7 +1571,7 @@ inline ::google::protobuf::Any* Person::unsafe_arena_release_any_one() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:test.pb.pa.Person.any_one)
 
-  _impl_._has_bits_[0] &= ~0x00000004u;
+  _impl_._has_bits_[0] &= ~0x00000010u;
   ::google::protobuf::Any* temp = _impl_.any_one_;
   _impl_.any_one_ = nullptr;
   return temp;
@@ -1526,7 +1585,7 @@ inline ::google::protobuf::Any* Person::_internal_mutable_any_one() {
   return _impl_.any_one_;
 }
 inline ::google::protobuf::Any* Person::mutable_any_one() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  _impl_._has_bits_[0] |= 0x00000004u;
+  _impl_._has_bits_[0] |= 0x00000010u;
   ::google::protobuf::Any* _msg = _internal_mutable_any_one();
   // @@protoc_insertion_point(field_mutable:test.pb.pa.Person.any_one)
   return _msg;
@@ -1543,9 +1602,9 @@ inline void Person::set_allocated_any_one(::google::protobuf::Any* value) {
     if (message_arena != submessage_arena) {
       value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
     }
-    _impl_._has_bits_[0] |= 0x00000004u;
+    _impl_._has_bits_[0] |= 0x00000010u;
   } else {
-    _impl_._has_bits_[0] &= ~0x00000004u;
+    _impl_._has_bits_[0] &= ~0x00000010u;
   }
 
   _impl_.any_one_ = reinterpret_cast<::google::protobuf::Any*>(value);
@@ -1664,13 +1723,13 @@ inline void Person::set_allocated_name(std::string* value) {
 
 // optional int32 age = 2 [(.shark.idl.shark_field) = {
 inline bool Person::has_age() const {
-  bool value = (_impl_._has_bits_[0] & 0x00000008u) != 0;
+  bool value = (_impl_._has_bits_[0] & 0x00000020u) != 0;
   return value;
 }
 inline void Person::clear_age() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.age_ = 0;
-  _impl_._has_bits_[0] &= ~0x00000008u;
+  _impl_._has_bits_[0] &= ~0x00000020u;
 }
 inline ::int32_t Person::age() const {
   // @@protoc_insertion_point(field_get:test.pb.pa.Person.age)
@@ -1678,7 +1737,7 @@ inline ::int32_t Person::age() const {
 }
 inline void Person::set_age(::int32_t value) {
   _internal_set_age(value);
-  _impl_._has_bits_[0] |= 0x00000008u;
+  _impl_._has_bits_[0] |= 0x00000020u;
   // @@protoc_insertion_point(field_set:test.pb.pa.Person.age)
 }
 inline ::int32_t Person::_internal_age() const {
@@ -1829,13 +1888,13 @@ inline ::google::protobuf::Map<std::string, ::int32_t>* Person::mutable_scores()
 
 // optional .test.pb.pa.Color favorite_color = 5 [default = GREEN];
 inline bool Person::has_favorite_color() const {
-  bool value = (_impl_._has_bits_[0] & 0x00000010u) != 0;
+  bool value = (_impl_._has_bits_[0] & 0x00000040u) != 0;
   return value;
 }
 inline void Person::clear_favorite_color() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.favorite_color_ = 1;
-  _impl_._has_bits_[0] &= ~0x00000010u;
+  _impl_._has_bits_[0] &= ~0x00000040u;
 }
 inline ::test::pb::pa::Color Person::favorite_color() const {
   // @@protoc_insertion_point(field_get:test.pb.pa.Person.favorite_color)
@@ -1843,7 +1902,7 @@ inline ::test::pb::pa::Color Person::favorite_color() const {
 }
 inline void Person::set_favorite_color(::test::pb::pa::Color value) {
   _internal_set_favorite_color(value);
-  _impl_._has_bits_[0] |= 0x00000010u;
+  _impl_._has_bits_[0] |= 0x00000040u;
   // @@protoc_insertion_point(field_set:test.pb.pa.Person.favorite_color)
 }
 inline ::test::pb::pa::Color Person::_internal_favorite_color() const {
@@ -1974,16 +2033,95 @@ inline ::uint32_t Person::_internal_bbb() const {
   return 0u;
 }
 
+// .test.pb.pa.Person.Address ddd = 13;
+inline bool Person::has_ddd() const {
+  return kind_case() == kDdd;
+}
+inline bool Person::_internal_has_ddd() const {
+  return kind_case() == kDdd;
+}
+inline void Person::set_has_ddd() {
+  _impl_._oneof_case_[0] = kDdd;
+}
+inline void Person::clear_ddd() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (kind_case() == kDdd) {
+    if (GetArena() == nullptr) {
+      delete _impl_.kind_.ddd_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.kind_.ddd_);
+    }
+    clear_has_kind();
+  }
+}
+inline ::test::pb::pa::Person_Address* Person::release_ddd() {
+  // @@protoc_insertion_point(field_release:test.pb.pa.Person.ddd)
+  if (kind_case() == kDdd) {
+    clear_has_kind();
+    auto* temp = _impl_.kind_.ddd_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.kind_.ddd_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::test::pb::pa::Person_Address& Person::_internal_ddd() const {
+  return kind_case() == kDdd ? *_impl_.kind_.ddd_ : reinterpret_cast<::test::pb::pa::Person_Address&>(::test::pb::pa::_Person_Address_default_instance_);
+}
+inline const ::test::pb::pa::Person_Address& Person::ddd() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:test.pb.pa.Person.ddd)
+  return _internal_ddd();
+}
+inline ::test::pb::pa::Person_Address* Person::unsafe_arena_release_ddd() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:test.pb.pa.Person.ddd)
+  if (kind_case() == kDdd) {
+    clear_has_kind();
+    auto* temp = _impl_.kind_.ddd_;
+    _impl_.kind_.ddd_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Person::unsafe_arena_set_allocated_ddd(::test::pb::pa::Person_Address* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_kind();
+  if (value) {
+    set_has_ddd();
+    _impl_.kind_.ddd_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:test.pb.pa.Person.ddd)
+}
+inline ::test::pb::pa::Person_Address* Person::_internal_mutable_ddd() {
+  if (kind_case() != kDdd) {
+    clear_kind();
+    set_has_ddd();
+    _impl_.kind_.ddd_ =
+        ::google::protobuf::Message::DefaultConstruct<::test::pb::pa::Person_Address>(GetArena());
+  }
+  return _impl_.kind_.ddd_;
+}
+inline ::test::pb::pa::Person_Address* Person::mutable_ddd() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::test::pb::pa::Person_Address* _msg = _internal_mutable_ddd();
+  // @@protoc_insertion_point(field_mutable:test.pb.pa.Person.ddd)
+  return _msg;
+}
+
 // optional .test.pb.pa.Person.Address address = 6;
 inline bool Person::has_address() const {
-  bool value = (_impl_._has_bits_[0] & 0x00000002u) != 0;
+  bool value = (_impl_._has_bits_[0] & 0x00000004u) != 0;
   PROTOBUF_ASSUME(!value || _impl_.address_ != nullptr);
   return value;
 }
 inline void Person::clear_address() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.address_ != nullptr) _impl_.address_->Clear();
-  _impl_._has_bits_[0] &= ~0x00000002u;
+  _impl_._has_bits_[0] &= ~0x00000004u;
 }
 inline const ::test::pb::pa::Person_Address& Person::_internal_address() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
@@ -2001,16 +2139,16 @@ inline void Person::unsafe_arena_set_allocated_address(::test::pb::pa::Person_Ad
   }
   _impl_.address_ = reinterpret_cast<::test::pb::pa::Person_Address*>(value);
   if (value != nullptr) {
-    _impl_._has_bits_[0] |= 0x00000002u;
+    _impl_._has_bits_[0] |= 0x00000004u;
   } else {
-    _impl_._has_bits_[0] &= ~0x00000002u;
+    _impl_._has_bits_[0] &= ~0x00000004u;
   }
   // @@protoc_insertion_point(field_unsafe_arena_set_allocated:test.pb.pa.Person.address)
 }
 inline ::test::pb::pa::Person_Address* Person::release_address() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
 
-  _impl_._has_bits_[0] &= ~0x00000002u;
+  _impl_._has_bits_[0] &= ~0x00000004u;
   ::test::pb::pa::Person_Address* released = _impl_.address_;
   _impl_.address_ = nullptr;
   if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
@@ -2030,7 +2168,7 @@ inline ::test::pb::pa::Person_Address* Person::unsafe_arena_release_address() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   // @@protoc_insertion_point(field_release:test.pb.pa.Person.address)
 
-  _impl_._has_bits_[0] &= ~0x00000002u;
+  _impl_._has_bits_[0] &= ~0x00000004u;
   ::test::pb::pa::Person_Address* temp = _impl_.address_;
   _impl_.address_ = nullptr;
   return temp;
@@ -2044,7 +2182,7 @@ inline ::test::pb::pa::Person_Address* Person::_internal_mutable_address() {
   return _impl_.address_;
 }
 inline ::test::pb::pa::Person_Address* Person::mutable_address() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  _impl_._has_bits_[0] |= 0x00000002u;
+  _impl_._has_bits_[0] |= 0x00000004u;
   ::test::pb::pa::Person_Address* _msg = _internal_mutable_address();
   // @@protoc_insertion_point(field_mutable:test.pb.pa.Person.address)
   return _msg;
@@ -2061,13 +2199,178 @@ inline void Person::set_allocated_address(::test::pb::pa::Person_Address* value)
     if (message_arena != submessage_arena) {
       value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
     }
-    _impl_._has_bits_[0] |= 0x00000002u;
+    _impl_._has_bits_[0] |= 0x00000004u;
   } else {
-    _impl_._has_bits_[0] &= ~0x00000002u;
+    _impl_._has_bits_[0] &= ~0x00000004u;
   }
 
   _impl_.address_ = reinterpret_cast<::test::pb::pa::Person_Address*>(value);
   // @@protoc_insertion_point(field_set_allocated:test.pb.pa.Person.address)
+}
+
+// optional .test.pb.pa.Person.Address address2 = 17;
+inline bool Person::has_address2() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000008u) != 0;
+  PROTOBUF_ASSUME(!value || _impl_.address2_ != nullptr);
+  return value;
+}
+inline void Person::clear_address2() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.address2_ != nullptr) _impl_.address2_->Clear();
+  _impl_._has_bits_[0] &= ~0x00000008u;
+}
+inline const ::test::pb::pa::Person_Address& Person::_internal_address2() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  const ::test::pb::pa::Person_Address* p = _impl_.address2_;
+  return p != nullptr ? *p : reinterpret_cast<const ::test::pb::pa::Person_Address&>(::test::pb::pa::_Person_Address_default_instance_);
+}
+inline const ::test::pb::pa::Person_Address& Person::address2() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:test.pb.pa.Person.address2)
+  return _internal_address2();
+}
+inline void Person::unsafe_arena_set_allocated_address2(::test::pb::pa::Person_Address* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (GetArena() == nullptr) {
+    delete reinterpret_cast<::google::protobuf::MessageLite*>(_impl_.address2_);
+  }
+  _impl_.address2_ = reinterpret_cast<::test::pb::pa::Person_Address*>(value);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000008u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000008u;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:test.pb.pa.Person.address2)
+}
+inline ::test::pb::pa::Person_Address* Person::release_address2() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+
+  _impl_._has_bits_[0] &= ~0x00000008u;
+  ::test::pb::pa::Person_Address* released = _impl_.address2_;
+  _impl_.address2_ = nullptr;
+  if (::google::protobuf::internal::DebugHardenForceCopyInRelease()) {
+    auto* old = reinterpret_cast<::google::protobuf::MessageLite*>(released);
+    released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    if (GetArena() == nullptr) {
+      delete old;
+    }
+  } else {
+    if (GetArena() != nullptr) {
+      released = ::google::protobuf::internal::DuplicateIfNonNull(released);
+    }
+  }
+  return released;
+}
+inline ::test::pb::pa::Person_Address* Person::unsafe_arena_release_address2() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:test.pb.pa.Person.address2)
+
+  _impl_._has_bits_[0] &= ~0x00000008u;
+  ::test::pb::pa::Person_Address* temp = _impl_.address2_;
+  _impl_.address2_ = nullptr;
+  return temp;
+}
+inline ::test::pb::pa::Person_Address* Person::_internal_mutable_address2() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (_impl_.address2_ == nullptr) {
+    auto* p = ::google::protobuf::Message::DefaultConstruct<::test::pb::pa::Person_Address>(GetArena());
+    _impl_.address2_ = reinterpret_cast<::test::pb::pa::Person_Address*>(p);
+  }
+  return _impl_.address2_;
+}
+inline ::test::pb::pa::Person_Address* Person::mutable_address2() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  _impl_._has_bits_[0] |= 0x00000008u;
+  ::test::pb::pa::Person_Address* _msg = _internal_mutable_address2();
+  // @@protoc_insertion_point(field_mutable:test.pb.pa.Person.address2)
+  return _msg;
+}
+inline void Person::set_allocated_address2(::test::pb::pa::Person_Address* value) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (message_arena == nullptr) {
+    delete (_impl_.address2_);
+  }
+
+  if (value != nullptr) {
+    ::google::protobuf::Arena* submessage_arena = (value)->GetArena();
+    if (message_arena != submessage_arena) {
+      value = ::google::protobuf::internal::GetOwnedMessage(message_arena, value, submessage_arena);
+    }
+    _impl_._has_bits_[0] |= 0x00000008u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000008u;
+  }
+
+  _impl_.address2_ = reinterpret_cast<::test::pb::pa::Person_Address*>(value);
+  // @@protoc_insertion_point(field_set_allocated:test.pb.pa.Person.address2)
+}
+
+// optional string long_name = 18;
+inline bool Person::has_long_name() const {
+  bool value = (_impl_._has_bits_[0] & 0x00000002u) != 0;
+  return value;
+}
+inline void Person::clear_long_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.long_name_.ClearToEmpty();
+  _impl_._has_bits_[0] &= ~0x00000002u;
+}
+inline const std::string& Person::long_name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:test.pb.pa.Person.long_name)
+  return _internal_long_name();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Person::set_long_name(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000002u;
+  _impl_.long_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:test.pb.pa.Person.long_name)
+}
+inline std::string* Person::mutable_long_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_long_name();
+  // @@protoc_insertion_point(field_mutable:test.pb.pa.Person.long_name)
+  return _s;
+}
+inline const std::string& Person::_internal_long_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.long_name_.Get();
+}
+inline void Person::_internal_set_long_name(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000002u;
+  _impl_.long_name_.Set(value, GetArena());
+}
+inline std::string* Person::_internal_mutable_long_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._has_bits_[0] |= 0x00000002u;
+  return _impl_.long_name_.Mutable( GetArena());
+}
+inline std::string* Person::release_long_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:test.pb.pa.Person.long_name)
+  if ((_impl_._has_bits_[0] & 0x00000002u) == 0) {
+    return nullptr;
+  }
+  _impl_._has_bits_[0] &= ~0x00000002u;
+  auto* released = _impl_.long_name_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.long_name_.Set("", GetArena());
+  }
+  return released;
+}
+inline void Person::set_allocated_long_name(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    _impl_._has_bits_[0] |= 0x00000002u;
+  } else {
+    _impl_._has_bits_[0] &= ~0x00000002u;
+  }
+  _impl_.long_name_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.long_name_.IsDefault()) {
+    _impl_.long_name_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:test.pb.pa.Person.long_name)
 }
 
 inline bool Person::has_kind() const {

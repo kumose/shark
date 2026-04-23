@@ -14,119 +14,19 @@
 //
 
 #include <shark/meta/global_state.h>
+#include <shark/utility/type.h>
 #include <turbo/strings/match.h>
 #include <turbo/strings/str_replace.h>
 #include <turbo/strings/match.h>
 #include <turbo/strings/str_cat.h>
 
 namespace shark {
-    std::string GlobalState::cpp_type(const google::protobuf::FieldDescriptor *descriptor, bool is_try) {
-        auto opt = descriptor->options();
-        auto ext_opt = opt.GetExtension(idl::shark_field);
-        auto opt_type = ext_opt.ctype();
-        if (!opt_type.empty()) {
-            return opt_type;
-        }
-        switch (descriptor->type()) {
-            case google::protobuf::FieldDescriptor::TYPE_SINT32:
-            case google::protobuf::FieldDescriptor::TYPE_SFIXED32:
-            case google::protobuf::FieldDescriptor::TYPE_INT32:
-                return "int32_t";
-            case google::protobuf::FieldDescriptor::TYPE_SINT64:
-            case google::protobuf::FieldDescriptor::TYPE_SFIXED64:
-            case google::protobuf::FieldDescriptor::TYPE_INT64:
-                return "int64_t";
-            case google::protobuf::FieldDescriptor::TYPE_UINT32:
-            case google::protobuf::FieldDescriptor::TYPE_FIXED32:
-                return "uint32_t";
-            case google::protobuf::FieldDescriptor::TYPE_UINT64:
-            case google::protobuf::FieldDescriptor::TYPE_FIXED64:
-                return "uint64_t";
-            case google::protobuf::FieldDescriptor::TYPE_FLOAT:
-                return "float";
-            case google::protobuf::FieldDescriptor::TYPE_DOUBLE:
-                return "double";
-            case google::protobuf::FieldDescriptor::TYPE_BOOL:
-                return "bool";
-            case google::protobuf::FieldDescriptor::TYPE_STRING:
-                return "std::string";
-            case google::protobuf::FieldDescriptor::TYPE_BYTES:
-                return "std::vector<uint8_t>";
-            case google::protobuf::FieldDescriptor::TYPE_ENUM:
-            case google::protobuf::FieldDescriptor::TYPE_GROUP:
-            case google::protobuf::FieldDescriptor::TYPE_MESSAGE:
-            default:
-                if (!is_try) {
-                    KLOG(FATAL) << "not a primitive type:" << static_cast<int>(descriptor->type());
-                }
-                return "";
-
-                // No default because we want the compiler to complain if any new
-                // types are added.
-        }
-    }
-
-    bool GlobalState::is_primitive_type(google::protobuf::FieldDescriptor::Type type) {
-        switch (type) {
-            case google::protobuf::FieldDescriptor::TYPE_SINT32:
-            case google::protobuf::FieldDescriptor::TYPE_SFIXED32:
-            case google::protobuf::FieldDescriptor::TYPE_INT32:
-            case google::protobuf::FieldDescriptor::TYPE_SINT64:
-            case google::protobuf::FieldDescriptor::TYPE_SFIXED64:
-            case google::protobuf::FieldDescriptor::TYPE_INT64:
-            case google::protobuf::FieldDescriptor::TYPE_UINT32:
-            case google::protobuf::FieldDescriptor::TYPE_FIXED32:
-            case google::protobuf::FieldDescriptor::TYPE_UINT64:
-            case google::protobuf::FieldDescriptor::TYPE_FIXED64:
-            case google::protobuf::FieldDescriptor::TYPE_FLOAT:
-            case google::protobuf::FieldDescriptor::TYPE_DOUBLE:
-            case google::protobuf::FieldDescriptor::TYPE_BOOL:
-                return true;
-            case google::protobuf::FieldDescriptor::TYPE_ENUM:
-            case google::protobuf::FieldDescriptor::TYPE_STRING:
-            case google::protobuf::FieldDescriptor::TYPE_BYTES:
-            case google::protobuf::FieldDescriptor::TYPE_GROUP:
-            case google::protobuf::FieldDescriptor::TYPE_MESSAGE:
-            default:
-                return false;
-
-                // No default because we want the compiler to complain if any new
-                // types are added.
-        }
-    }
-
-    bool GlobalState::is_cpp_type(google::protobuf::FieldDescriptor::Type type) {
-        switch (type) {
-            case google::protobuf::FieldDescriptor::TYPE_SINT32:
-            case google::protobuf::FieldDescriptor::TYPE_SFIXED32:
-            case google::protobuf::FieldDescriptor::TYPE_INT32:
-            case google::protobuf::FieldDescriptor::TYPE_SINT64:
-            case google::protobuf::FieldDescriptor::TYPE_SFIXED64:
-            case google::protobuf::FieldDescriptor::TYPE_INT64:
-            case google::protobuf::FieldDescriptor::TYPE_UINT32:
-            case google::protobuf::FieldDescriptor::TYPE_FIXED32:
-            case google::protobuf::FieldDescriptor::TYPE_UINT64:
-            case google::protobuf::FieldDescriptor::TYPE_FIXED64:
-            case google::protobuf::FieldDescriptor::TYPE_FLOAT:
-            case google::protobuf::FieldDescriptor::TYPE_DOUBLE:
-            case google::protobuf::FieldDescriptor::TYPE_BOOL:
-            case google::protobuf::FieldDescriptor::TYPE_STRING:
-            case google::protobuf::FieldDescriptor::TYPE_BYTES:
-                return true;
-            case google::protobuf::FieldDescriptor::TYPE_ENUM:
-            case google::protobuf::FieldDescriptor::TYPE_GROUP:
-            case google::protobuf::FieldDescriptor::TYPE_MESSAGE:
-            default:
-                return false;
-
-                // No default because we want the compiler to complain if any new
-                // types are added.
-        }
-    }
 
     void GlobalState::registry(const google::protobuf::FileDescriptor *file) {
+        g_file = file;
         ext_file_options = file->options().GetExtension(idl::shark_file);
         pb_namespace = turbo::str_replace_all(file->package(), {{".", "::"}});
+        pb_namespace_prefix = pb_namespace + "::";
         if (!ext_file_options.has_runtime_namespace() && ext_file_options.runtime_namespace().empty()) {
             KLOG(FATAL) << "must spefic runtime_namespace";
         }
@@ -142,19 +42,80 @@ namespace shark {
             }
         }
         for (auto i  = 0; i <file->message_type_count(); i++) {
-            process_message(file->message_type(i));
+            MessageMeta mm;
+
+
+            process_message(file->message_type(i), mm);
+            message_meta_map[file->message_type(i)] = mm;
         }
     }
 
     int cnt = 0;
-    void GlobalState::process_message(const google::protobuf::Descriptor *file) {
+    void GlobalState::process_message(const google::protobuf::Descriptor *file, MessageMeta &mm) {
+        auto r = std::make_unique<FieldMeta>();
+
+        auto rptr = r.get();
+        field_meta_map["root"] = rptr;
+        field_metas.push_back(std::move(r));
+        mm.index++;
+        mm.data_index++;
+        std::deque<FieldMeta*> que;
         for (auto i = 0; i < file->field_count(); ++i ) {
-            auto f = file->field(i);
-            KLOG(INFO)<<"id:"<<cnt++<<" field:"<<f->full_name()<<" name:"<<f->name();
+            auto field = file->field(i);
+            auto meta = std::make_unique<FieldMeta>();
+            meta->field = field;
+            meta->repeated = field->is_repeated();
+            meta->path =field->name();
+            meta->index = mm.index++;
+            meta->root = file;
+            auto ptr = meta.get();
+            mm.field_map[meta->path] = ptr;
+            field_meta_map[meta->path] = ptr;
+            field_metas.push_back(std::move(meta));
+
+            if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
+                ptr->data_index = -1;
+                que.push_back(ptr);
+                continue;
+            }
+            ptr->data_index = mm.data_index++;
+            if (field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
+                ptr->cpp_type = cpp_type(field,true);
+            } else {
+                ptr->cpp_type = "enum";
+            }
+            KLOG(INFO)<<"uri:"<<field->full_name()<<"cpp type:"<<ptr->cpp_type;
         }
-        KLOG(INFO)<<"--------------------------------------";
-        for (int i = 0; i < file->nested_type_count(); ++i ) {
-            process_message(file->nested_type(i));
+
+        while (!que.empty()) {
+            auto entity = que.front();
+            que.pop_front();
+            for (auto i = 0; i < entity->field->message_type()->field_count(); ++i) {
+                auto field = entity->field->message_type()->field(i);
+                auto meta = std::make_unique<FieldMeta>();
+                meta->field = field;
+                meta->path =entity->path + "." + field->name();
+                meta->index = mm.index++;
+                meta->root = file;
+                entity->column.push_back(meta->index);
+                auto ptr = meta.get();
+                mm.field_map[meta->path] = ptr;
+                field_meta_map[meta->path] = ptr;
+                field_metas.push_back(std::move(meta));
+
+                if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
+                    ptr->data_index  = -1;
+                    que.push_back(ptr);
+                    continue;
+                }
+                ptr->data_index = mm.data_index++;
+                if (field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
+                    ptr->cpp_type = cpp_type(field,true);
+                } else {
+                    ptr->cpp_type = "enum";
+                }
+                KLOG(INFO)<<"uri:"<<field->full_name()<<"cpp type:"<<ptr->cpp_type;
+            }
         }
     }
 
@@ -235,115 +196,6 @@ namespace shark {
             {"turbo::btree_map", "turbo/container/btree_map.h"},
         };
 
-        if (descriptor->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE &&
-            descriptor->message_type()->options().map_entry()) {
-            auto type = complex_type(descriptor, true);
-            if (!type.empty()) {
-                auto pos = type.find('<');
-                if (pos != std::string::npos) {
-                    type = type.substr(0, pos);
-                }
-            }
-            if (!type.empty()) {
-                auto it = map_header.find(type);
-                if (it != rep_header.end()) {
-                    instance().includes.insert(turbo::str_cat("#include <", it->second, ">"));
-                } else {
-                    KLOG(WARNING) << "can not found repeat container type, include it your self type:" << type;
-                }
-            }
-        }
     }
 
-    std::string GlobalState::complex_type(const google::protobuf::FieldDescriptor *descriptor, bool is_try) {
-        if (descriptor->type() != google::protobuf::FieldDescriptor::TYPE_MESSAGE &&
-            descriptor->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
-            if (is_try) {
-                return "";
-            }
-            KLOG(FATAL) << "must spefic enum or message type";
-        }
-        if (descriptor->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE &&
-            descriptor->message_type()->options().map_entry()) {
-            return map_type(descriptor, is_try);
-        }
-        std::string f;
-        if (descriptor->type() == google::protobuf::FieldDescriptor::TYPE_ENUM) {
-            f = descriptor->enum_type()->full_name();
-        } else if (descriptor->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
-            f = descriptor->message_type()->full_name();
-        }
-        auto it = instance().pb_to_sk.find(f);
-        if (it == instance().pb_to_sk.end()) {
-            if (!is_try) {
-                KLOG(FATAL) << "unkown type:" << descriptor->full_name();
-            }
-            return "";
-        }
-        auto find = it->second;
-        for (auto &it: instance().ns_mapping) {
-            if (turbo::starts_with(find, it.first)) {
-                return turbo::str_cat(it.second, find.substr(it.first.size()));
-            }
-        }
-
-        if (!is_try) {
-            KLOG(FATAL) << "unkown type:" << descriptor->full_name();
-        }
-        return "";
-    }
-
-    std::string GlobalState::map_type(const google::protobuf::FieldDescriptor *descriptor, bool is_try) {
-        // Get the map entry message
-        const auto *entry = descriptor->message_type();
-        const auto *key_field = entry->field(0);
-        const auto *value_field = entry->field(1);
-
-        // Recursively get C++ types for key and value
-        std::string key_type = get_ctype(key_field);
-        std::string value_type = get_ctype(value_field);
-        if (key_type.empty() || value_type.empty()) {
-            if (!is_try)
-                KLOG(FATAL) << "failed to get key/value type for map: " << descriptor->full_name();
-            return "";
-        }
-
-        // Obtain sk_map_type template from the file that defines this map
-        const auto *file = descriptor->file();
-        auto file_opts = file->options().GetExtension(idl::shark_file);
-        std::string map_template = "std::unordered_map";
-        if (file_opts.has_sk_map_type()) {
-            map_template = file_opts.sk_map_type();
-        }
-
-        // Replace placeholders
-        size_t pos = map_template.find("<");
-        std::string mtype = map_template;
-        if (pos != std::string::npos) {
-            mtype = map_template.substr(0, pos);
-        }
-
-        return turbo::str_cat(mtype, "<", key_type, ",", value_type, ">");
-    }
-
-    std::string GlobalState::get_ctype(const google::protobuf::FieldDescriptor *descriptor) {
-        auto typ = cpp_type(descriptor, true);
-        auto opt = descriptor->options().GetExtension(idl::shark_field);
-        bool is_atomic =opt.is_atomic();
-        auto com_typ = complex_type(descriptor, true);
-        std::string find = typ;
-        if (!com_typ.empty()) {
-            find = com_typ;
-        }
-        if (find.empty()) {
-            KLOG(FATAL) << "must spefic enum or message type";
-        }
-
-        if (is_atomic) {
-            if (descriptor->is_repeated() || !is_primitive_type(descriptor->type())) {
-                KLOG(FATAL) << "repeat or complexed type can not be atomic";
-            }
-        }
-        return find;
-    }
 } // namespace shark

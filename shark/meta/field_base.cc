@@ -31,11 +31,13 @@ namespace shark {
         _option = descriptor_->options();
         _ext_option = descriptor_->options().GetExtension(idl::shark_field);
         if (descriptor_->options().deprecated()) {
-            variables_["deprecated"] = "[[deprecated]]";
+            variables_["deprecated"] = "[[deprecated]] ";
         }
         GlobalState::instance().registry(descriptor_);
         variables_["name"] = varify_field_name(descriptor_);
-        variables_["domain"] = message_domain_without_namespace(descriptor_);
+        variables_["domain"] = message_type(descriptor_->containing_type());
+        variables_["domain_skb"] = message_type(descriptor_->containing_type(), "Skb");
+        variables_["domain_view"] = message_type(descriptor_->containing_type(), "View");
 
         do_initialize();
     }

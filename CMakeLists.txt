@@ -91,7 +91,7 @@ if(NOT PYTHON_EXTENSION)
     ##############################################
     # header installing
     #############################################
-    install(DIRECTORY ${PROJECT_NAME}
+    install(DIRECTORY ${PROJECT_NAME}/include
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
             FILES_MATCHING
             PATTERN "*.inc"

@@ -23,10 +23,26 @@
 #include <turbo/log/logging.h>
 
 namespace shark {
-
     /// no need lock, always single thread
-    struct  GlobalState {
+    ///
+    struct FieldMeta {
+        int index{0};
+        int data_index{0};
+        const google::protobuf::Descriptor* root{nullptr};
+        std::string path;
+        const google::protobuf::FieldDescriptor* field{nullptr};
+        std::vector<int> column;
+        bool repeated{false};
+        std::string cpp_type;
+    };
 
+    struct MessageMeta {
+        int index{0};
+        int data_index{0};
+        turbo::flat_hash_map<std::string, FieldMeta*> field_map;
+    };
+
+    struct GlobalState {
         static GlobalState &instance() {
             static GlobalState instance;
             return instance;
@@ -40,18 +56,6 @@ namespace shark {
 
         void registry(const google::protobuf::FieldDescriptor *descriptor);
 
-        static std::string cpp_type(const google::protobuf::FieldDescriptor *descriptor, bool is_try = false);
-
-        static std::string complex_type(const google::protobuf::FieldDescriptor *descriptor, bool is_try = false);
-
-        static std::string map_type(const google::protobuf::FieldDescriptor *descriptor, bool is_try = false);
-
-        static bool is_primitive_type(google::protobuf::FieldDescriptor::Type type);
-
-        static bool is_cpp_type(google::protobuf::FieldDescriptor::Type type);
-
-        static::std::string get_ctype(const google::protobuf::FieldDescriptor *descriptor);
-
         turbo::flat_hash_map<std::string, std::string> pb_to_sk;
         turbo::flat_hash_map<std::string, std::string> sk_to_pb;
         turbo::flat_hash_set<std::string> includes;
@@ -63,8 +67,16 @@ namespace shark {
 
         std::string cnamespace;
         std::string pb_namespace;
+
+        const google::protobuf::FileDescriptor *g_file;
+        std::string pb_namespace_prefix;
+
+        turbo::flat_hash_map<const google::protobuf::Descriptor*, MessageMeta> message_meta_map;
+        turbo::flat_hash_map<std::string, FieldMeta*> field_meta_map;
+        std::vector<std::unique_ptr<FieldMeta>> field_metas;
     private:
         void process_deps(const google::protobuf::FileDescriptor *file);
-        void process_message(const google::protobuf::Descriptor *file);
+
+        void process_message(const google::protobuf::Descriptor *file, MessageMeta &mm);
     };
-}  // namespace shark
+} // namespace shark

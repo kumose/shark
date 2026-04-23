@@ -1,7 +1,3 @@
-// SPDX-License-Identifier: BSD-3-Clause
-// Based on Google Protobuf (https://github.com/protocolbuffers/protobuf) and protobuf-c
-// (https://github.com/protobuf-c/protobuf-c)
-// Copyright 2008 Google Inc., 2008-2025 protobuf-c authors. Modifications for C++ generation.
 // Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 
 
 #include <algorithm>
@@ -67,7 +64,7 @@ namespace shark {
             extension_generators_.push_back(std::move(ptr));
         }
         _vars["classname"] = descriptor_->name();
-        _vars["domian"] = message_domain_without_namespace(descriptor_);
+        _vars["domain"] = message_type(descriptor_);
         _vars["lcclassname"] = FullNameToLower(descriptor_->full_name(), descriptor_->file());
         _vars["ucclassname"] = FullNameToUpper(descriptor_->full_name(), descriptor_->file());
         _vars["field_count"] = turbo::str_cat(descriptor_->field_count());
@@ -96,7 +93,7 @@ namespace shark {
             nested_generators_[i]->generate_struct_inl(printer);
         }
 
-        printer->Print(_vars,"inline const google::protobuf::Descriptor* $domian$::descriptor() const {\n");
+        printer->Print(_vars,"inline const google::protobuf::Descriptor* $domain$::descriptor() const {\n");
         printer->Indent();
         printer->Print(_vars,"return get_descriptor();\n");
         printer->Outdent();
@@ -223,19 +220,19 @@ namespace shark {
         for (int i = 0; i < nested_generators_.size(); i++) {
             nested_generators_[i]->generate_struct_transfer(printer);
         }
-        printer->Print(_vars, "$domian$::$classname$() {\n");
+        printer->Print(_vars, "$domain$::$classname$() {\n");
         printer->Indent();
         _oneof_generator.generate_ctor_define(printer);
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
-        printer->Print(_vars, "$domian$::~$classname$() {\n");
+        printer->Print(_vars, "$domain$::~$classname$() {\n");
         printer->Indent();
         _oneof_generator.generate_dtor_define(printer);
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
 
 
-        printer->Print(_vars,"$domian$::$classname$(const $classname$& rhs) {\n");
+        printer->Print(_vars,"$domain$::$classname$(const $classname$& rhs) {\n");
         printer->Indent();
         _oneof_generator.generate_copy_ctor_define(printer);
         for (int i = 0; i < descriptor_->field_count(); i++) {
@@ -247,7 +244,7 @@ namespace shark {
 
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
-        printer->Print(_vars,"$domian$& $domian$::operator= (const $classname$& rhs) {\n");
+        printer->Print(_vars,"$domain$& $domain$::operator= (const $classname$& rhs) {\n");
         printer->Indent();
         _oneof_generator.generate_copy_ctor_define(printer);
         for (int i = 0; i < descriptor_->field_count(); i++) {
@@ -261,7 +258,7 @@ namespace shark {
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
 
-        printer->Print(_vars,"$domian$::$classname$($classname$&& rhs) noexcept {\n");
+        printer->Print(_vars,"$domain$::$classname$($classname$&& rhs) noexcept {\n");
         printer->Indent();
         _oneof_generator.generate_move_ctor_define(printer);
         for (int i = 0; i < descriptor_->field_count(); i++) {
@@ -274,7 +271,7 @@ namespace shark {
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
 
-        printer->Print(_vars,"$domian$& $domian$::operator= ($classname$&& rhs) noexcept {\n");
+        printer->Print(_vars,"$domain$& $domain$::operator= ($classname$&& rhs) noexcept {\n");
         printer->Indent();
         _oneof_generator.generate_move_ctor_define(printer);
         for (int i = 0; i < descriptor_->field_count(); i++) {
@@ -289,14 +286,14 @@ namespace shark {
 
         printer->Print("///////////////////////////////////////////////////////////////////////// \n");
         printer->Print("/// metas \n");
-        printer->Print(_vars,"const google::protobuf::Descriptor* $domian$::get_descriptor() {\n");
+        printer->Print(_vars,"const google::protobuf::Descriptor* $domain$::get_descriptor() {\n");
         printer->Indent();
         printer->Print(_vars, "return $PBTYPE$::descriptor();\n");
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
         printer->Print("///////////////////////////////////////////////////////////////////////// \n");
         printer->Print("/// transfers \n");
-        printer->Print(_vars, "void $domian$::parse_from_proto(const $PBTYPE$& pb) {\n");
+        printer->Print(_vars, "void $domain$::parse_from_proto(const $PBTYPE$& pb) {\n");
         printer->Indent();
         for (int i = 0; i < descriptor_->field_count(); i++) {
             const google::protobuf::FieldDescriptor *field = descriptor_->field(i);
@@ -308,7 +305,7 @@ namespace shark {
         printer->Outdent();
         printer->Print("}\n\n");
         ////
-        printer->Print(_vars, "void $domian$::serialize_to_proto($PBTYPE$& pb) const {\n");
+        printer->Print(_vars, "void $domain$::serialize_to_proto($PBTYPE$& pb) const {\n");
         printer->Indent();
         for (int i = 0; i < descriptor_->field_count(); i++) {
             const google::protobuf::FieldDescriptor *field = descriptor_->field(i);
@@ -320,7 +317,7 @@ namespace shark {
         printer->Outdent();
         printer->Print("}\n\n");
         ////
-        printer->Print(_vars, "bool $domian$::parse_from_json(const std::string& json) {\n");
+        printer->Print(_vars, "bool $domain$::parse_from_json(const std::string& json) {\n");
         printer->Indent();
         printer->Print(_vars, "$PBTYPE$ pb;\n");
         printer->Print(_vars, "if(!google::protobuf::json::JsonStringToMessage(json, &pb, google::protobuf::json::ParseOptions()).ok()) {\n");
@@ -333,7 +330,7 @@ namespace shark {
         printer->Outdent();
         printer->Print("}\n\n");
         ////
-        printer->Print(_vars, "bool $domian$::serialize_to_json(std::string& json) const {\n");
+        printer->Print(_vars, "bool $domain$::serialize_to_json(std::string& json) const {\n");
         printer->Indent();
         printer->Print(_vars, "$PBTYPE$ pb;\n");
         printer->Print(_vars, "serialize_to_proto(pb);\n");
@@ -345,7 +342,7 @@ namespace shark {
         printer->Print(_vars, "return true;\n");
         printer->Outdent();
         printer->Print("}\n\n");
-        printer->Print(_vars, "std::string $domian$::to_string() const {\n");
+        printer->Print(_vars, "std::string $domain$::to_string() const {\n");
         printer->Indent();
         printer->Print(_vars, "std::string json;\n");
         printer->Print(_vars, "auto b = serialize_to_json(json);\n");

@@ -28,7 +28,6 @@
 #include <shark/utility/compat.h>
 
 namespace shark {
-
     // Get the (unqualified) name that should be used for this field in C code.
     // The name is coerced to lower-case to emulate proto1 behavior.  People
     // should be using lowercase-with-underscores style for proto field names
@@ -39,12 +38,26 @@ namespace shark {
 
     std::string field_uri_without_namespace(const google::protobuf::FieldDescriptor *field);
 
-    std::string message_domain(const google::protobuf::FieldDescriptor *field);
+    std::string message_type(const google::protobuf::Descriptor *descriptor);
+
+    std::string message_type(const google::protobuf::Descriptor *descriptor, const std::string &suffix);
+
+    std::string relative_message_type(const google::protobuf::Descriptor *d, const google::protobuf::Descriptor *r);
+
+    std::string relative_message_type(const google::protobuf::Descriptor *d, const google::protobuf::Descriptor *r, const std::string &suffix);
 
     std::string message_domain_without_namespace(const google::protobuf::FieldDescriptor *field);
 
-    std::string message_domain(const google::protobuf::Descriptor *field);
-
     std::string message_domain_without_namespace(const google::protobuf::Descriptor *field);
 
-}  // namespace shark
+    std::string message_domain_without_namespace(const google::protobuf::FieldDescriptor *field,
+                                                 const std::string &suffix);
+
+    std::string message_domain_without_namespace(const google::protobuf::Descriptor *field, const std::string &suffix);
+
+
+    std::string enum_type(const google::protobuf::FieldDescriptor *field);
+
+    std::string enum_type(const google::protobuf::EnumDescriptor *field);
+
+} // namespace shark

@@ -115,7 +115,11 @@ inline constexpr Person::Impl_::Impl_(
         name_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
+        long_name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
         address_{nullptr},
+        address2_{nullptr},
         any_one_{nullptr},
         age_{0},
         favorite_color_{static_cast< ::test::pb::pa::Color >(1)},
@@ -206,18 +210,24 @@ const ::uint32_t
         PROTOBUF_FIELD_OFFSET(::test::pb::pa::Person, _impl_.favorite_color_),
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
         PROTOBUF_FIELD_OFFSET(::test::pb::pa::Person, _impl_.address_),
+        PROTOBUF_FIELD_OFFSET(::test::pb::pa::Person, _impl_.address2_),
+        PROTOBUF_FIELD_OFFSET(::test::pb::pa::Person, _impl_.long_name_),
         PROTOBUF_FIELD_OFFSET(::test::pb::pa::Person, _impl_.kind_),
-        2,
-        ~0u,
-        0,
-        3,
-        ~0u,
-        ~0u,
-        ~0u,
         4,
         ~0u,
+        0,
+        5,
         ~0u,
+        ~0u,
+        ~0u,
+        6,
+        ~0u,
+        ~0u,
+        ~0u,
+        2,
+        3,
         1,
 };
 
@@ -226,7 +236,7 @@ static const ::_pbi::MigrationSchema
         {0, 10, -1, sizeof(::test::pb::pa::Person_ScoresEntry_DoNotUse)},
         {12, 22, -1, sizeof(::test::pb::pa::Person_Address_Detail)},
         {24, 35, -1, sizeof(::test::pb::pa::Person_Address)},
-        {38, 58, -1, sizeof(::test::pb::pa::Person)},
+        {38, 61, -1, sizeof(::test::pb::pa::Person)},
 };
 static const ::_pb::Message* const file_default_instances[] = {
     &::test::pb::pa::_Person_ScoresEntry_DoNotUse_default_instance_._instance,
@@ -238,28 +248,31 @@ const char descriptor_table_protodef_tests_2ftest_2eproto[] ABSL_ATTRIBUTE_SECTI
     protodesc_cold) = {
     "\n\020tests/test.proto\022\ntest.pb.pa\032\035shark/id"
     "l/shark_options.proto\032\031google/protobuf/a"
-    "ny.proto\"\306\004\n\006Person\022%\n\007any_one\030d \001(\0132\024.g"
+    "ny.proto\"\262\005\n\006Person\022%\n\007any_one\030d \001(\0132\024.g"
     "oogle.protobuf.Any\022%\n\007any_two\030e \003(\0132\024.go"
     "ogle.protobuf.Any\022\030\n\004name\030\001 \001(\t:\006LotharB"
     "\002\030\001\022\033\n\003age\030\002 \001(\005B\016\262\262\031\n\n\006int8_t\020\001\022\016\n\006emai"
     "ls\030\003 \003(\t\022\014\n\004ages\030\010 \003(\005\022.\n\006scores\030\004 \003(\0132\036"
     ".test.pb.pa.Person.ScoresEntry\0220\n\016favori"
     "te_color\030\005 \001(\0162\021.test.pb.pa.Color:\005GREEN"
-    "\022\r\n\003aaa\030\n \001(\tH\000\022\r\n\003bbb\030\014 \001(\rH\000\022+\n\007addres"
-    "s\030\006 \001(\0132\032.test.pb.pa.Person.Address\032-\n\013S"
-    "coresEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\002"
-    "8\001\032\212\001\n\007Address\022\016\n\006street\030\001 \001(\t\022\022\n\006number"
-    "\030\002 \001(\005:\00220\0221\n\006detail\030\003 \001(\0132!.test.pb.pa."
-    "Person.Address.Detail\032(\n\006Detail\022\016\n\006regio"
-    "n\030\001 \001(\t\022\016\n\006prcode\030\002 \001(\t\"(\n\005Dolor\022\010\n\004DRED"
-    "\020\000\022\n\n\006DGREEN\020\001\022\t\n\005DBLUE\020\002B\006\n\004kind*-\n\005Col"
-    "or\022\007\n\003RED\020\000\022\t\n\005GREEN\020\001\022\010\n\004BLUE\020\002\032\006\242\262\031\002\010\001"
-    "*6\n\010ColorU16\022\t\n\005RED16\020\000\022\013\n\007GREEN16\020\001\022\n\n\006"
-    "BLUE16\020\002\032\006\242\262\031\002\010\002*6\n\010ColorU32\022\t\n\005RED32\020\000\022"
-    "\013\n\007GREEN32\020\001\022\n\n\006BLUE32\020\002\032\006\242\262\031\002\010\003Bq\212\262\031m\n\016"
-    "my::custom::ns\022\037turbo/container/flat_has"
-    "h_map.h\032\034absl::flat_hash_map< %s, %s>\"\032a"
-    "bsl::InlinedVector<%s, 2>(\002"
+    "\022\r\n\003aaa\030\n \001(\tH\000\022\r\n\003bbb\030\014 \001(\rH\000\022)\n\003ddd\030\r "
+    "\001(\0132\032.test.pb.pa.Person.AddressH\000\022+\n\007add"
+    "ress\030\006 \001(\0132\032.test.pb.pa.Person.Address\022,"
+    "\n\010address2\030\021 \001(\0132\032.test.pb.pa.Person.Add"
+    "ress\022\021\n\tlong_name\030\022 \001(\t\032-\n\013ScoresEntry\022\013"
+    "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\005:\0028\001\032\212\001\n\007Addre"
+    "ss\022\016\n\006street\030\001 \001(\t\022\022\n\006number\030\002 \001(\005:\00220\0221"
+    "\n\006detail\030\003 \001(\0132!.test.pb.pa.Person.Addre"
+    "ss.Detail\032(\n\006Detail\022\016\n\006region\030\001 \001(\t\022\016\n\006p"
+    "rcode\030\002 \001(\t\"(\n\005Dolor\022\010\n\004DRED\020\000\022\n\n\006DGREEN"
+    "\020\001\022\t\n\005DBLUE\020\002B\006\n\004kind*-\n\005Color\022\007\n\003RED\020\000\022"
+    "\t\n\005GREEN\020\001\022\010\n\004BLUE\020\002\032\006\242\262\031\002\010\001*6\n\010ColorU16"
+    "\022\t\n\005RED16\020\000\022\013\n\007GREEN16\020\001\022\n\n\006BLUE16\020\002\032\006\242\262"
+    "\031\002\010\002*6\n\010ColorU32\022\t\n\005RED32\020\000\022\013\n\007GREEN32\020\001"
+    "\022\n\n\006BLUE32\020\002\032\006\242\262\031\002\010\003Bq\212\262\031m\n\016my::custom::"
+    "ns\022\037turbo/container/flat_hash_map.h\032\034abs"
+    "l::flat_hash_map< %s, %s>\"\032absl::Inlined"
+    "Vector<%s, 2>(\002"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_tests_2ftest_2eproto_deps[2] =
     {
@@ -270,7 +283,7 @@ static ::absl::once_flag descriptor_table_tests_2ftest_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_tests_2ftest_2eproto = {
     false,
     false,
-    947,
+    1055,
     descriptor_table_protodef_tests_2ftest_2eproto,
     "tests/test.proto",
     &descriptor_table_tests_2ftest_2eproto_once,
@@ -1038,7 +1051,7 @@ class Person::_Internal {
 void Person::clear_any_one() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   if (_impl_.any_one_ != nullptr) _impl_.any_one_->Clear();
-  _impl_._has_bits_[0] &= ~0x00000004u;
+  _impl_._has_bits_[0] &= ~0x00000010u;
 }
 void Person::clear_any_two() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
@@ -1048,6 +1061,19 @@ void Person::clear_any_two() {
     {{"Lothar", 6}},
     {nullptr},
 };
+void Person::set_allocated_ddd(::test::pb::pa::Person_Address* ddd) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_kind();
+  if (ddd) {
+    ::google::protobuf::Arena* submessage_arena = ddd->GetArena();
+    if (message_arena != submessage_arena) {
+      ddd = ::google::protobuf::internal::GetOwnedMessage(message_arena, ddd, submessage_arena);
+    }
+    set_has_ddd();
+    _impl_.kind_.ddd_ = ddd;
+  }
+  // @@protoc_insertion_point(field_set_allocated:test.pb.pa.Person.ddd)
+}
 Person::Person(::google::protobuf::Arena* arena)
 #if defined(PROTOBUF_CUSTOM_VTABLE)
     : ::google::protobuf::Message(arena, _class_data_.base()) {
@@ -1067,6 +1093,7 @@ inline PROTOBUF_NDEBUG_INLINE Person::Impl_::Impl_(
         ages_{visibility, arena, from.ages_},
         any_two_{visibility, arena, from.any_two_},
         name_(arena, from.name_, _i_give_permission_to_break_this_code_default_name_),
+        long_name_(arena, from.long_name_),
         kind_{},
         _oneof_case_{from._oneof_case_[0]} {}
 
@@ -1084,10 +1111,13 @@ Person::Person(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
   ::uint32_t cached_has_bits = _impl_._has_bits_[0];
-  _impl_.address_ = (cached_has_bits & 0x00000002u) ? ::google::protobuf::Message::CopyConstruct<::test::pb::pa::Person_Address>(
+  _impl_.address_ = (cached_has_bits & 0x00000004u) ? ::google::protobuf::Message::CopyConstruct<::test::pb::pa::Person_Address>(
                               arena, *from._impl_.address_)
                         : nullptr;
-  _impl_.any_one_ = (cached_has_bits & 0x00000004u) ? ::google::protobuf::Message::CopyConstruct<::google::protobuf::Any>(
+  _impl_.address2_ = (cached_has_bits & 0x00000008u) ? ::google::protobuf::Message::CopyConstruct<::test::pb::pa::Person_Address>(
+                              arena, *from._impl_.address2_)
+                        : nullptr;
+  _impl_.any_one_ = (cached_has_bits & 0x00000010u) ? ::google::protobuf::Message::CopyConstruct<::google::protobuf::Any>(
                               arena, *from._impl_.any_one_)
                         : nullptr;
   ::memcpy(reinterpret_cast<char *>(&_impl_) +
@@ -1106,6 +1136,9 @@ Person::Person(
       case kBbb:
         _impl_.kind_.bbb_ = from._impl_.kind_.bbb_;
         break;
+      case kDdd:
+        _impl_.kind_.ddd_ = ::google::protobuf::Message::CopyConstruct<::test::pb::pa::Person_Address>(arena, *from._impl_.kind_.ddd_);
+        break;
   }
 
   // @@protoc_insertion_point(copy_constructor:test.pb.pa.Person)
@@ -1119,6 +1152,7 @@ inline PROTOBUF_NDEBUG_INLINE Person::Impl_::Impl_(
         ages_{visibility, arena},
         any_two_{visibility, arena},
         name_(arena, Impl_::_i_give_permission_to_break_this_code_default_name_),
+        long_name_(arena),
         favorite_color_{static_cast< ::test::pb::pa::Color >(1)},
         kind_{},
         _oneof_case_{} {}
@@ -1141,7 +1175,9 @@ inline void Person::SharedDtor(MessageLite& self) {
   this_._internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   ABSL_DCHECK(this_.GetArena() == nullptr);
   this_._impl_.name_.Destroy();
+  this_._impl_.long_name_.Destroy();
   delete this_._impl_.address_;
+  delete this_._impl_.address2_;
   delete this_._impl_.any_one_;
   if (this_.has_kind()) {
     this_.clear_kind();
@@ -1159,6 +1195,14 @@ void Person::clear_kind() {
     }
     case kBbb: {
       // No need to clear
+      break;
+    }
+    case kDdd: {
+      if (GetArena() == nullptr) {
+        delete _impl_.kind_.ddd_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.kind_.ddd_);
+      }
       break;
     }
     case KIND_NOT_SET: {
@@ -1233,16 +1277,16 @@ const ::google::protobuf::internal::ClassData* Person::GetClassData() const {
   return _class_data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<3, 11, 5, 53, 7> Person::_table_ = {
+const ::_pbi::TcParseTable<3, 14, 7, 62, 7> Person::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Person, _impl_._has_bits_),
     0, // no _extensions_
     101, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294964544,  // skipmap
+    4294763840,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    11,  // num_field_entries
-    5,  // num_aux_entries
+    14,  // num_field_entries
+    7,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     _class_data_.base(),
     nullptr,  // post_loop_handler
@@ -1258,43 +1302,43 @@ const ::_pbi::TcParseTable<3, 11, 5, 53, 7> Person::_table_ = {
     {::_pbi::TcParser::FastSS1,
      {10, 0, 0, PROTOBUF_FIELD_OFFSET(Person, _impl_.name_)}},
     // optional int32 age = 2 [(.shark.idl.shark_field) = {
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Person, _impl_.age_), 3>(),
-     {16, 3, 0, PROTOBUF_FIELD_OFFSET(Person, _impl_.age_)}},
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Person, _impl_.age_), 5>(),
+     {16, 5, 0, PROTOBUF_FIELD_OFFSET(Person, _impl_.age_)}},
     // repeated string emails = 3;
     {::_pbi::TcParser::FastSR1,
      {26, 63, 0, PROTOBUF_FIELD_OFFSET(Person, _impl_.emails_)}},
     // optional .google.protobuf.Any any_one = 100;
     {::_pbi::TcParser::FastMtS2,
-     {1698, 2, 1, PROTOBUF_FIELD_OFFSET(Person, _impl_.any_one_)}},
+     {1698, 4, 3, PROTOBUF_FIELD_OFFSET(Person, _impl_.any_one_)}},
     // optional .test.pb.pa.Color favorite_color = 5 [default = GREEN];
     {::_pbi::TcParser::FastEr0S1,
-     {40, 4, 2, PROTOBUF_FIELD_OFFSET(Person, _impl_.favorite_color_)}},
+     {40, 6, 2, PROTOBUF_FIELD_OFFSET(Person, _impl_.favorite_color_)}},
     // optional .test.pb.pa.Person.Address address = 6;
     {::_pbi::TcParser::FastMtS1,
-     {50, 1, 0, PROTOBUF_FIELD_OFFSET(Person, _impl_.address_)}},
+     {50, 2, 0, PROTOBUF_FIELD_OFFSET(Person, _impl_.address_)}},
     {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     100, 0, 1,
-    65532, 9,
+    65532, 12,
     65535, 65535
   }}, {{
     // optional string name = 1 [default = "Lothar", deprecated = true];
     {PROTOBUF_FIELD_OFFSET(Person, _impl_.name_), _Internal::kHasBitsOffset + 0, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kRawString | ::_fl::kRepAString)},
     // optional int32 age = 2 [(.shark.idl.shark_field) = {
-    {PROTOBUF_FIELD_OFFSET(Person, _impl_.age_), _Internal::kHasBitsOffset + 3, 0,
+    {PROTOBUF_FIELD_OFFSET(Person, _impl_.age_), _Internal::kHasBitsOffset + 5, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kInt32)},
     // repeated string emails = 3;
     {PROTOBUF_FIELD_OFFSET(Person, _impl_.emails_), -1, 0,
     (0 | ::_fl::kFcRepeated | ::_fl::kRawString | ::_fl::kRepSString)},
     // map<string, int32> scores = 4;
-    {PROTOBUF_FIELD_OFFSET(Person, _impl_.scores_), -1, 3,
+    {PROTOBUF_FIELD_OFFSET(Person, _impl_.scores_), -1, 5,
     (0 | ::_fl::kFcRepeated | ::_fl::kMap)},
     // optional .test.pb.pa.Color favorite_color = 5 [default = GREEN];
-    {PROTOBUF_FIELD_OFFSET(Person, _impl_.favorite_color_), _Internal::kHasBitsOffset + 4, 4,
+    {PROTOBUF_FIELD_OFFSET(Person, _impl_.favorite_color_), _Internal::kHasBitsOffset + 6, 6,
     (0 | ::_fl::kFcOptional | ::_fl::kEnumRange)},
     // optional .test.pb.pa.Person.Address address = 6;
-    {PROTOBUF_FIELD_OFFSET(Person, _impl_.address_), _Internal::kHasBitsOffset + 1, 0,
+    {PROTOBUF_FIELD_OFFSET(Person, _impl_.address_), _Internal::kHasBitsOffset + 2, 0,
     (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // repeated int32 ages = 8;
     {PROTOBUF_FIELD_OFFSET(Person, _impl_.ages_), -1, 0,
@@ -1305,13 +1349,24 @@ const ::_pbi::TcParseTable<3, 11, 5, 53, 7> Person::_table_ = {
     // uint32 bbb = 12;
     {PROTOBUF_FIELD_OFFSET(Person, _impl_.kind_.bbb_), _Internal::kOneofCaseOffset + 0, 0,
     (0 | ::_fl::kFcOneof | ::_fl::kUInt32)},
+    // .test.pb.pa.Person.Address ddd = 13;
+    {PROTOBUF_FIELD_OFFSET(Person, _impl_.kind_.ddd_), _Internal::kOneofCaseOffset + 0, 1,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // optional .test.pb.pa.Person.Address address2 = 17;
+    {PROTOBUF_FIELD_OFFSET(Person, _impl_.address2_), _Internal::kHasBitsOffset + 3, 2,
+    (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+    // optional string long_name = 18;
+    {PROTOBUF_FIELD_OFFSET(Person, _impl_.long_name_), _Internal::kHasBitsOffset + 1, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kRawString | ::_fl::kRepAString)},
     // optional .google.protobuf.Any any_one = 100;
-    {PROTOBUF_FIELD_OFFSET(Person, _impl_.any_one_), _Internal::kHasBitsOffset + 2, 1,
+    {PROTOBUF_FIELD_OFFSET(Person, _impl_.any_one_), _Internal::kHasBitsOffset + 4, 3,
     (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
     // repeated .google.protobuf.Any any_two = 101;
-    {PROTOBUF_FIELD_OFFSET(Person, _impl_.any_two_), -1, 2,
+    {PROTOBUF_FIELD_OFFSET(Person, _impl_.any_two_), -1, 4,
     (0 | ::_fl::kFcRepeated | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
+    {::_pbi::TcParser::GetTable<::test::pb::pa::Person_Address>()},
+    {::_pbi::TcParser::GetTable<::test::pb::pa::Person_Address>()},
     {::_pbi::TcParser::GetTable<::test::pb::pa::Person_Address>()},
     {::_pbi::TcParser::GetTable<::google::protobuf::Any>()},
     {::_pbi::TcParser::GetTable<::google::protobuf::Any>()},
@@ -1321,12 +1376,13 @@ const ::_pbi::TcParseTable<3, 11, 5, 53, 7> Person::_table_ = {
         5)},
     {0, 3},
   }}, {{
-    "\21\4\0\6\6\0\0\0\3\0\0\0\0\0\0\0"
+    "\21\4\0\6\6\0\0\0\3\0\0\0\11\0\0\0"
     "test.pb.pa.Person"
     "name"
     "emails"
     "scores"
     "aaa"
+    "long_name"
   }},
 };
 
@@ -1342,20 +1398,27 @@ PROTOBUF_NOINLINE void Person::Clear() {
   _impl_.ages_.Clear();
   _impl_.any_two_.Clear();
   cached_has_bits = _impl_._has_bits_[0];
-  if (cached_has_bits & 0x00000007u) {
+  if (cached_has_bits & 0x0000001fu) {
     if (cached_has_bits & 0x00000001u) {
       _impl_.name_.ClearToDefault(::test::pb::pa::Person::Impl_::_i_give_permission_to_break_this_code_default_name_, GetArena());
     }
     if (cached_has_bits & 0x00000002u) {
+      _impl_.long_name_.ClearNonDefaultToEmpty();
+    }
+    if (cached_has_bits & 0x00000004u) {
       ABSL_DCHECK(_impl_.address_ != nullptr);
       _impl_.address_->Clear();
     }
-    if (cached_has_bits & 0x00000004u) {
+    if (cached_has_bits & 0x00000008u) {
+      ABSL_DCHECK(_impl_.address2_ != nullptr);
+      _impl_.address2_->Clear();
+    }
+    if (cached_has_bits & 0x00000010u) {
       ABSL_DCHECK(_impl_.any_one_ != nullptr);
       _impl_.any_one_->Clear();
     }
   }
-  if (cached_has_bits & 0x00000018u) {
+  if (cached_has_bits & 0x00000060u) {
     _impl_.age_ = 0;
     _impl_.favorite_color_ = 1;
   }
@@ -1389,7 +1452,7 @@ PROTOBUF_NOINLINE void Person::Clear() {
           }
 
           // optional int32 age = 2 [(.shark.idl.shark_field) = {
-          if (cached_has_bits & 0x00000008u) {
+          if (cached_has_bits & 0x00000020u) {
             target = ::google::protobuf::internal::WireFormatLite::
                 WriteInt32ToArrayWithField<2>(
                     stream, this_._internal_age(), target);
@@ -1431,14 +1494,14 @@ PROTOBUF_NOINLINE void Person::Clear() {
           }
 
           // optional .test.pb.pa.Color favorite_color = 5 [default = GREEN];
-          if (cached_has_bits & 0x00000010u) {
+          if (cached_has_bits & 0x00000040u) {
             target = stream->EnsureSpace(target);
             target = ::_pbi::WireFormatLite::WriteEnumToArray(
                 5, this_._internal_favorite_color(), target);
           }
 
           // optional .test.pb.pa.Person.Address address = 6;
-          if (cached_has_bits & 0x00000002u) {
+          if (cached_has_bits & 0x00000004u) {
             target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
                 6, *this_._impl_.address_, this_._impl_.address_->GetCachedSize(), target,
                 stream);
@@ -1465,11 +1528,32 @@ PROTOBUF_NOINLINE void Person::Clear() {
                   12, this_._internal_bbb(), target);
               break;
             }
+            case kDdd: {
+              target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                  13, *this_._impl_.kind_.ddd_, this_._impl_.kind_.ddd_->GetCachedSize(), target,
+                  stream);
+              break;
+            }
             default:
               break;
           }
+          // optional .test.pb.pa.Person.Address address2 = 17;
+          if (cached_has_bits & 0x00000008u) {
+            target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+                17, *this_._impl_.address2_, this_._impl_.address2_->GetCachedSize(), target,
+                stream);
+          }
+
+          // optional string long_name = 18;
+          if (cached_has_bits & 0x00000002u) {
+            const std::string& _s = this_._internal_long_name();
+            ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(_s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormat::SERIALIZE,
+                                        "test.pb.pa.Person.long_name");
+            target = stream->WriteStringMaybeAliased(18, _s, target);
+          }
+
           // optional .google.protobuf.Any any_one = 100;
-          if (cached_has_bits & 0x00000004u) {
+          if (cached_has_bits & 0x00000010u) {
             target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
                 100, *this_._impl_.any_one_, this_._impl_.any_one_->GetCachedSize(), target,
                 stream);
@@ -1547,29 +1631,39 @@ PROTOBUF_NOINLINE void Person::Clear() {
             }
           }
           cached_has_bits = this_._impl_._has_bits_[0];
-          if (cached_has_bits & 0x0000001fu) {
+          if (cached_has_bits & 0x0000007fu) {
             // optional string name = 1 [default = "Lothar", deprecated = true];
             if (cached_has_bits & 0x00000001u) {
               total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                               this_._internal_name());
             }
-            // optional .test.pb.pa.Person.Address address = 6;
+            // optional string long_name = 18;
             if (cached_has_bits & 0x00000002u) {
+              total_size += 2 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                              this_._internal_long_name());
+            }
+            // optional .test.pb.pa.Person.Address address = 6;
+            if (cached_has_bits & 0x00000004u) {
               total_size += 1 +
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.address_);
             }
+            // optional .test.pb.pa.Person.Address address2 = 17;
+            if (cached_has_bits & 0x00000008u) {
+              total_size += 2 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.address2_);
+            }
             // optional .google.protobuf.Any any_one = 100;
-            if (cached_has_bits & 0x00000004u) {
+            if (cached_has_bits & 0x00000010u) {
               total_size += 2 +
                             ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.any_one_);
             }
             // optional int32 age = 2 [(.shark.idl.shark_field) = {
-            if (cached_has_bits & 0x00000008u) {
+            if (cached_has_bits & 0x00000020u) {
               total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
                   this_._internal_age());
             }
             // optional .test.pb.pa.Color favorite_color = 5 [default = GREEN];
-            if (cached_has_bits & 0x00000010u) {
+            if (cached_has_bits & 0x00000040u) {
               total_size += 1 +
                             ::_pbi::WireFormatLite::EnumSize(this_._internal_favorite_color());
             }
@@ -1585,6 +1679,12 @@ PROTOBUF_NOINLINE void Person::Clear() {
             case kBbb: {
               total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
                   this_._internal_bbb());
+              break;
+            }
+            // .test.pb.pa.Person.Address ddd = 13;
+            case kDdd: {
+              total_size += 1 +
+                            ::google::protobuf::internal::WireFormatLite::MessageSize(*this_._impl_.kind_.ddd_);
               break;
             }
             case KIND_NOT_SET: {
@@ -1610,11 +1710,14 @@ void Person::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::
   _this->_internal_mutable_any_two()->MergeFrom(
       from._internal_any_two());
   cached_has_bits = from._impl_._has_bits_[0];
-  if (cached_has_bits & 0x0000001fu) {
+  if (cached_has_bits & 0x0000007fu) {
     if (cached_has_bits & 0x00000001u) {
       _this->_internal_set_name(from._internal_name());
     }
     if (cached_has_bits & 0x00000002u) {
+      _this->_internal_set_long_name(from._internal_long_name());
+    }
+    if (cached_has_bits & 0x00000004u) {
       ABSL_DCHECK(from._impl_.address_ != nullptr);
       if (_this->_impl_.address_ == nullptr) {
         _this->_impl_.address_ =
@@ -1623,7 +1726,16 @@ void Person::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::
         _this->_impl_.address_->MergeFrom(*from._impl_.address_);
       }
     }
-    if (cached_has_bits & 0x00000004u) {
+    if (cached_has_bits & 0x00000008u) {
+      ABSL_DCHECK(from._impl_.address2_ != nullptr);
+      if (_this->_impl_.address2_ == nullptr) {
+        _this->_impl_.address2_ =
+            ::google::protobuf::Message::CopyConstruct<::test::pb::pa::Person_Address>(arena, *from._impl_.address2_);
+      } else {
+        _this->_impl_.address2_->MergeFrom(*from._impl_.address2_);
+      }
+    }
+    if (cached_has_bits & 0x00000010u) {
       ABSL_DCHECK(from._impl_.any_one_ != nullptr);
       if (_this->_impl_.any_one_ == nullptr) {
         _this->_impl_.any_one_ =
@@ -1632,10 +1744,10 @@ void Person::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::
         _this->_impl_.any_one_->MergeFrom(*from._impl_.any_one_);
       }
     }
-    if (cached_has_bits & 0x00000008u) {
+    if (cached_has_bits & 0x00000020u) {
       _this->_impl_.age_ = from._impl_.age_;
     }
-    if (cached_has_bits & 0x00000010u) {
+    if (cached_has_bits & 0x00000040u) {
       _this->_impl_.favorite_color_ = from._impl_.favorite_color_;
     }
   }
@@ -1660,6 +1772,15 @@ void Person::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::
       }
       case kBbb: {
         _this->_impl_.kind_.bbb_ = from._impl_.kind_.bbb_;
+        break;
+      }
+      case kDdd: {
+        if (oneof_needs_init) {
+          _this->_impl_.kind_.ddd_ =
+              ::google::protobuf::Message::CopyConstruct<::test::pb::pa::Person_Address>(arena, *from._impl_.kind_.ddd_);
+        } else {
+          _this->_impl_.kind_.ddd_->MergeFrom(from._internal_ddd());
+        }
         break;
       }
       case KIND_NOT_SET:
@@ -1688,6 +1809,7 @@ void Person::InternalSwap(Person* PROTOBUF_RESTRICT other) {
   _impl_.ages_.InternalSwap(&other->_impl_.ages_);
   _impl_.any_two_.InternalSwap(&other->_impl_.any_two_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.long_name_, &other->_impl_.long_name_, arena);
   ::google::protobuf::internal::memswap<
       PROTOBUF_FIELD_OFFSET(Person, _impl_.favorite_color_)
       + sizeof(Person::_impl_.favorite_color_)

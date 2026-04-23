@@ -17,9 +17,10 @@
 #include <turbo/strings/ascii.h>
 #include <turbo/strings/str_split.h>
 #include <turbo/strings/str_replace.h>
+#include <turbo/strings/strip.h>
+#include <shark/meta/global_state.h>
 
 namespace shark {
-
     const char *const kKeywordList[] = {
         "and", "and_eq", "asm", "auto", "bitand", "bitor", "bool", "break", "case",
         "catch", "char", "class", "compl", "const", "const_cast", "continue",
@@ -62,27 +63,82 @@ namespace shark {
     }
 
 
-    std::string message_domain(const google::protobuf::FieldDescriptor *field) {
-        return message_domain(field->containing_type());
+    std::string message_type(const google::protobuf::Descriptor *md) {
+        auto s = md->full_name();
+        auto t = turbo::str_replace_all(s, {{".", "::"}});
+        return std::string(turbo::strip_prefix(t, GlobalState::instance().pb_namespace_prefix));
+    }
+
+    std::string message_type(const google::protobuf::Descriptor *des, const std::string &suffix) {
+        auto f = des->file()->package();
+        auto mf = des->full_name();
+        auto t = std::string(turbo::strip_prefix(mf, f + "."));
+        std::vector<std::string_view> sps = turbo::str_split(t, '.');
+        std::string result;
+        for (size_t i = 0; i < sps.size(); i++) {
+            result += turbo::str_cat(sps[i], suffix, "::");
+        }
+        /// pop "::"
+        result.pop_back();
+        result.pop_back();
+
+        result = turbo::str_replace_all(f, {{".", "::"}}) + "::" +result;
+        return std::string(turbo::strip_prefix(result, GlobalState::instance().pb_namespace_prefix));
+    }
+
+    std::string relative_message_type(const google::protobuf::Descriptor *d, const google::protobuf::Descriptor *r) {
+        auto dm = message_type(d);
+        std::string rm;
+        if (r) {
+            rm = message_type(r) + "::";
+        }
+        return std::string(turbo::strip_prefix(dm, rm));
+    }
+
+    std::string relative_message_type(const google::protobuf::Descriptor *d, const google::protobuf::Descriptor *r, const std::string &suffix) {
+        auto dm = message_type(d, suffix);
+        std::string rm;
+        if (r) {
+            rm = message_type(r, suffix) + "::";
+        }
+        return std::string(turbo::strip_prefix(dm, rm));
     }
 
     std::string message_domain_without_namespace(const google::protobuf::FieldDescriptor *field) {
         return message_domain_without_namespace(field->containing_type());
     }
 
-    std::string message_domain(const google::protobuf::Descriptor *md) {
-        auto s = md->full_name();
-        return turbo::str_replace_all(s, {{".", "::"}});
-    }
-
     std::string message_domain_without_namespace(const google::protobuf::Descriptor *md) {
-        KLOG(INFO)<<1;
         auto s = md->full_name();
-        KLOG(INFO)<<2;
         s = s.substr(md->file()->package().size() + 1);
-        KLOG(INFO)<<3;
         return turbo::str_replace_all(s, {{".", "::"}});
     }
 
 
-}  // namespace shark
+    std::string message_domain_without_namespace(const google::protobuf::FieldDescriptor *field,
+                                                 const std::string &suffix) {
+        return message_domain_without_namespace(field->containing_type(), suffix);
+    }
+
+    std::string message_domain_without_namespace(const google::protobuf::Descriptor *md, const std::string &suffix) {
+        auto s = md->full_name();
+        s = s.substr(md->file()->package().size() + 1);
+        std::vector<std::string_view> sps = turbo::str_split(s, '.');
+        std::string result;
+        for (size_t i = 0; i < sps.size(); i++) {
+            result += turbo::str_cat(sps[i], suffix, "::");
+        }
+        /// pop "::"
+        result.pop_back();
+        result.pop_back();
+        return result;
+    }
+
+    std::string enum_type(const google::protobuf::FieldDescriptor *field) {
+        return enum_type(field->enum_type());
+    }
+
+    std::string enum_type(const google::protobuf::EnumDescriptor *field) {
+        return turbo::str_replace_all(field->full_name(), {{".", "::"}});
+    }
+} // namespace shark

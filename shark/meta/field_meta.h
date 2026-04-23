@@ -32,6 +32,8 @@ namespace shark {
         void generate_meta_declares(google::protobuf::io::Printer *printer) const override;
 
         void generate_meta_definition(google::protobuf::io::Printer *printer) const override;
+
+        void generate_meta_definition_inline(google::protobuf::io::Printer *printer) const override;
     };
 
 }  // namespace shark

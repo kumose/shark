@@ -8,455 +8,606 @@
 #include <optional>
 #include <google/protobuf/descriptor.h>
 #include <tests/test.pb.h>
-#include <atomic>
 #include <turbo/container/flat_hash_map.h>
-
+#include <atomic>
 
 
 namespace my::custom::ns {
+    class Person;
+    class Address;
+    class Detail;
 
-  class Person;
-  class Address;
-  class Detail;
 
+    /// --- enums ---
 
-  /// --- enums ---
+    enum class Color : uint8_t {
+        RED = 0,
+        GREEN = 1,
+        BLUE = 2
+    }; //
+    enum class ColorU16 : uint16_t {
+        RED16 = 0,
+        GREEN16 = 1,
+        BLUE16 = 2
+    }; //
+    enum class ColorU32 : uint32_t {
+        RED32 = 0,
+        GREEN32 = 1,
+        BLUE32 = 2
+    }; //
 
-  enum class Color : uint8_t{
-    RED = 0,
-    GREEN = 1,
-    BLUE = 2
-  };  // 
-  enum class ColorU16 : uint16_t{
-    RED16 = 0,
-    GREEN16 = 1,
-    BLUE16 = 2
-  };  // 
-  enum class ColorU32 : uint32_t{
-    RED32 = 0,
-    GREEN32 = 1,
-    BLUE32 = 2
-  };  // 
+    /// --- messages ---
 
-  /// --- messages --- 
-
-  class  Person {
-  public:
-    /// constructor
-    Person();
-
-    /// destructor
-    ~Person();
-
-    Person(const Person& rhs);
-
-    Person& operator= (const Person& rhs);
-
-    Person(Person&& rhs) noexcept;
-
-    Person& operator= (Person&& rhs) noexcept;
-
-    /////////////////////////////////////////////////////////////////////// 
-    /// meta describe 
-    static const google::protobuf::Descriptor* get_descriptor();
-
-    const google::protobuf::Descriptor *descriptor() const;
-
-    class  Address {
+    class Person {
     public:
-      /// constructor
-      Address();
-
-      /// destructor
-      ~Address();
-
-      Address(const Address& rhs);
-
-      Address& operator= (const Address& rhs);
-
-      Address(Address&& rhs) noexcept;
-
-      Address& operator= (Address&& rhs) noexcept;
-
-      /////////////////////////////////////////////////////////////////////// 
-      /// meta describe 
-      static const google::protobuf::Descriptor* get_descriptor();
-
-      const google::protobuf::Descriptor *descriptor() const;
-
-      class  Detail {
-      public:
         /// constructor
-        Detail();
+        Person();
 
         /// destructor
-        ~Detail();
+        ~Person();
 
-        Detail(const Detail& rhs);
+        Person(const Person &rhs);
 
-        Detail& operator= (const Detail& rhs);
+        Person &operator=(const Person &rhs);
 
-        Detail(Detail&& rhs) noexcept;
+        Person(Person &&rhs) noexcept;
 
-        Detail& operator= (Detail&& rhs) noexcept;
+        Person &operator=(Person &&rhs) noexcept;
 
-        /////////////////////////////////////////////////////////////////////// 
-        /// meta describe 
-        static const google::protobuf::Descriptor* get_descriptor();
+        ///////////////////////////////////////////////////////////////////////
+        /// meta describe
+        static const google::protobuf::Descriptor *get_descriptor();
 
         const google::protobuf::Descriptor *descriptor() const;
 
-        /// -----enums-------- 
-      public:
+        class Address {
+        public:
+            /// constructor
+            Address();
+
+            /// destructor
+            ~Address();
+
+            Address(const Address &rhs);
+
+            Address &operator=(const Address &rhs);
+
+            Address(Address &&rhs) noexcept;
+
+            Address &operator=(Address &&rhs) noexcept;
+
+            ///////////////////////////////////////////////////////////////////////
+            /// meta describe
+            static const google::protobuf::Descriptor *get_descriptor();
+
+            const google::protobuf::Descriptor *descriptor() const;
+
+            class Detail {
+            public:
+                /// constructor
+                Detail();
+
+                /// destructor
+                ~Detail();
+
+                Detail(const Detail &rhs);
+
+                Detail &operator=(const Detail &rhs);
+
+                Detail(Detail &&rhs) noexcept;
+
+                Detail &operator=(Detail &&rhs) noexcept;
+
+                ///////////////////////////////////////////////////////////////////////
+                /// meta describe
+                static const google::protobuf::Descriptor *get_descriptor();
+
+                const google::protobuf::Descriptor *descriptor() const;
+
+                /// -----enums--------
+            public:
+                ////////////////////// getters/setters
+
+                inline const std::string &region() const;
+
+                inline void set_region(const std::string &v);
+
+                inline const std::string &prcode() const;
+
+                inline void set_prcode(const std::string &v);
+
+                /////////////////////////////////////////////////////////////////////////
+                /// transfers
+                void parse_from_proto(const test::pb::pa::Person::Address::Detail &pb);
+
+                void serialize_to_proto(test::pb::pa::Person::Address::Detail &pb) const;
+
+                bool parse_from_json(const std::string &json);
+
+                bool serialize_to_json(std::string &json) const;
+
+                std::string to_string() const;
+
+            private:
+                ////////////////////// members
+                std::string _region;
+                std::string _prcode;
+                ////////////////////// unions
+            };
+
+            /// -----enums--------
+        public:
+            ////////////////////// getters/setters
+
+            inline const std::string &street() const;
+
+            inline void set_street(const std::string &v);
+
+            inline int32_t number() const;
+
+            inline void number(int32_t value);
+
+            inline const Detail &detail() const;
+
+            inline void set_detail(const Detail &val);
+
+            inline void set_detail(Detail &&val);
+
+            /////////////////////////////////////////////////////////////////////////
+            /// transfers
+            void parse_from_proto(const test::pb::pa::Person::Address &pb);
+
+            void serialize_to_proto(test::pb::pa::Person::Address &pb) const;
+
+            bool parse_from_json(const std::string &json);
+
+            bool serialize_to_json(std::string &json) const;
+
+            std::string to_string() const;
+
+        private:
+            ////////////////////// members
+            std::string _street;
+            int32_t _number;
+            Detail _detail;
+            ////////////////////// unions
+        };
+
+        enum class kindCase {
+            NONE = 0,
+            AAA = 10,
+            BBB = 12,
+            DDD = 13
+        };
+
+        /// -----enums--------
+        enum class Dolor : uint32_t {
+            DRED = 0,
+            DGREEN = 1,
+            DBLUE = 2
+        }; //
+
+        static std::string_view to_string(Dolor value);
+
+    public:
         ////////////////////// getters/setters
 
-         inline const std::string& region() const;
-         inline void set_region(const std::string &v);
-         inline const std::string& prcode() const;
-         inline void set_prcode(const std::string &v);
-        ///////////////////////////////////////////////////////////////////////// 
-        /// transfers 
-        void parse_from_proto(const test::pb::pa::Person::Address::Detail& pb);
+        inline const std::pair<std::string, std::string> &any_one() const;
 
-        void serialize_to_proto(test::pb::pa::Person::Address::Detail& pb) const;
+        inline void set_any_one(const std::pair<std::string, std::string> &v);
 
-        bool parse_from_json(const std::string& json);
+        inline const std::vector<std::pair<std::string, std::string> > &any_two() const;
 
-        bool serialize_to_json(std::string& json) const;
+        inline std::vector<std::pair<std::string, std::string> > &mutable_any_two();
+
+        [[deprecated]] inline const std::string &name() const;
+
+        [[deprecated]] inline void set_name(const std::string &v);
+
+        inline int8_t age() const;
+
+        inline void age(int8_t value);
+
+        inline const std::vector<std::string> &emails() const;
+
+        inline std::vector<std::string> &mutable_emails();
+
+        inline const std::vector<int32_t> &ages() const;
+
+        inline std::vector<int32_t> &mutable_ages();
+
+        inline const absl::flat_hash_map<std::string, int32_t> &scores() const;
+
+        inline void set_scores(const absl::flat_hash_map<std::string, int32_t> &v);
+
+        inline Color favorite_color() const;
+
+        inline void set_favorite_color(Color value);
+
+        inline const Address &address() const;
+
+        inline void set_address(const Address &val);
+
+        inline void set_address(Address &&val);
+
+        inline const Address &address2() const;
+
+        inline void set_address2(const Address &val);
+
+        inline void set_address2(Address &&val);
+
+        inline const std::string &long_name() const;
+
+        inline void set_long_name(const std::string &v);
+
+        inline kindCase kind_case() const;
+
+        inline bool has_kind() const;
+
+        inline void clear_kind();
+
+        inline bool has_aaa() const;
+
+        inline void set_aaa(std::string val);
+
+        inline std::optional<std::string> aaa() const;
+
+        inline bool has_bbb() const;
+
+        inline void set_bbb(uint32_t val);
+
+        inline std::optional<uint32_t> bbb() const;
+
+        inline bool has_ddd() const;
+
+        inline void set_ddd(Address val);
+
+        inline std::optional<Address> ddd() const;
+
+        /////////////////////////////////////////////////////////////////////////
+        /// transfers
+        void parse_from_proto(const test::pb::pa::Person &pb);
+
+        void serialize_to_proto(test::pb::pa::Person &pb) const;
+
+        bool parse_from_json(const std::string &json);
+
+        bool serialize_to_json(std::string &json) const;
 
         std::string to_string() const;
 
-      private:
-        ////////////////////// members
-        std::string _region;
-        std::string _prcode;
-        ////////////////////// unions
-      };
-      /// -----enums-------- 
-    public:
-      ////////////////////// getters/setters
-
-       inline const std::string& street() const;
-       inline void set_street(const std::string &v);
-       inline int32_t number() const;
-       inline void number(int32_t value);
-       inline const Person::Address& detail() const;
-       inline void set_detail(const Person::Address& val);
-       inline void set_detail(Person::Address&& val);
-      ///////////////////////////////////////////////////////////////////////// 
-      /// transfers 
-      void parse_from_proto(const test::pb::pa::Person::Address& pb);
-
-      void serialize_to_proto(test::pb::pa::Person::Address& pb) const;
-
-      bool parse_from_json(const std::string& json);
-
-      bool serialize_to_json(std::string& json) const;
-
-      std::string to_string() const;
-
     private:
-      ////////////////////// members
-      std::string _street;
-      int32_t _number;
-      Person::Address _detail;
-      ////////////////////// unions
+        ////////////////////// members
+        std::pair<std::string, std::string> _any_one;
+        std::vector<std::pair<std::string, std::string> > _any_two;
+        std::string _name;
+        int8_t _age;
+        std::vector<std::string> _emails;
+        std::vector<int32_t> _ages;
+        absl::flat_hash_map<std::string, int32_t> _scores;
+        Color _favorite_color;
+        Address _address;
+        Address _address2;
+        std::string _long_name;
+
+        ////////////////////// unions
+        union kind {
+            int64_t _kind_placeholder{0};
+            std::string _aaa;
+            uint32_t _bbb;
+            Address _ddd;
+
+            kind() {
+            };
+
+            ~kind() {
+            };
+        } _kind;
+
+        kindCase _kind_case{kindCase::NONE};
     };
-    enum class kindCase {
-      NONE = 0,
-      AAA = 10,
-      BBB = 12
+
+    /* --- services --- */
+
+
+    /* --- descriptors --- */
+
+    inline std::string_view to_string(Color value) {
+        switch (value) {
+            case Color::RED: return "RED";
+            case Color::GREEN: return "GREEN";
+            case Color::BLUE: return "BLUE";
+            default: return "UNKNOWN";
+        }
+    }
+
+    inline std::string_view to_string(ColorU16 value) {
+        switch (value) {
+            case ColorU16::RED16: return "RED16";
+            case ColorU16::GREEN16: return "GREEN16";
+            case ColorU16::BLUE16: return "BLUE16";
+            default: return "UNKNOWN";
+        }
+    }
+
+    inline std::string_view to_string(ColorU32 value) {
+        switch (value) {
+            case ColorU32::RED32: return "RED32";
+            case ColorU32::GREEN32: return "GREEN32";
+            case ColorU32::BLUE32: return "BLUE32";
+            default: return "UNKNOWN";
+        }
+    }
+
+    ///////////////////////////////////////////////////////////
+    /// --- inlines ---
+    inline const google::protobuf::Descriptor *Person::Address::Detail::descriptor() const {
+        return get_descriptor();
+    }
+
+    /// getter
+    inline const std::string &Person::Address::Detail::region() const {
+        return _region;
+    }
+
+    /// setter
+    inline void Person::Address::Detail::set_region(const std::string &v) {
+        _region = v;
+    }
+
+    /// getter
+    inline const std::string &Person::Address::Detail::prcode() const {
+        return _prcode;
+    }
+
+    /// setter
+    inline void Person::Address::Detail::set_prcode(const std::string &v) {
+        _prcode = v;
+    }
+
+    inline const google::protobuf::Descriptor *Person::Address::descriptor() const {
+        return get_descriptor();
+    }
+
+    /// getter
+    inline const std::string &Person::Address::street() const {
+        return _street;
+    }
+
+    /// setter
+    inline void Person::Address::set_street(const std::string &v) {
+        _street = v;
+    }
+
+    inline int32_t Person::Address::number() const {
+        return _number;
+    }
+
+    inline void Person::Address::number(int32_t value) {
+        _number = value;
+    }
+
+    inline const Person::Address::Detail &Person::Address::detail() const {
+        return _detail;
+    }
+
+    inline void Person::Address::set_detail(const Detail &val) {
+        _detail = val;
+    }
+
+    inline void Person::Address::set_detail(Detail &&val) {
+        _detail = std::move(val);
+    }
+
+    inline const google::protobuf::Descriptor *Person::descriptor() const {
+        return get_descriptor();
+    }
+
+    /// getter
+    inline const std::pair<std::string, std::string> &Person::any_one() const {
+        return _any_one;
+    }
+
+    /// setter
+    inline void Person::set_any_one(const std::pair<std::string, std::string> &v) {
+        _any_one = v;
+    }
+
+    /// getter
+    inline const std::vector<std::pair<std::string, std::string> > &Person::any_two() const {
+        return _any_two;
+    }
+
+    /// setter
+    inline std::vector<std::pair<std::string, std::string> > &Person::mutable_any_two() {
+        return _any_two;
+    }
+
+    /// getter
+    inline const std::string &Person::name() const {
+        return _name;
+    }
+
+    /// setter
+    inline void Person::set_name(const std::string &v) {
+        _name = v;
+    }
+
+    inline int8_t Person::age() const {
+        return _age;
+    }
+
+    inline void Person::age(int8_t value) {
+        _age = value;
+    }
+
+    /// getter
+    inline const std::vector<std::string> &Person::emails() const {
+        return _emails;
+    }
+
+    /// setter
+    inline std::vector<std::string> &Person::mutable_emails() {
+        return _emails;
+    }
+
+    inline const std::vector<int32_t> &Person::ages() const {
+        return _ages;
+    }
+
+    inline std::vector<int32_t> &Person::mutable_ages() {
+        return _ages;
+    }
+
+    /// getter
+    inline const absl::flat_hash_map<std::string, int32_t> &Person::scores() const {
+        return _scores;
+    }
+
+    /// setter
+    inline void Person::set_scores(const absl::flat_hash_map<std::string, int32_t> &v) {
+        _scores = v;
+    }
+
+    inline Color Person::favorite_color() const {
+        return _favorite_color;
+    }
+
+    inline void Person::set_favorite_color(Color value) {
+        _favorite_color = value;
+    }
+
+    inline const Person::Address &Person::address() const {
+        return _address;
+    }
+
+    inline void Person::set_address(const Address &val) {
+        _address = val;
+    }
+
+    inline void Person::set_address(Address &&val) {
+        _address = std::move(val);
+    }
+
+    inline const Person::Address &Person::address2() const {
+        return _address2;
+    }
+
+    inline void Person::set_address2(const Address &val) {
+        _address2 = val;
+    }
+
+    inline void Person::set_address2(Address &&val) {
+        _address2 = std::move(val);
+    }
+
+    /// getter
+    inline const std::string &Person::long_name() const {
+        return _long_name;
+    }
+
+    /// setter
+    inline void Person::set_long_name(const std::string &v) {
+        _long_name = v;
+    }
+
+    inline Person::kindCase Person::kind_case() const {
+        return _kind_case;
+    }
+
+    inline bool Person::has_kind() const {
+        return _kind_case != kindCase::NONE;
+    }
+
+    inline void Person::clear_kind() {
+        switch (_kind_case) {
+            case kindCase::AAA:
+                _kind._aaa.~decltype(_kind._aaa)();
+                break;
+            case kindCase::BBB:
+                break;
+            case kindCase::DDD:
+                _kind._ddd.~decltype(_kind._ddd)();
+                break;
+            default:
+                break;
+        };
+        _kind_case = kindCase::NONE;
+        _kind._kind_placeholder = 0;
+    }
+
+    inline bool Person::has_aaa() const {
+        return _kind_case == kindCase::AAA;
+    }
+
+    inline void Person::set_aaa(std::string val) {
+        clear_kind();
+        new(&_kind._aaa) std::string(std::move(val));
+        _kind_case = kindCase::AAA;
+    }
+
+    inline std::optional<std::string> Person::aaa() const {
+        if (_kind_case != kindCase::AAA) {
+            return std::nullopt;
+        }
+        return _kind._aaa;
+    }
+
+    inline bool Person::has_bbb() const {
+        return _kind_case == kindCase::BBB;
+    }
+
+    inline void Person::set_bbb(uint32_t val) {
+        clear_kind();
+        _kind._bbb = val;
+        _kind_case = kindCase::BBB;
+    }
+
+    inline std::optional<uint32_t> Person::bbb() const {
+        if (_kind_case != kindCase::BBB) {
+            return std::nullopt;
+        }
+        return _kind._bbb;
+    }
+
+    inline bool Person::has_ddd() const {
+        return _kind_case == kindCase::DDD;
+    }
+
+    inline void Person::set_ddd(Address val) {
+        clear_kind();
+        new(&_kind._ddd) Address(std::move(val));
+        _kind_case = kindCase::DDD;
+    }
+
+    inline std::optional<Person::Address> Person::ddd() const {
+        if (_kind_case != kindCase::DDD) {
+            return std::nullopt;
+        }
+        return _kind._ddd;
+    }
+
+    inline std::string_view Person::to_string(Person::Dolor value) {
+        switch (value) {
+            case Person::Dolor::DRED: return "DRED";
+            case Person::Dolor::DGREEN: return "DGREEN";
+            case Person::Dolor::DBLUE: return "DBLUE";
+            default: return "UNKNOWN";
+        }
+    }
+
+    template<int INDEX>
+    struct PersonIndexer;
+
+
+    template<>
+    struct PersonIndexer<1> {
+        static constexpr bool is_one_of = true;
+        static constexpr bool is_repeated = false;
+        using cpp_type = int32_t;
+
+        static std::optional<uint32_t> get(const Person &p) {
+            return p.bbb();
+        }
     };
-
-    /// -----enums-------- 
-    enum class Dolor : uint32_t{
-      DRED = 0,
-      DGREEN = 1,
-      DBLUE = 2
-    };  // 
-
-    static std::string_view to_string(Dolor value);
-  public:
-    ////////////////////// getters/setters
-
-     inline const std::pair<std::string,std::string>& any_one() const;
-     inline void set_any_one(const std::pair<std::string,std::string> &v);
-     inline const std::vector<std::pair<std::string,std::string>>& any_two() const;
-     inline std::vector<std::pair<std::string,std::string>>& mutable_any_two();
-    [[deprecated]] inline const std::string& name() const;
-    [[deprecated]] inline void set_name(const std::string &v);
-     inline int8_t age() const;
-     inline void age(int8_t value);
-     inline const std::vector<std::string>& emails() const;
-     inline std::vector<std::string>& mutable_emails();
-     inline const std::vector<int32_t>& ages() const;
-     inline std::vector<int32_t>& mutable_ages();
-     inline const absl::flat_hash_map<std::string,int32_t>& scores() const;
-     inline void set_scores(const absl::flat_hash_map<std::string,int32_t> &v);
-     inline Color favorite_color() const;
-    inline void set_favorite_color(Color value);
-     inline const Person& address() const;
-     inline void set_address(const Person& val);
-     inline void set_address(Person&& val);
-    inline kindCase kind_case() const;
-    inline bool has_kind() const;
-    inline void clear_kind();
-    inline bool has_aaa() const;
-    inline void set_aaa(std::string val);
-    inline std::optional<std::string> aaa() const;
-    inline bool has_bbb() const;
-    inline void set_bbb(uint32_t val);
-    inline std::optional<uint32_t> bbb() const;
-    ///////////////////////////////////////////////////////////////////////// 
-    /// transfers 
-    void parse_from_proto(const test::pb::pa::Person& pb);
-
-    void serialize_to_proto(test::pb::pa::Person& pb) const;
-
-    bool parse_from_json(const std::string& json);
-
-    bool serialize_to_json(std::string& json) const;
-
-    std::string to_string() const;
-
-  private:
-    ////////////////////// members
-    std::pair<std::string,std::string> _any_one;
-    std::vector<std::pair<std::string,std::string>> _any_two;
-    std::string _name;
-    int8_t _age;
-    std::vector<std::string> _emails;
-    std::vector<int32_t> _ages;
-     absl::flat_hash_map<std::string,int32_t> _scores;
-    Color _favorite_color;
-    Person _address;
-    ////////////////////// unions
-    union kind {
-      int64_t _kind_placeholder{0};
-      std::string _aaa;
-      uint32_t _bbb;
-      kind() {};
-
-      ~kind() {};
-
-    } _kind;
-
-    kindCase _kind_case{kindCase::NONE};
-
-  };
-
-  /* --- services --- */
-
-
-  /* --- descriptors --- */
-
-  inline std::string_view to_string(Color value) {
-    switch (value) {
-      case Color::RED: return "RED";
-      case Color::GREEN: return "GREEN";
-      case Color::BLUE: return "BLUE";
-      default: return "UNKNOWN";
-    }
-  }
-  inline std::string_view to_string(ColorU16 value) {
-    switch (value) {
-      case ColorU16::RED16: return "RED16";
-      case ColorU16::GREEN16: return "GREEN16";
-      case ColorU16::BLUE16: return "BLUE16";
-      default: return "UNKNOWN";
-    }
-  }
-  inline std::string_view to_string(ColorU32 value) {
-    switch (value) {
-      case ColorU32::RED32: return "RED32";
-      case ColorU32::GREEN32: return "GREEN32";
-      case ColorU32::BLUE32: return "BLUE32";
-      default: return "UNKNOWN";
-    }
-  }
-
-  ///////////////////////////////////////////////////////////
-  /// --- inlines ---
-  inline const google::protobuf::Descriptor* Person::Address::Detail::descriptor() const {
-    return get_descriptor();
-  }
-
-  /// getter
-  inline const std::string& Person::Address::Detail::region() const {
-    return _region;
-  }
-  /// setter
-  inline void Person::Address::Detail::set_region(const std::string &v) {
-    _region = v;
-  }
-  /// getter
-  inline const std::string& Person::Address::Detail::prcode() const {
-    return _prcode;
-  }
-  /// setter
-  inline void Person::Address::Detail::set_prcode(const std::string &v) {
-    _prcode = v;
-  }
-  inline const google::protobuf::Descriptor* Person::Address::descriptor() const {
-    return get_descriptor();
-  }
-
-  /// getter
-  inline const std::string& Person::Address::street() const {
-    return _street;
-  }
-  /// setter
-  inline void Person::Address::set_street(const std::string &v) {
-    _street = v;
-  }
-  inline int32_t Person::Address::number() const {
-    return _number;
-  }
-  inline void Person::Address::number(int32_t value) {
-    _number = value;
-  }
-  inline const Person::Address& Person::Address::detail() const {
-    return _detail;
-  }
-  inline void Person::Address::set_detail(const Person::Address& val) {
-    _detail = val;
-  }
-  inline void Person::Address::set_detail(Person::Address&& val) {
-    _detail = std::move(val);
-  }
-  inline const google::protobuf::Descriptor* Person::descriptor() const {
-    return get_descriptor();
-  }
-
-  /// getter
-  inline const std::pair<std::string,std::string>& Person::any_one() const {
-    return _any_one;
-  }
-  /// setter
-  inline void Person::set_any_one(const std::pair<std::string,std::string> &v) {
-    _any_one = v;
-  }
-  /// getter
-  inline const std::vector<std::pair<std::string,std::string>>& Person::any_two() const {
-    return _any_two;
-  }
-
-  /// setter
-  inline std::vector<std::pair<std::string,std::string>>& Person::mutable_any_two() {
-    return _any_two;
-  }
-
-  /// getter
-  inline const std::string& Person::name() const {
-    return _name;
-  }
-  /// setter
-  inline void Person::set_name(const std::string &v) {
-    _name = v;
-  }
-  inline int8_t Person::age() const {
-    return _age;
-  }
-  inline void Person::age(int8_t value) {
-    _age = value;
-  }
-  /// getter
-  inline const std::vector<std::string>& Person::emails() const {
-    return _emails;
-  }
-
-  /// setter
-  inline std::vector<std::string>& Person::mutable_emails() {
-    return _emails;
-  }
-
-  inline const std::vector<int32_t>& Person::ages() const {
-    return _ages;
-  }
-  inline std::vector<int32_t>& Person::mutable_ages() {
-    return _ages;
-  }
-  /// getter
-  inline const absl::flat_hash_map<std::string,int32_t>& Person::scores() const {
-    return _scores;
-  }
-  /// setter
-  inline void Person::set_scores(const absl::flat_hash_map<std::string,int32_t> &v) {
-    _scores = v;
-  }
-  inline Color Person::favorite_color() const {
-    return _favorite_color;
-  }
-  inline void Person::set_favorite_color(Color value) {
-    _favorite_color = value;
-  }
-  inline const Person& Person::address() const {
-    return _address;
-  }
-  inline void Person::set_address(const Person& val) {
-    _address = val;
-  }
-  inline void Person::set_address(Person&& val) {
-    _address = std::move(val);
-  }
-  inline Person::kindCase Person::kind_case() const {
-    return _kind_case;
-  }
-  inline bool Person::has_kind() const {
-    return _kind_case != kindCase::NONE;
-  }
-  inline void Person::clear_kind() {
-    switch(_kind_case) {
-      case kindCase::AAA:
-        _kind._aaa.~decltype(_kind._aaa)();
-        break;
-      case kindCase::BBB:
-        break;
-      default:
-        break;
-    };
-    _kind_case = kindCase::NONE;
-    _kind._kind_placeholder = 0;
-  }
-
-  inline bool Person::has_aaa() const {
-    return _kind_case == kindCase::AAA;
-  }
-  inline void Person::set_aaa(std::string val) {
-    clear_kind();
-    new (&_kind._aaa) std::string(std::move(val));
-    _kind_case = kindCase::AAA;
-  }
-  inline std::optional<std::string> Person::aaa() const {
-    if(_kind_case != kindCase::AAA) {
-      return std::nullopt;
-    }
-    return _kind._aaa;
-  }
-  inline bool Person::has_bbb() const {
-    return _kind_case == kindCase::BBB;
-  }
-  inline void Person::set_bbb(uint32_t val) {
-    clear_kind();
-    _kind._bbb = val;
-    _kind_case = kindCase::BBB;
-  }
-  inline std::optional<uint32_t> Person::bbb() const {
-    if(_kind_case != kindCase::BBB) {
-      return std::nullopt;
-    }
-    return _kind._bbb;
-  }
-
-  inline std::string_view Person::to_string(Person::Dolor value) {
-    switch (value) {
-      case Person::Dolor::DRED: return "DRED";
-      case Person::Dolor::DGREEN: return "DGREEN";
-      case Person::Dolor::DBLUE: return "DBLUE";
-      default: return "UNKNOWN";
-    }
-  }
-
-}  // my::custom::ns
-
-
+} // my::custom::ns

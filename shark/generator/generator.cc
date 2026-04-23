@@ -1,7 +1,3 @@
-// SPDX-License-Identifier: BSD-3-Clause
-// Based on Google Protobuf (https://github.com/protocolbuffers/protobuf) and protobuf-c
-// (https://github.com/protobuf-c/protobuf-c)
-// Copyright 2008 Google Inc., 2008-2025 protobuf-c authors. Modifications for C++ generation.
 // Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +14,7 @@
 //
 
 
+
 #include <memory>
 #include <utility>
 #include <vector>
@@ -27,6 +24,7 @@
 
 #include <shark/idl/shark_options.pb.h>
 #include <shark/rt/file.h>
+#include <shark/skb/file.h>
 #include <shark/generator/generator.h>
 #include <shark/utility/helpers.h>
 
@@ -100,27 +98,50 @@ namespace shark {
         }
 
         // -----------------------------------------------------------------
-
-
-        std::string basename = StripProto(file->name());
-        basename.append(".sk");
-
-        FileGenerator file_generator(file, dllexport_decl);
-
-        // Generate header.
+        GlobalState::instance().registry(file);
         {
-            std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
-                output_directory->Open(basename + ".h"));
-            google::protobuf::io::Printer printer(output.get(), '$');
-            file_generator.GenerateHeader(&printer);
+            std::string basename = StripProto(file->name());
+            basename.append(".sk");
+
+            FileGenerator file_generator(file, dllexport_decl);
+
+            // Generate header.
+            {
+                std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
+                    output_directory->Open(basename + ".h"));
+                google::protobuf::io::Printer printer(output.get(), '$');
+                file_generator.GenerateHeader(&printer);
+            }
+
+            // Generate cc file.
+            {
+                std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
+                    output_directory->Open(basename + ".cc"));
+                google::protobuf::io::Printer printer(output.get(), '$');
+                file_generator.GenerateSource(&printer);
+            }
         }
-
-        // Generate cc file.
         {
-            std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
-                output_directory->Open(basename + ".cc"));
-            google::protobuf::io::Printer printer(output.get(), '$');
-            file_generator.GenerateSource(&printer);
+            std::string skb_basename = StripProto(file->name());
+            skb_basename.append(".skb");
+
+            FileSkbGenerator file_skb_generator(file, dllexport_decl);
+
+            // Generate header.
+            {
+                std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
+                    output_directory->Open(skb_basename + ".h"));
+                google::protobuf::io::Printer printer(output.get(), '$');
+                file_skb_generator.GenerateHeader(&printer);
+            }
+
+            // Generate cc file.
+            {
+                std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
+                    output_directory->Open(skb_basename + ".cc"));
+                google::protobuf::io::Printer printer(output.get(), '$');
+                file_skb_generator.GenerateSource(&printer);
+            }
         }
 
         return true;

@@ -1,7 +1,3 @@
-// SPDX-License-Identifier: BSD-3-Clause
-// Based on Google Protobuf (https://github.com/protocolbuffers/protobuf) and protobuf-c
-// (https://github.com/protobuf-c/protobuf-c)
-// Copyright 2008 Google Inc., 2008-2025 protobuf-c authors. Modifications for C++ generation.
 // Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 
 
 #include <google/protobuf/io/printer.h>
@@ -143,12 +140,12 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
 
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "$deprecated$ inline $type$ $name$() const;\n");
+                printer->Print(variables_, "$deprecated$inline $type$ $name$() const;\n");
                 printer->Print(variables_, "inline void set_$name$($type$ value);\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "$deprecated$ inline const std::vector<$type$>& $name$() const;\n");
-                printer->Print(variables_, "$deprecated$ inline std::vector<$type$> mutable_$name$();\n");
+                printer->Print(variables_, "$deprecated$inline const std::vector<$type$>& $name$() const;\n");
+                printer->Print(variables_, "$deprecated$inline std::vector<$type$> mutable_$name$();\n");
                 break;
         }
     }

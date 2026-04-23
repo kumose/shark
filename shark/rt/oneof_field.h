@@ -26,8 +26,7 @@
 namespace shark {
     class OneofFieldGenerator {
     public:
-        explicit OneofFieldGenerator(const google::protobuf::Descriptor *mdes) : mdes_(mdes), msg_(message_domain_without_namespace(mdes_)) {
-        }
+        explicit OneofFieldGenerator(const google::protobuf::Descriptor *mdes);
 
         ~OneofFieldGenerator();
 
@@ -67,6 +66,6 @@ namespace shark {
 
     private:
         const google::protobuf::Descriptor *mdes_;
-        std::string msg_;
+        std::map<std::string, std::string> _variable;
     };
 } // namespace shark

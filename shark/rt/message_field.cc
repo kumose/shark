@@ -1,7 +1,3 @@
-// SPDX-License-Identifier: BSD-3-Clause
-// Based on Google Protobuf (https://github.com/protocolbuffers/protobuf) and protobuf-c
-// (https://github.com/protobuf-c/protobuf-c)
-// Copyright 2008 Google Inc., 2008-2025 protobuf-c authors. Modifications for C++ generation.
 // Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +14,7 @@
 //
 
 
+
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/wire_format.h>
@@ -29,7 +26,8 @@ namespace shark {
     MessageFieldGenerator::
     MessageFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
         : FieldMetaGenerator(descriptor) {
-        variables_["type"] = message_domain_without_namespace(descriptor_);
+        variables_["type"] = descriptor_->message_type()->name();
+        variables_["domain_type"] = message_type(descriptor->message_type());
     }
 
     MessageFieldGenerator::~MessageFieldGenerator() {
@@ -58,13 +56,13 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "$deprecated$ inline const $type$& $name$() const;\n");
-                printer->Print(variables_, "$deprecated$ inline void set_$name$(const $type$& val);\n");
-                printer->Print(variables_, "$deprecated$ inline void set_$name$($type$&& val);\n");
+                printer->Print(variables_, "$deprecated$inline const $type$& $name$() const;\n");
+                printer->Print(variables_, "$deprecated$inline void set_$name$(const $type$& val);\n");
+                printer->Print(variables_, "$deprecated$inline void set_$name$($type$&& val);\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "$deprecated$ inline const std::vector<$type$>& $name$() const;\n");
-                printer->Print(variables_, "$deprecated$ std::vector<$type$>& mutable_$name$();\n");
+                printer->Print(variables_, "$deprecated$inline const std::vector<$type$>& $name$() const;\n");
+                printer->Print(variables_, "$deprecated$std::vector<$type$>& mutable_$name$();\n");
                 break;
         }
     }
@@ -73,7 +71,7 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "inline const $type$& $domain$::$name$() const {\n");
+                printer->Print(variables_, "inline const $domain_type$& $domain$::$name$() const {\n");
                 printer->Indent();
                 printer->Print(variables_, "return _$name$;\n");
                 printer->Outdent();
@@ -91,12 +89,12 @@ namespace shark {
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
                 printer->Print(
-                    variables_, "inline const std::vector<$type$>& $domain$::$name$() const {\n");
+                    variables_, "inline const std::vector<$domain_type$>& $domain$::$name$() const {\n");
                 printer->Indent();
                 printer->Print(variables_, "return _$name$;\n");
                 printer->Outdent();
                 printer->Print(variables_, "}\n");
-                printer->Print(variables_, "inline std::vector<$type$>& $domain$::mutable_$name$() {\n");
+                printer->Print(variables_, "inline std::vector<$domain_type$>& $domain$::mutable_$name$() {\n");
                 printer->Indent();
                 printer->Print(variables_, "return _$name$;\n");
                 printer->Outdent();

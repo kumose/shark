@@ -26,18 +26,18 @@
 namespace shark {
     MapFieldGenerator::MapFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
         : FieldMetaGenerator(descriptor) {
-        auto mtp = GlobalState::get_ctype(descriptor_);
+        auto mtp = get_ctype(descriptor_, descriptor_->containing_type());
         variables_["map_type"] = mtp;
     }
 
     // implements FieldGenerator ---------------------------------------
     void MapFieldGenerator::generate_members(google::protobuf::io::Printer* printer) const {
-        printer->Print(variables_, "$deprecated$ $map_type$ _$name$$default_init$;\n");
+        printer->Print(variables_, "$deprecated$$map_type$ _$name$$default_init$;\n");
     }
 
     void MapFieldGenerator::generate_members_declares(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "$deprecated$ inline const $map_type$& $name$() const;\n");
-        printer->Print(variables_, "$deprecated$ inline void set_$name$(const $map_type$ &v);\n");
+        printer->Print(variables_, "$deprecated$inline const $map_type$& $name$() const;\n");
+        printer->Print(variables_, "$deprecated$inline void set_$name$(const $map_type$ &v);\n");
     }
 
     void MapFieldGenerator::generate_move_ctor_define(google::protobuf::io::Printer *printer) const {

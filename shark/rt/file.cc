@@ -1,7 +1,3 @@
-// SPDX-License-Identifier: BSD-3-Clause
-// Based on Google Protobuf (https://github.com/protocolbuffers/protobuf) and protobuf-c
-// (https://github.com/protobuf-c/protobuf-c)
-// Copyright 2008 Google Inc., 2008-2025 protobuf-c authors. Modifications for C++ generation.
 // Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+
 
 
 #include <google/protobuf/descriptor.h>
@@ -47,7 +44,6 @@ namespace shark {
               new std::unique_ptr<ServiceGenerator>[file->service_count()]),
           extension_generators_(
               new std::unique_ptr<ExtensionGenerator>[file->extension_count()]) {
-        GlobalState::instance().registry(file);
 
         for (int i = 0; i < file->message_type_count(); i++) {
             message_generators_[i].reset(

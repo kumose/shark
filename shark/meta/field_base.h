@@ -42,6 +42,8 @@ namespace shark {
 
         virtual void generate_meta_declares(google::protobuf::io::Printer *printer) const = 0;
 
+        virtual void generate_meta_definition_inline(google::protobuf::io::Printer *printer) const = 0;
+
         virtual void generate_meta_definition(google::protobuf::io::Printer *printer) const = 0;
 
         virtual void generate_members_declares(google::protobuf::io::Printer *printer) const = 0;

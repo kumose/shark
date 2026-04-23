@@ -16,10 +16,43 @@
 
 namespace shark {
     void FieldMetaGenerator::generate_meta_declares(google::protobuf::io::Printer *printer) const {
-
+        /*
+        printer->Print(variables_, "\n//////////////////////////////////////////////////////\n");
+        printer->Print(variables_, "/// $name$ region\n");
+        printer->Print(variables_, "/// Returns the fully-qualified field name (URI).\n");
+        printer->Print(variables_, "std::string_view $name$_uri() const;\n\n");
+        printer->Print(variables_, "/// Returns the field number (index) as defined in .proto.\n");
+        printer->Print(variables_, "int $name$_index() const;\n\n");
+        printer->Print(variables_, "/// Returns the field number (index) as defined in .proto.\n");
+        printer->Print(variables_, "std::string_view $name$_path() const;\n\n");
+        */
     }
 
     void FieldMetaGenerator::generate_meta_definition(google::protobuf::io::Printer *printer) const {
 
+    }
+
+    void FieldMetaGenerator::generate_meta_definition_inline(google::protobuf::io::Printer *printer) const {
+        /*
+        printer->Print(variables_, "\n//////////////////////////////////////////////////////\n");
+        printer->Print(variables_, "/// $name$ region\n");
+        printer->Print(variables_, "inline std::string_view $domain_view$::$name$_uri() const {\n");
+        printer->Indent();
+        printer->Print(variables_, turbo::str_format("return \"%s\";\n", descriptor_->full_name().c_str()));
+        printer->Outdent();
+        printer->Print(variables_, "}\n\n");
+
+        printer->Print(variables_, "inline int $domain_view$::$name$_index() const {\n");
+        printer->Indent();
+        printer->Print(variables_, turbo::str_format("return %d;\n", GlobalState::instance().field_meta_map[descriptor_].index));
+        printer->Outdent();
+        printer->Print(variables_, "}\n\n");
+
+        printer->Print(variables_, "inline std::string_view $domain_view$::$name$_path() const {\n");
+        printer->Indent();
+        printer->Print(variables_, turbo::str_format("return \"%s\";\n", GlobalState::instance().field_meta_map[descriptor_].path));
+        printer->Outdent();
+        printer->Print(variables_, "}\n\n");
+        */
     }
 }  // namespace shark

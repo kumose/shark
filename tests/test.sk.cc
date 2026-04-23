@@ -182,6 +182,9 @@ namespace my::custom::ns {
       case kindCase::BBB:
         _kind._bbb = rhs._kind._bbb;
         break;
+      case kindCase::DDD:
+        new (&_kind._ddd) decltype(_kind._ddd)(rhs._kind._ddd);
+        break;
       default:
         break;
     };
@@ -195,6 +198,8 @@ namespace my::custom::ns {
     _scores = rhs._scores;
     _favorite_color = rhs._favorite_color;
     _address = rhs._address;
+    _address2 = rhs._address2;
+    _long_name = rhs._long_name;
   }
 
   Person& Person::operator= (const Person& rhs) {
@@ -206,6 +211,9 @@ namespace my::custom::ns {
       case kindCase::BBB:
         _kind._bbb = rhs._kind._bbb;
         break;
+      case kindCase::DDD:
+        new (&_kind._ddd) decltype(_kind._ddd)(rhs._kind._ddd);
+        break;
       default:
         break;
     };
@@ -219,6 +227,8 @@ namespace my::custom::ns {
     _scores = rhs._scores;
     _favorite_color = rhs._favorite_color;
     _address = rhs._address;
+    _address2 = rhs._address2;
+    _long_name = rhs._long_name;
     return *this;
   }
 
@@ -231,6 +241,9 @@ namespace my::custom::ns {
       case kindCase::BBB:
         _kind._bbb = rhs._kind._bbb;
         break;
+      case kindCase::DDD:
+        new (&_kind._ddd) decltype(_kind._ddd)(std::move(rhs._kind._ddd));
+        break;
       default:
         break;
     };
@@ -244,6 +257,8 @@ namespace my::custom::ns {
     _scores = std::move(rhs._scores);
     _favorite_color = rhs._favorite_color;
     _address = std::move(rhs._address);
+    _address2 = std::move(rhs._address2);
+    _long_name = std::move(rhs._long_name);
   }
 
   Person& Person::operator= (Person&& rhs) noexcept {
@@ -255,6 +270,9 @@ namespace my::custom::ns {
       case kindCase::BBB:
         _kind._bbb = rhs._kind._bbb;
         break;
+      case kindCase::DDD:
+        new (&_kind._ddd) decltype(_kind._ddd)(std::move(rhs._kind._ddd));
+        break;
       default:
         break;
     };
@@ -268,6 +286,8 @@ namespace my::custom::ns {
     _scores = std::move(rhs._scores);
     _favorite_color = rhs._favorite_color;
     _address = std::move(rhs._address);
+    _address2 = std::move(rhs._address2);
+    _long_name = std::move(rhs._long_name);
     return *this;
   }
 
@@ -304,6 +324,8 @@ namespace my::custom::ns {
     }
     _favorite_color = pb.favorite_color();
     _address.parse_from_proto(pb.address());
+    _address2.parse_from_proto(pb.address2());
+    _long_name = pb.long_name();
     clear_kind();
     switch(pb.kind_case()) {
       case test::pb::pa::Person::KindCase::kAaa:
@@ -313,6 +335,10 @@ namespace my::custom::ns {
       case test::pb::pa::Person::KindCase::kBbb:
         _kind._bbb = pb.bbb();
         _kind_case = kindCase::BBB;
+        break;
+      case test::pb::pa::Person::KindCase::kDdd:
+        new (&_kind._ddd) decltype(_kind._ddd)(pb.ddd());
+        _kind_case = kindCase::DDD;
         break;
       default:
         break;
@@ -343,12 +369,17 @@ namespace my::custom::ns {
     }
     pb.set_favorite_color(_favorite_color);
     _address.serialize_to_proto(*pb.mutable_address());
+    _address2.serialize_to_proto(*pb.mutable_address2());
+    pb.set_long_name(_long_name);
     switch(kind_case()) {
       case kindCase::AAA:
         pb.set_aaa(_kind._aaa);
         break;
       case kindCase::BBB:
         pb.set_bbb(_kind._bbb);
+        break;
+      case kindCase::DDD:
+        pb.set_ddd(_kind._ddd);
         break;
       default:
         break;
