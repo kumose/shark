@@ -28,30 +28,35 @@ namespace shark {
 
         virtual ~OneofFieldGeneratorBase() = default;
 
-        virtual void generate_enum_def(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_enum_def(google::protobuf::io::Printer *printer)  = 0;
 
         // implements FieldGenerator ---------------------------------------
-        virtual void generate_members(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_members(google::protobuf::io::Printer *printer)  = 0;
 
-        virtual void generate_members_declares(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_members_declares(google::protobuf::io::Printer *printer)  = 0;
 
-        virtual void generate_ctor_define(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_ctor_define(google::protobuf::io::Printer *printer)  = 0;
 
-        virtual void generate_move_ctor_define(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_move_ctor_define(google::protobuf::io::Printer *printer)  = 0;
 
-        virtual void generate_copy_ctor_define(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_copy_ctor_define(google::protobuf::io::Printer *printer)  = 0;
 
-        virtual void generate_dtor_define(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_dtor_define(google::protobuf::io::Printer *printer)  = 0;
 
-        virtual void generate_members_inline_implementations(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_members_inline_implementations(google::protobuf::io::Printer *printer)  = 0;
 
 
-        virtual void generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer)  = 0;
 
-        virtual void generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer)  = 0;
 
-    private:
+        virtual std::string get_default_value(void)  {
+            return "";
+        }
+
+    protected:
         const google::protobuf::OneofDescriptor *_oneof;
         std::map<std::string, std::string> _variable;
+        const google::protobuf::Descriptor *_descriptor{nullptr};
     };
 } // namespace shark

@@ -14,10 +14,21 @@
 //
 
 #include <shark/generator/oneof_field.h>
+#include <shark/utility/helpers.h>
+#include <turbo/strings/str_replace.h>
 
 namespace shark {
     OneofFieldGeneratorBase::OneofFieldGeneratorBase(const google::protobuf::OneofDescriptor *oneof)
         : _oneof(oneof) {
+        _descriptor = _oneof->containing_type();
+        _variable["domain"] = message_type(_descriptor);
+        _variable["opt_comma"] = ",";
+
+        _variable["oneofname"] = CamelToUpper(oneof->name());
+        _variable["foneofname"] = oneof->name();
+        auto pb_uri = turbo::str_replace_all(_descriptor->full_name(), {{".", "::"}});
+        _variable["pb_uri"] = pb_uri;
+        _variable["Coneofname"] = ToCamel(_oneof->name());
     }
 
 } // namespace shark

@@ -27,6 +27,7 @@
 #include <shark/rt/enum.h>
 #include <shark/rt/extension.h>
 #include <shark/generator/field_map.h>
+#include <shark/rt/oneof_field.h>
 
 namespace shark {
     class MessageGenerator {
@@ -69,6 +70,6 @@ namespace shark {
         std::vector<std::unique_ptr<ExtensionGenerator>> extension_generators_;
         bool _have_one_of;
         std::map<std::string, std::string> _vars;
-        OneofFieldGenerator _oneof_generator;
+        std::vector<std::unique_ptr<OneofFieldGeneratorBase>> _oneof_generator;
     };
 } // namespace shark

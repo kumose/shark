@@ -43,8 +43,7 @@ namespace shark {
                                        const std::string &dllexport_decl, const MessageGenerator *parent)
         : descriptor_(descriptor),
           _dllexport_decl(dllexport_decl),
-          field_generators_(descriptor),
-            _oneof_generator(descriptor_){
+          field_generators_(descriptor){
         GlobalState::instance().registry(descriptor_);
         for (int i = 0; i < descriptor->nested_type_count(); i++) {
             if (descriptor->nested_type(i)->options().map_entry()) {
@@ -62,6 +61,11 @@ namespace shark {
         for (int i = 0; i < descriptor->extension_count(); i++) {
             auto ptr = std::make_unique<ExtensionGenerator>(descriptor->extension(i), dllexport_decl);
             extension_generators_.push_back(std::move(ptr));
+        }
+
+        for (auto i = 0; i < descriptor->oneof_decl_count(); i++) {
+            auto ptr = std::make_unique<OneofFieldGenerator>(descriptor_->oneof_decl(i));
+            _oneof_generator.push_back(std::move(ptr));
         }
         _vars["classname"] = descriptor_->name();
         _vars["domain"] = message_type(descriptor_);
@@ -110,7 +114,10 @@ namespace shark {
                 field_generators_.get(field).generate_members_inline_implementations(printer);
             }
         }
-        _oneof_generator.generate_members_inline_implementations(printer);
+
+        for (auto &it :_oneof_generator) {
+            it->generate_members_inline_implementations(printer);
+        }
 
         for (int i = 0; i < descriptor_->enum_type_count(); i++) {
             printer->Print("\n");
@@ -157,7 +164,10 @@ namespace shark {
         }
 
         /// generate oneof definitiion
-        _oneof_generator.generate_enum_def(printer);
+
+        for (auto &it :_oneof_generator) {
+            it->generate_enum_def(printer);
+        }
 
         google::protobuf::SourceLocation msgSourceLoc;
         descriptor_->GetSourceLocation(&msgSourceLoc);
@@ -185,7 +195,11 @@ namespace shark {
                 field_generators_.get(field).generate_members_declares(printer);
             }
         }
-        _oneof_generator.generate_members_declares(printer);
+
+        for (auto &it :_oneof_generator) {
+            it->generate_members_declares(printer);
+        }
+
         printer->Print("///////////////////////////////////////////////////////////////////////// \n");
         printer->Print("/// transfers \n");
         printer->Print(_vars, "void parse_from_proto(const $PBTYPE$& pb);\n\n");
@@ -209,8 +223,10 @@ namespace shark {
             }
         }
         printer->Print("////////////////////// unions\n");
-        _oneof_generator.generate_members(printer);
 
+        for (auto &it :_oneof_generator) {
+            it->generate_members(printer);
+        }
         printer->Outdent();
 
         printer->Print(_vars, "};\n");
@@ -222,19 +238,27 @@ namespace shark {
         }
         printer->Print(_vars, "$domain$::$classname$() {\n");
         printer->Indent();
-        _oneof_generator.generate_ctor_define(printer);
+        for (auto &it :_oneof_generator) {
+            it->generate_ctor_define(printer);
+        }
+
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
         printer->Print(_vars, "$domain$::~$classname$() {\n");
         printer->Indent();
-        _oneof_generator.generate_dtor_define(printer);
+        for (auto &it :_oneof_generator) {
+            it->generate_dtor_define(printer);
+        }
+
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
 
 
         printer->Print(_vars,"$domain$::$classname$(const $classname$& rhs) {\n");
         printer->Indent();
-        _oneof_generator.generate_copy_ctor_define(printer);
+        for (auto &it :_oneof_generator) {
+            it->generate_copy_ctor_define(printer);
+        }
         for (int i = 0; i < descriptor_->field_count(); i++) {
             const google::protobuf::FieldDescriptor *field = descriptor_->field(i);
             if (field->containing_oneof() == NULL) {
@@ -246,7 +270,9 @@ namespace shark {
         printer->Print(_vars, "}\n\n");
         printer->Print(_vars,"$domain$& $domain$::operator= (const $classname$& rhs) {\n");
         printer->Indent();
-        _oneof_generator.generate_copy_ctor_define(printer);
+        for (auto &it :_oneof_generator) {
+            it->generate_copy_ctor_define(printer);
+        }
         for (int i = 0; i < descriptor_->field_count(); i++) {
             const google::protobuf::FieldDescriptor *field = descriptor_->field(i);
             if (field->containing_oneof() == NULL) {
@@ -260,7 +286,10 @@ namespace shark {
 
         printer->Print(_vars,"$domain$::$classname$($classname$&& rhs) noexcept {\n");
         printer->Indent();
-        _oneof_generator.generate_move_ctor_define(printer);
+        for (auto &it :_oneof_generator) {
+            it->generate_move_ctor_define(printer);
+        }
+
         for (int i = 0; i < descriptor_->field_count(); i++) {
             const google::protobuf::FieldDescriptor *field = descriptor_->field(i);
             if (field->containing_oneof() == NULL) {
@@ -273,7 +302,10 @@ namespace shark {
 
         printer->Print(_vars,"$domain$& $domain$::operator= ($classname$&& rhs) noexcept {\n");
         printer->Indent();
-        _oneof_generator.generate_move_ctor_define(printer);
+        for (auto &it :_oneof_generator) {
+            it->generate_move_ctor_define(printer);
+        }
+
         for (int i = 0; i < descriptor_->field_count(); i++) {
             const google::protobuf::FieldDescriptor *field = descriptor_->field(i);
             if (field->containing_oneof() == NULL) {
@@ -301,7 +333,9 @@ namespace shark {
                 field_generators_.get(field).generate_trans_parse_pb_implementations(printer);
             }
         }
-        _oneof_generator.generate_trans_parse_pb_implementations(printer);
+        for (auto &it :_oneof_generator) {
+            it->generate_trans_parse_pb_implementations(printer);
+        }
         printer->Outdent();
         printer->Print("}\n\n");
         ////
@@ -313,7 +347,10 @@ namespace shark {
                 field_generators_.get(field).generate_trans_to_pb_implementations(printer);
             }
         }
-        _oneof_generator.generate_trans_to_pb_implementations(printer);
+        for (auto &it :_oneof_generator) {
+            it->generate_trans_to_pb_implementations(printer);
+        }
+
         printer->Outdent();
         printer->Print("}\n\n");
         ////
