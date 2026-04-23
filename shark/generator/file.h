@@ -48,7 +48,7 @@ namespace shark {
 
         virtual void generate_header(google::protobuf::io::Printer *printer) = 0;
 
-        virtual void GenerateSource(google::protobuf::io::Printer *printer) = 0;
+        virtual void generate_source(google::protobuf::io::Printer *printer) = 0;
 
     protected:
         const google::protobuf::FileDescriptor *_file{nullptr};

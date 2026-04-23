@@ -103,14 +103,14 @@ namespace shark {
             std::string basename = StripProto(file->name());
             basename.append(".sk");
 
-            FileGenerator file_generator(file, dllexport_decl);
+            FileRtGenerator file_generator(file, dllexport_decl);
 
             // Generate header.
             {
                 std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
                     output_directory->Open(basename + ".h"));
                 google::protobuf::io::Printer printer(output.get(), '$');
-                file_generator.GenerateHeader(&printer);
+                file_generator.generate_header(&printer);
             }
 
             // Generate cc file.
@@ -118,7 +118,7 @@ namespace shark {
                 std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
                     output_directory->Open(basename + ".cc"));
                 google::protobuf::io::Printer printer(output.get(), '$');
-                file_generator.GenerateSource(&printer);
+                file_generator.generate_source(&printer);
             }
         }
         {
@@ -132,7 +132,7 @@ namespace shark {
                 std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
                     output_directory->Open(skb_basename + ".h"));
                 google::protobuf::io::Printer printer(output.get(), '$');
-                file_skb_generator.GenerateHeader(&printer);
+                file_skb_generator.generate_header(&printer);
             }
 
             // Generate cc file.
@@ -140,7 +140,7 @@ namespace shark {
                 std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
                     output_directory->Open(skb_basename + ".cc"));
                 google::protobuf::io::Printer printer(output.get(), '$');
-                file_skb_generator.GenerateSource(&printer);
+                file_skb_generator.generate_source(&printer);
             }
         }
 

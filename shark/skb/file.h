@@ -37,19 +37,20 @@
 #include <shark/generator/field_map.h>
 #include <shark/view/message.h>
 #include <shark/view/service.h>
+#include <shark/generator/file.h>
 
 namespace shark {
-    class FileSkbGenerator {
+    class FileSkbGenerator  : public FileGeneratorBase {
     public:
         // See generator.cc for the meaning of dllexport_decl.
         explicit FileSkbGenerator(const google::protobuf::FileDescriptor *file,
                                const std::string &dllexport_decl);
 
-        ~FileSkbGenerator();
+        ~FileSkbGenerator() override;
 
-        void GenerateHeader(google::protobuf::io::Printer *printer);
+        void generate_header(google::protobuf::io::Printer *printer) override;
 
-        void GenerateSource(google::protobuf::io::Printer *printer);
+        void generate_source(google::protobuf::io::Printer *printer) override;
 
     private:
         const google::protobuf::FileDescriptor *file_;

@@ -14,7 +14,6 @@
 //
 
 
-
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 
@@ -33,9 +32,9 @@
 namespace shark {
     // ===================================================================
 
-    FileGenerator::FileGenerator(const google::protobuf::FileDescriptor *file,
+    FileRtGenerator::FileRtGenerator(const google::protobuf::FileDescriptor *file,
                                  const std::string &dllexport_decl)
-        : file_(file),
+        : FileGeneratorBase(file),
           message_generators_(
               new std::unique_ptr<MessageGenerator>[file->message_type_count()]),
           enum_generators_(
@@ -44,7 +43,6 @@ namespace shark {
               new std::unique_ptr<ServiceGenerator>[file->service_count()]),
           extension_generators_(
               new std::unique_ptr<ExtensionGenerator>[file->extension_count()]) {
-
         for (int i = 0; i < file->message_type_count(); i++) {
             message_generators_[i].reset(
                 new MessageGenerator(file->message_type(i), dllexport_decl, nullptr));
@@ -69,11 +67,11 @@ namespace shark {
         }
     }
 
-    FileGenerator::~FileGenerator() {
+    FileRtGenerator::~FileRtGenerator() {
     }
 
-    void FileGenerator::GenerateHeader(google::protobuf::io::Printer *printer) {
-        std::string filename_identifier = FilenameIdentifier(file_->name());
+    void FileRtGenerator::generate_header(google::protobuf::io::Printer *printer) {
+        std::string filename_identifier = FilenameIdentifier(_file->name());
 
         // Generate top of header.
         std::string inc;
@@ -97,21 +95,21 @@ namespace shark {
             "\n"
             "\n",
             "INC", inc,
-            "filename", file_->name(),
-            "basename", StripProto(file_->name()),
+            "filename", _file->name(),
+            "basename", StripProto(_file->name()),
             "filename_identifier", filename_identifier);
 
-        for (int i = 0; i < file_->dependency_count(); i++) {
+        for (int i = 0; i < _file->dependency_count(); i++) {
             if (!GlobalState::instance().ext_file_options.no_generate()) {
-                if (turbo::starts_with(file_->dependency(i)->name(), "shark/idl")) {
+                if (turbo::starts_with(_file->dependency(i)->name(), "shark/idl")) {
                     continue;
                 }
-                if (turbo::starts_with(file_->dependency(i)->name(), "google/protobuf/any")) {
+                if (turbo::starts_with(_file->dependency(i)->name(), "google/protobuf/any")) {
                     continue;
                 }
                 printer->Print(
                     "#include \"$dependency$.sk.h\"\n",
-                    "dependency", StripProto(file_->dependency(i)->name()));
+                    "dependency", StripProto(_file->dependency(i)->name()));
             }
         }
 
@@ -119,7 +117,7 @@ namespace shark {
         printer->Print("namespace $NS$ {\n\n", "NS", GlobalState::instance().cnamespace);
         printer->Indent();
         // Generate forward declarations of classes.
-        for (int i = 0; i < file_->message_type_count(); i++) {
+        for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->generate_struct_typedef(printer);
         }
 
@@ -127,39 +125,39 @@ namespace shark {
 
         // Generate enum definitions.
         printer->Print("\n/// --- enums ---\n\n");
-        for (int i = 0; i < file_->enum_type_count(); i++) {
+        for (int i = 0; i < _file->enum_type_count(); i++) {
             enum_generators_[i]->generate_definition(printer);
         }
 
         // Generate class definitions.
         printer->Print("\n/// --- messages --- \n\n");
-        for (int i = 0; i < file_->message_type_count(); i++) {
+        for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->generate_struct_definition(printer);
         }
 
         // Generate service definitions.
         printer->Print("\n/* --- services --- */\n\n");
-        for (int i = 0; i < file_->service_count(); i++) {
+        for (int i = 0; i < _file->service_count(); i++) {
             service_generators_[i]->GenerateMainHFile(printer);
         }
 
         // Declare extension identifiers.
-        for (int i = 0; i < file_->extension_count(); i++) {
+        for (int i = 0; i < _file->extension_count(); i++) {
             extension_generators_[i]->GenerateDeclaration(printer);
         }
 
         printer->Print("\n/* --- descriptors --- */\n\n");
-        for (int i = 0; i < file_->enum_type_count(); i++) {
+        for (int i = 0; i < _file->enum_type_count(); i++) {
             enum_generators_[i]->generate_inline_definition(printer, nullptr);
         }
 
-        for (int i = 0; i < file_->service_count(); i++) {
+        for (int i = 0; i < _file->service_count(); i++) {
             service_generators_[i]->GenerateDescriptorDeclarations(printer);
         }
         printer->Print("\n///////////////////////////////////////////////////////////\n");
         printer->Print("/// --- inlines ---\n");
         //////// inlines
-        for (int i = 0; i < file_->message_type_count(); i++) {
+        for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->generate_struct_inl(printer);
         }
         printer->Outdent();
@@ -171,7 +169,7 @@ namespace shark {
             "filename_identifier", filename_identifier);
     }
 
-    void FileGenerator::GenerateSource(google::protobuf::io::Printer *printer) {
+    void FileRtGenerator::generate_source(google::protobuf::io::Printer *printer) {
         printer->Print(
             "/* Generated by the protocol buffer compiler.  DO NOT EDIT! */\n"
             "/* Generated from: $filename$ */\n"
@@ -181,21 +179,21 @@ namespace shark {
             "#include <$basename$.sk.h>\n"
             "#include <google/protobuf/json/json.h>\n\n"
             "namespace $NS$ {\n",
-            "filename", file_->name(),
+            "filename", _file->name(),
             "NS", GlobalState::instance().cnamespace,
-            "basename", StripProto(file_->name()));
+            "basename", StripProto(_file->name()));
         printer->Indent();
-        for (int i = 0; i < file_->message_type_count(); i++) {
+        for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->generate_struct_transfer(printer);
         }
 
-        for (int i = 0; i < file_->message_type_count(); i++) {
+        for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->GenerateMessageDescriptor(printer);
         }
-        for (int i = 0; i < file_->enum_type_count(); i++) {
+        for (int i = 0; i < _file->enum_type_count(); i++) {
             enum_generators_[i]->GenerateEnumDescriptor(printer);
         }
-        for (int i = 0; i < file_->service_count(); i++) {
+        for (int i = 0; i < _file->service_count(); i++) {
             service_generators_[i]->GenerateCFile(printer);
         }
         printer->Outdent();

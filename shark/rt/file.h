@@ -29,24 +29,24 @@
 #include <shark/rt/enum.h>
 #include <shark/rt/extension.h>
 #include <shark/generator/field_map.h>
+#include <shark/generator/file.h>
 #include <shark/rt/message.h>
 #include <shark/rt/service.h>
 
 namespace shark {
-    class FileGenerator {
+    class FileRtGenerator : public FileGeneratorBase {
     public:
         // See generator.cc for the meaning of dllexport_decl.
-        explicit FileGenerator(const google::protobuf::FileDescriptor *file,
+        explicit FileRtGenerator(const google::protobuf::FileDescriptor *file,
                                const std::string &dllexport_decl);
 
-        ~FileGenerator();
+        ~FileRtGenerator() override;
 
-        void GenerateHeader(google::protobuf::io::Printer *printer);
+        void generate_header(google::protobuf::io::Printer *printer);
 
-        void GenerateSource(google::protobuf::io::Printer *printer);
+        void generate_source(google::protobuf::io::Printer *printer);
 
     private:
-        const google::protobuf::FileDescriptor *file_;
         bool  _have_one_of{false};
 
         std::unique_ptr<std::unique_ptr<MessageGenerator>[]> message_generators_;
