@@ -20,24 +20,35 @@
 #include <memory>
 #include <string>
 #include <vector>
-
+#include <shark/generator/sub_file.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/stubs/common.h>
 
 
 namespace shark {
-    class FileGeneratorBase {
+    class MetaFileGenerator : public SubFileGeneratorBase {
     public:
         // See generator.cc for the meaning of dllexport_decl.
-        explicit FileGeneratorBase(const google::protobuf::FileDescriptor *file) : _file(file) {
+        explicit MetaFileGenerator(const google::protobuf::FileDescriptor *file) : SubFileGeneratorBase(file) {
         }
 
-        virtual ~FileGeneratorBase() = default;
+        ~MetaFileGenerator() override = default;
 
-        virtual void generate_header(google::protobuf::io::Printer *printer) = 0;
+        /// header region
+        void generate_fwd_typedef(google::protobuf::io::Printer *printer) override;
 
-        virtual void generate_source(google::protobuf::io::Printer *printer) = 0;
+        void generate_definition(google::protobuf::io::Printer *printer) override;
+
+        void generate_inline_implement(google::protobuf::io::Printer *printer) override;
+
+
+        /// source range
+        void generate_static_variable(google::protobuf::io::Printer *printer) override;
+
+        void generate_static_functions(google::protobuf::io::Printer *printer) override;
+
+        void generate_implement(google::protobuf::io::Printer *printer) override;
 
     protected:
         const google::protobuf::FileDescriptor *_file{nullptr};

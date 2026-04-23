@@ -64,7 +64,7 @@ namespace shark {
         void generate_enum_definitions(google::protobuf::io::Printer *printer);
 
         const google::protobuf::Descriptor *descriptor_;
-        std::string dllexport_decl_;
+        std::string _dllexport_decl;
         FieldGeneratorMap field_generators_;
         std::vector<std::unique_ptr<MessageSkbGenerator> > nested_generators_;
         std::vector<std::unique_ptr<EnumSkbGenerator> > enum_generators_;

@@ -24,7 +24,7 @@ namespace shark {
     ExtensionViewGenerator::ExtensionViewGenerator(const google::protobuf::FieldDescriptor *descriptor,
                                            const std::string &dllexport_decl)
         : descriptor_(descriptor),
-          dllexport_decl_(dllexport_decl) {
+          _dllexport_decl(dllexport_decl) {
     }
 
     ExtensionViewGenerator::~ExtensionViewGenerator() {

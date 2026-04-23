@@ -25,22 +25,7 @@
 namespace shark {
     /// no need lock, always single thread
     ///
-    struct FieldMeta {
-        int index{0};
-        int data_index{0};
-        const google::protobuf::Descriptor* root{nullptr};
-        std::string path;
-        const google::protobuf::FieldDescriptor* field{nullptr};
-        std::vector<int> column;
-        bool repeated{false};
-        std::string cpp_type;
-    };
 
-    struct MessageMeta {
-        int index{0};
-        int data_index{0};
-        turbo::flat_hash_map<std::string, FieldMeta*> field_map;
-    };
 
     struct GlobalState {
         static GlobalState &instance() {
@@ -70,13 +55,7 @@ namespace shark {
 
         const google::protobuf::FileDescriptor *g_file;
         std::string pb_namespace_prefix;
-
-        turbo::flat_hash_map<const google::protobuf::Descriptor*, MessageMeta> message_meta_map;
-        turbo::flat_hash_map<std::string, FieldMeta*> field_meta_map;
-        std::vector<std::unique_ptr<FieldMeta>> field_metas;
     private:
         void process_deps(const google::protobuf::FileDescriptor *file);
-
-        void process_message(const google::protobuf::Descriptor *file, MessageMeta &mm);
     };
 } // namespace shark

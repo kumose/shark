@@ -35,7 +35,7 @@ namespace shark {
     EnumFieldGenerator::
     EnumFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
         : FieldMetaGenerator(descriptor) {
-        SetEnumVariables(descriptor, &variables_);
+        SetEnumVariables(descriptor, &_variables);
     }
 
     EnumFieldGenerator::~EnumFieldGenerator() {
@@ -45,11 +45,11 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "$type$ _$name$$default_init$;\n");
+                printer->Print(_variables, "$type$ _$name$$default_init$;\n");
                 break;
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "std::vector<$type$> _$name$;\n");
+                printer->Print(_variables, "std::vector<$type$> _$name$;\n");
                 break;
         }
     }
@@ -58,15 +58,15 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "_$name$ = rhs._$name$;\n");
+                printer->Print(_variables, "_$name$ = rhs._$name$;\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "_$name$ = std::move(rhs._$name$);\n");
+                printer->Print(_variables, "_$name$ = std::move(rhs._$name$);\n");
                 break;
         }
     }
     void EnumFieldGenerator::generate_copy_ctor_define(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "_$name$ = rhs._$name$;\n");
+        printer->Print(_variables, "_$name$ = rhs._$name$;\n");
     }
 
 
@@ -75,28 +75,28 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
 
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "inline $type$ $domain$::$name$() const {\n");
+                printer->Print(_variables, "inline $type$ $domain$::$name$() const {\n");
                 printer->Indent();
-                printer->Print(variables_, "return _$name$;\n");
+                printer->Print(_variables, "return _$name$;\n");
                 printer->Outdent();
-                printer->Print(variables_, "}\n");
-                printer->Print(variables_, "inline void $domain$::set_$name$($type$ value) {\n");
+                printer->Print(_variables, "}\n");
+                printer->Print(_variables, "inline void $domain$::set_$name$($type$ value) {\n");
                 printer->Indent();
-                printer->Print(variables_, "_$name$ = value;\n");
+                printer->Print(_variables, "_$name$ = value;\n");
                 printer->Outdent();
-                printer->Print(variables_, "}\n");
+                printer->Print(_variables, "}\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "inline const std::vector<$type$>& $domain$::$name$() const {\n");
+                printer->Print(_variables, "inline const std::vector<$type$>& $domain$::$name$() const {\n");
                 printer->Indent();
-                printer->Print(variables_, "return _$name$;\n");
+                printer->Print(_variables, "return _$name$;\n");
                 printer->Outdent();
-                printer->Print(variables_, "}\n");
-                printer->Print(variables_, "inline std::vector<$type$> $domain$::mutable_$name$() {\n");
+                printer->Print(_variables, "}\n");
+                printer->Print(_variables, "inline std::vector<$type$> $domain$::mutable_$name$() {\n");
                 printer->Indent();
-                printer->Print(variables_, "return _$name$;\n");
+                printer->Print(_variables, "return _$name$;\n");
                 printer->Outdent();
-                printer->Print(variables_, "}\n");
+                printer->Print(_variables, "}\n");
                 break;
         }
     }
@@ -105,13 +105,13 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "_$name$ = pb.$name$();\n");
+                printer->Print(_variables, "_$name$ = pb.$name$();\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "_$name$.reserve(pb.$name$_size());");
-                printer->Print(variables_, "for(size_t i = 0; i < pb.$name$_size(); ++i) {\n");
+                printer->Print(_variables, "_$name$.reserve(pb.$name$_size());");
+                printer->Print(_variables, "for(size_t i = 0; i < pb.$name$_size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(variables_, "_$name$.push_back(pb.$name$(i));\n");
+                printer->Print(_variables, "_$name$.push_back(pb.$name$(i));\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
@@ -122,13 +122,13 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "pb.set_$name$(_$name$);\n");
+                printer->Print(_variables, "pb.set_$name$(_$name$);\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "pb.mutable_$name$()->Reserve(_$name$.size());\n");
-                printer->Print(variables_, "for(size_t i = 0; i < _$name$.size(); ++i) {\n");
+                printer->Print(_variables, "pb.mutable_$name$()->Reserve(_$name$.size());\n");
+                printer->Print(_variables, "for(size_t i = 0; i < _$name$.size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(variables_, "*pb.mutable_$name$()->Add() = _$name$[i];\n");
+                printer->Print(_variables, "*pb.mutable_$name$()->Add() = _$name$[i];\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
@@ -140,12 +140,12 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
 
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "$deprecated$inline $type$ $name$() const;\n");
-                printer->Print(variables_, "inline void set_$name$($type$ value);\n");
+                printer->Print(_variables, "$deprecated$inline $type$ $name$() const;\n");
+                printer->Print(_variables, "inline void set_$name$($type$ value);\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "$deprecated$inline const std::vector<$type$>& $name$() const;\n");
-                printer->Print(variables_, "$deprecated$inline std::vector<$type$> mutable_$name$();\n");
+                printer->Print(_variables, "$deprecated$inline const std::vector<$type$>& $name$() const;\n");
+                printer->Print(_variables, "$deprecated$inline std::vector<$type$> mutable_$name$();\n");
                 break;
         }
     }

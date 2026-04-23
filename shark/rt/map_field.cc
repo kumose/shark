@@ -27,57 +27,57 @@ namespace shark {
     MapFieldGenerator::MapFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
         : FieldMetaGenerator(descriptor) {
         auto mtp = get_ctype(descriptor_, descriptor_->containing_type());
-        variables_["map_type"] = mtp;
+        _variables["map_type"] = mtp;
     }
 
     // implements FieldGenerator ---------------------------------------
     void MapFieldGenerator::generate_members(google::protobuf::io::Printer* printer) const {
-        printer->Print(variables_, "$deprecated$$map_type$ _$name$$default_init$;\n");
+        printer->Print(_variables, "$deprecated$$map_type$ _$name$$default_init$;\n");
     }
 
     void MapFieldGenerator::generate_members_declares(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "$deprecated$inline const $map_type$& $name$() const;\n");
-        printer->Print(variables_, "$deprecated$inline void set_$name$(const $map_type$ &v);\n");
+        printer->Print(_variables, "$deprecated$inline const $map_type$& $name$() const;\n");
+        printer->Print(_variables, "$deprecated$inline void set_$name$(const $map_type$ &v);\n");
     }
 
     void MapFieldGenerator::generate_move_ctor_define(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "_$name$ = std::move(rhs._$name$);\n");
+        printer->Print(_variables, "_$name$ = std::move(rhs._$name$);\n");
     }
     void MapFieldGenerator::generate_copy_ctor_define(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "_$name$ = rhs._$name$;\n");
+        printer->Print(_variables, "_$name$ = rhs._$name$;\n");
     }
 
 
 
     void MapFieldGenerator::generate_members_inline_implementations(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "/// getter\n");
-        printer->Print(variables_, "inline const $map_type$& $domain$::$name$() const {\n");
+        printer->Print(_variables, "/// getter\n");
+        printer->Print(_variables, "inline const $map_type$& $domain$::$name$() const {\n");
         printer->Indent();
-        printer->Print(variables_, "return _$name$;\n");
+        printer->Print(_variables, "return _$name$;\n");
         printer->Outdent();
-        printer->Print(variables_, "}\n");
-        printer->Print(variables_, "/// setter\n");
-        printer->Print(variables_, "inline void $domain$::set_$name$(const $map_type$ &v) {\n");
+        printer->Print(_variables, "}\n");
+        printer->Print(_variables, "/// setter\n");
+        printer->Print(_variables, "inline void $domain$::set_$name$(const $map_type$ &v) {\n");
         printer->Indent();
-        printer->Print(variables_, "_$name$ = v;\n");
+        printer->Print(_variables, "_$name$ = v;\n");
         printer->Outdent();
-        printer->Print(variables_, "}\n");
+        printer->Print(_variables, "}\n");
     }
 
     void MapFieldGenerator::generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "_$name$.reserve(pb.$name$_size());\n");
-        printer->Print(variables_, "for(auto &it : pb.$name$()) {\n");
+        printer->Print(_variables, "_$name$.reserve(pb.$name$_size());\n");
+        printer->Print(_variables, "for(auto &it : pb.$name$()) {\n");
         printer->Indent();
-        printer->Print(variables_, "_$name$[it.first] = it.second;\n");
+        printer->Print(_variables, "_$name$[it.first] = it.second;\n");
         printer->Outdent();
         printer->Print("}\n");
 
     }
 
     void MapFieldGenerator::generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "for(auto &it : _$name$) {\n");
+        printer->Print(_variables, "for(auto &it : _$name$) {\n");
         printer->Indent();
-        printer->Print(variables_, "(*pb.mutable_$name$())[it.first] = it.second;\n");
+        printer->Print(_variables, "(*pb.mutable_$name$())[it.first] = it.second;\n");
         printer->Outdent();
         printer->Print("}\n");
     }

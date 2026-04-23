@@ -23,8 +23,8 @@
 #include <google/protobuf/io/zero_copy_stream.h>
 
 #include <shark/idl/shark_options.pb.h>
-#include <shark/rt/file.h>
-#include <shark/skb/file.h>
+#include <shark/generator/rt_file.h>
+#include <shark/generator/skb_file.h>
 #include <shark/generator/generator.h>
 #include <shark/utility/helpers.h>
 

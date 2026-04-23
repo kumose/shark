@@ -37,12 +37,17 @@ set(GENERATOR_SRC
         generator/field_meta.cc
         generator/generator.cc
         generator/field_map.cc
+        generator/rt_file.cc
+        generator/skb_file.cc
+        generator/message.cc
+        meta/meta_map.cc
+        meta/meta_file.cc
+        meta/meta_message.cc
         rt/any_field.cc
         rt/bytes_field.cc
         rt/enum.cc
         rt/enum_field.cc
         rt/extension.cc
-        rt/file.cc
         rt/map_field.cc
         rt/message.cc
         rt/message_field.cc
@@ -60,7 +65,6 @@ set(GENERATOR_SRC
         builder/message_field.cc
         builder/oneof_field.cc
         builder/primitive_field.cc
-        builder/service.cc
         builder/string_field.cc
         view/bytes_field.cc
         view/enum.cc
@@ -72,9 +76,7 @@ set(GENERATOR_SRC
         view/message_field.cc
         view/oneof_field.cc
         view/primitive_field.cc
-        view/service.cc
         view/string_field.cc
-        skb/file.cc
         utility/helpers.cc
         utility/uri.cc
         utility/type.cc

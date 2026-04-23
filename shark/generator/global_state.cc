@@ -41,83 +41,9 @@ namespace shark {
                 includes.insert(turbo::str_cat("#include <", ext_file_options.cpp_includes(i), ">"));
             }
         }
-        for (auto i  = 0; i <file->message_type_count(); i++) {
-            MessageMeta mm;
 
-
-            process_message(file->message_type(i), mm);
-            message_meta_map[file->message_type(i)] = mm;
-        }
     }
 
-    int cnt = 0;
-    void GlobalState::process_message(const google::protobuf::Descriptor *file, MessageMeta &mm) {
-        auto r = std::make_unique<FieldMeta>();
-
-        auto rptr = r.get();
-        field_meta_map["root"] = rptr;
-        field_metas.push_back(std::move(r));
-        mm.index++;
-        mm.data_index++;
-        std::deque<FieldMeta*> que;
-        for (auto i = 0; i < file->field_count(); ++i ) {
-            auto field = file->field(i);
-            auto meta = std::make_unique<FieldMeta>();
-            meta->field = field;
-            meta->repeated = field->is_repeated();
-            meta->path =field->name();
-            meta->index = mm.index++;
-            meta->root = file;
-            auto ptr = meta.get();
-            mm.field_map[meta->path] = ptr;
-            field_meta_map[meta->path] = ptr;
-            field_metas.push_back(std::move(meta));
-
-            if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
-                ptr->data_index = -1;
-                que.push_back(ptr);
-                continue;
-            }
-            ptr->data_index = mm.data_index++;
-            if (field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
-                ptr->cpp_type = cpp_type(field,true);
-            } else {
-                ptr->cpp_type = "enum";
-            }
-            KLOG(INFO)<<"uri:"<<field->full_name()<<"cpp type:"<<ptr->cpp_type;
-        }
-
-        while (!que.empty()) {
-            auto entity = que.front();
-            que.pop_front();
-            for (auto i = 0; i < entity->field->message_type()->field_count(); ++i) {
-                auto field = entity->field->message_type()->field(i);
-                auto meta = std::make_unique<FieldMeta>();
-                meta->field = field;
-                meta->path =entity->path + "." + field->name();
-                meta->index = mm.index++;
-                meta->root = file;
-                entity->column.push_back(meta->index);
-                auto ptr = meta.get();
-                mm.field_map[meta->path] = ptr;
-                field_meta_map[meta->path] = ptr;
-                field_metas.push_back(std::move(meta));
-
-                if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
-                    ptr->data_index  = -1;
-                    que.push_back(ptr);
-                    continue;
-                }
-                ptr->data_index = mm.data_index++;
-                if (field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
-                    ptr->cpp_type = cpp_type(field,true);
-                } else {
-                    ptr->cpp_type = "enum";
-                }
-                KLOG(INFO)<<"uri:"<<field->full_name()<<"cpp type:"<<ptr->cpp_type;
-            }
-        }
-    }
 
     void GlobalState::process_deps(const google::protobuf::FileDescriptor *file) {
         std::vector<const google::protobuf::FileDescriptor *> files;

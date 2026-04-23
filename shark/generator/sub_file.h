@@ -16,33 +16,41 @@
 
 #pragma once
 
+
+#include <memory>
 #include <string>
+#include <vector>
 
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/stubs/common.h>
 
+
 namespace shark {
-    // Generates code for an extension, which may be within the scope of some
-    // message or may be at file scope.  This is much simpler than FieldGenerator
-    // since extensions are just simple identifiers with interesting types.
-    class ExtensionViewGenerator {
+    class SubFileGeneratorBase {
     public:
         // See generator.cc for the meaning of dllexport_decl.
-        explicit ExtensionViewGenerator(const google::protobuf::FieldDescriptor *descriptor,
-                                    const std::string &dllexport_decl);
+        explicit SubFileGeneratorBase(const google::protobuf::FileDescriptor *file) : _file(file) {
+        }
 
-        ~ExtensionViewGenerator();
+        virtual ~SubFileGeneratorBase() = default;
 
-        // Header stuff.
-        void GenerateDeclaration(google::protobuf::io::Printer *printer);
+        /// header region
+        virtual void generate_fwd_typedef(google::protobuf::io::Printer *printer) = 0;
 
-        // Source file stuff.
-        void GenerateDefinition(google::protobuf::io::Printer *printer);
+        virtual void generate_definition(google::protobuf::io::Printer *printer) = 0;
 
-    private:
-        const google::protobuf::FieldDescriptor *descriptor_;
-        std::string type_traits_;
-        std::string _dllexport_decl;
+        virtual void generate_inline_implement(google::protobuf::io::Printer *printer) = 0;
+
+
+        /// source range
+        virtual void generate_static_variable(google::protobuf::io::Printer *printer) = 0;
+
+        virtual void generate_static_functions(google::protobuf::io::Printer *printer) = 0;
+
+        virtual void generate_implement(google::protobuf::io::Printer *printer) = 0;
+
+    protected:
+        const google::protobuf::FileDescriptor *_file{nullptr};
     };
 } // namespace shark

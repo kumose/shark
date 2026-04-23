@@ -13,26 +13,8 @@
 // limitations under the License.
 //
 
-
-
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/io/printer.h>
-
-#include <shark/rt/extension.h>
+#include <shark/meta/meta_file.h>
 
 namespace shark {
-    ExtensionGenerator::ExtensionGenerator(const google::protobuf::FieldDescriptor *descriptor,
-                                           const std::string &dllexport_decl)
-        : descriptor_(descriptor),
-          _dllexport_decl(dllexport_decl) {
-    }
 
-    ExtensionGenerator::~ExtensionGenerator() {
-    }
-
-    void ExtensionGenerator::GenerateDeclaration(google::protobuf::io::Printer *printer) {
-    }
-
-    void ExtensionGenerator::GenerateDefinition(google::protobuf::io::Printer *printer) {
-    }
-} // namespace shark
+}  // namespace shark

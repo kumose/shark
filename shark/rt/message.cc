@@ -42,7 +42,7 @@ namespace shark {
     MessageGenerator::MessageGenerator(const google::protobuf::Descriptor *descriptor,
                                        const std::string &dllexport_decl, const MessageGenerator *parent)
         : descriptor_(descriptor),
-          dllexport_decl_(dllexport_decl),
+          _dllexport_decl(dllexport_decl),
           field_generators_(descriptor),
             _oneof_generator(descriptor_){
         GlobalState::instance().registry(descriptor_);
@@ -69,10 +69,10 @@ namespace shark {
         _vars["ucclassname"] = FullNameToUpper(descriptor_->full_name(), descriptor_->file());
         _vars["field_count"] = turbo::str_cat(descriptor_->field_count());
         _vars["PBTYPE"] = turbo::str_replace_all(descriptor_->full_name(), {{".", "::"}});
-        if (dllexport_decl_.empty()) {
+        if (_dllexport_decl.empty()) {
             _vars["dllexport"] = "";
         } else {
-            _vars["dllexport"] = dllexport_decl_ + " ";
+            _vars["dllexport"] = _dllexport_decl + " ";
         }
     }
 

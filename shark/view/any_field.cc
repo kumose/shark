@@ -36,20 +36,20 @@ namespace shark {
     }
 
     void AnyFieldViewGenerator::generate_members(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "shark::AnyView _$name$$default_init$;\n");
+        printer->Print(_variables, "shark::AnyView _$name$$default_init$;\n");
     }
 
     void AnyFieldViewGenerator::generate_members_declares(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "$deprecated$inline shark::AnyView $name$() const;\n");
+        printer->Print(_variables, "$deprecated$inline shark::AnyView $name$() const;\n");
     }
 
     void AnyFieldViewGenerator::generate_members_inline_implementations(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "/// getter\n");
-        printer->Print(variables_, "inline shark::AnyView $domain_view$::$name$() const {\n");
+        printer->Print(_variables, "/// getter\n");
+        printer->Print(_variables, "inline shark::AnyView $domain_view$::$name$() const {\n");
         printer->Indent();
-        printer->Print(variables_, "return _$name$;\n");
+        printer->Print(_variables, "return _$name$;\n");
         printer->Outdent();
-        printer->Print(variables_, "}\n");
+        printer->Print(_variables, "}\n");
     }
 
     void AnyFieldViewGenerator::generate_move_ctor_define(google::protobuf::io::Printer *printer) const {
@@ -63,15 +63,15 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "_$name$.first = pb.$name$().type_url();\n");
-                printer->Print(variables_, "_$name$.second = pb.$name$().value();\n");
+                printer->Print(_variables, "_$name$.first = pb.$name$().type_url();\n");
+                printer->Print(_variables, "_$name$.second = pb.$name$().value();\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "_$name$.resize(pb.$name$_size());\n");
-                printer->Print(variables_, "for(size_t i = 0; i < pb.$name$_size(); ++i) {\n");
+                printer->Print(_variables, "_$name$.resize(pb.$name$_size());\n");
+                printer->Print(_variables, "for(size_t i = 0; i < pb.$name$_size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(variables_, "_$name$[i].first = pb.$name$(i).type_url();\n");
-                printer->Print(variables_, "_$name$[i].second = pb.$name$(i).value();\n");
+                printer->Print(_variables, "_$name$[i].first = pb.$name$(i).type_url();\n");
+                printer->Print(_variables, "_$name$[i].second = pb.$name$(i).value();\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
@@ -82,16 +82,16 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "pb.mutable_$name$()->set_type_url(_$name$.first);\n");
-                printer->Print(variables_, "pb.mutable_$name$()->set_value(_$name$.second);\n");
+                printer->Print(_variables, "pb.mutable_$name$()->set_type_url(_$name$.first);\n");
+                printer->Print(_variables, "pb.mutable_$name$()->set_value(_$name$.second);\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "pb.mutable_$name$()->Reserve(_$name$.size());\n");
-                printer->Print(variables_, "for(size_t i = 0; i < _$name$.size(); ++i) {\n");
+                printer->Print(_variables, "pb.mutable_$name$()->Reserve(_$name$.size());\n");
+                printer->Print(_variables, "for(size_t i = 0; i < _$name$.size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(variables_, "auto ptr = pb.mutable_$name$()->Add();\n");
-                printer->Print(variables_, "ptr->set_type_url(_$name$[i].first);\n");
-                printer->Print(variables_, "ptr->set_value(_$name$[i].second);\n");
+                printer->Print(_variables, "auto ptr = pb.mutable_$name$()->Add();\n");
+                printer->Print(_variables, "ptr->set_type_url(_$name$[i].first);\n");
+                printer->Print(_variables, "ptr->set_value(_$name$[i].second);\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
@@ -101,7 +101,7 @@ namespace shark {
 
     void AnyFieldViewGenerator::GenerateDefaultValueImplementations(google::protobuf::io::Printer *printer) const {
         std::map<std::string, std::string> vars;
-        vars["default"] = variables_.find("default")->second;
+        vars["default"] = _variables.find("default")->second;
         vars["escaped"] = CEscape(descriptor_->default_value_string());
         printer->Print(vars, "char $default$[] = \"$escaped$\";\n");
     }

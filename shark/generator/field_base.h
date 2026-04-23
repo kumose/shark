@@ -68,7 +68,7 @@ namespace shark {
         }
 
         const google::protobuf::FieldDescriptor *descriptor_;
-        std::map<std::string, std::string> variables_;
+        std::map<std::string, std::string> _variables;
         idl::SharkFieldOptions _ext_option;
         google::protobuf::FieldOptions _option;
     };

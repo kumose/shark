@@ -43,6 +43,6 @@ namespace shark {
     private:
         const google::protobuf::FieldDescriptor *descriptor_;
         std::string type_traits_;
-        std::string dllexport_decl_;
+        std::string _dllexport_decl;
     };
 } // namespace shark

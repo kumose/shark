@@ -30,13 +30,12 @@
 #include <shark/builder/extension.h>
 #include <shark/generator/field_map.h>
 #include <shark/builder/message.h>
-#include <shark/builder/service.h>
+
 
 #include <shark/view/enum.h>
 #include <shark/view/extension.h>
 #include <shark/generator/field_map.h>
 #include <shark/view/message.h>
-#include <shark/view/service.h>
 #include <shark/generator/file.h>
 
 namespace shark {
@@ -58,12 +57,10 @@ namespace shark {
 
         std::vector<std::unique_ptr<MessageSkbGenerator>> message_generators_;
         std::vector<std::unique_ptr<EnumSkbGenerator>> enum_generators_;
-        std::vector<std::unique_ptr<ServiceSkbGenerator>> service_generators_;
         std::vector<std::unique_ptr<ExtensionSkbGenerator>> extension_generators_;
 
         std::vector<std::unique_ptr<MessageViewGenerator>> message_view_generators_;
         std::vector<std::unique_ptr<EnumViewGenerator>> enum_view_generators_;
-        std::vector<std::unique_ptr<ServiceViewGenerator>> service_view_generators_;
         std::vector<std::unique_ptr<ExtensionViewGenerator>> extension_view_generators_;
     };
 } // namespace shark

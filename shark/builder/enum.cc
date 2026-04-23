@@ -28,7 +28,7 @@ namespace shark {
     EnumSkbGenerator::EnumSkbGenerator(const google::protobuf::EnumDescriptor *descriptor,
                                  const std::string &dllexport_decl)
         : descriptor_(descriptor),
-          dllexport_decl_(dllexport_decl) {
+          _dllexport_decl(dllexport_decl) {
     }
 
     EnumSkbGenerator::~EnumSkbGenerator() {

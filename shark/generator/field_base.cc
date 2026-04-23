@@ -25,19 +25,19 @@ namespace shark {
     void FieldGeneratorBase::initialize() {
         auto d = get_default_value();
         if (!d.empty()) {
-            variables_["default_init"] = "";
+            _variables["default_init"] = "";
         }
 
         _option = descriptor_->options();
         _ext_option = descriptor_->options().GetExtension(idl::shark_field);
         if (descriptor_->options().deprecated()) {
-            variables_["deprecated"] = "[[deprecated]] ";
+            _variables["deprecated"] = "[[deprecated]] ";
         }
         GlobalState::instance().registry(descriptor_);
-        variables_["name"] = varify_field_name(descriptor_);
-        variables_["domain"] = message_type(descriptor_->containing_type());
-        variables_["domain_skb"] = message_type(descriptor_->containing_type(), "Skb");
-        variables_["domain_view"] = message_type(descriptor_->containing_type(), "View");
+        _variables["name"] = varify_field_name(descriptor_);
+        _variables["domain"] = message_type(descriptor_->containing_type());
+        _variables["domain_skb"] = message_type(descriptor_->containing_type(), "Skb");
+        _variables["domain_view"] = message_type(descriptor_->containing_type(), "View");
 
         do_initialize();
     }

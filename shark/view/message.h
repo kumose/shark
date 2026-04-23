@@ -65,7 +65,7 @@ namespace shark {
 
         const google::protobuf::Descriptor *descriptor_;
         const google::protobuf::Descriptor *parent_descriptor_;
-        std::string dllexport_decl_;
+        std::string _dllexport_decl;
         FieldGeneratorMap field_generators_;
         std::vector<std::unique_ptr<MessageViewGenerator> > nested_generators_;
         std::vector<std::unique_ptr<EnumViewGenerator> > enum_generators_;

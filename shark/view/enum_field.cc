@@ -28,51 +28,51 @@ namespace shark {
     EnumFieldViewGenerator::
     EnumFieldViewGenerator(const google::protobuf::FieldDescriptor *descriptor)
         : FieldMetaGenerator(descriptor) {
-       variables_["type"] = descriptor->enum_type()->name();
+       _variables["type"] = descriptor->enum_type()->name();
     }
 
     EnumFieldViewGenerator::~EnumFieldViewGenerator() {
     }
 
     void EnumFieldViewGenerator::generate_members(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "shark::EnumView<$type$> _$name$$default_init$;\n");
+        printer->Print(_variables, "shark::EnumView<$type$> _$name$$default_init$;\n");
     }
 
     void EnumFieldViewGenerator::generate_move_ctor_define(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "_$name$ = rhs._$name$;\n");
+                printer->Print(_variables, "_$name$ = rhs._$name$;\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "_$name$ = std::move(rhs._$name$);\n");
+                printer->Print(_variables, "_$name$ = std::move(rhs._$name$);\n");
                 break;
         }
     }
     void EnumFieldViewGenerator::generate_copy_ctor_define(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "_$name$ = rhs._$name$;\n");
+        printer->Print(_variables, "_$name$ = rhs._$name$;\n");
     }
 
 
     void EnumFieldViewGenerator::generate_members_inline_implementations(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "inline shark::EnumView<$type$> $domain_view$::$name$() const {\n");
+        printer->Print(_variables, "inline shark::EnumView<$type$> $domain_view$::$name$() const {\n");
         printer->Indent();
-        printer->Print(variables_, "return _$name$;\n");
+        printer->Print(_variables, "return _$name$;\n");
         printer->Outdent();
-        printer->Print(variables_, "}\n");
+        printer->Print(_variables, "}\n");
     }
 
     void EnumFieldViewGenerator::generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "_$name$ = pb.$name$();\n");
+                printer->Print(_variables, "_$name$ = pb.$name$();\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "_$name$.reserve(pb.$name$_size());");
-                printer->Print(variables_, "for(size_t i = 0; i < pb.$name$_size(); ++i) {\n");
+                printer->Print(_variables, "_$name$.reserve(pb.$name$_size());");
+                printer->Print(_variables, "for(size_t i = 0; i < pb.$name$_size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(variables_, "_$name$.push_back(pb.$name$(i));\n");
+                printer->Print(_variables, "_$name$.push_back(pb.$name$(i));\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
@@ -83,13 +83,13 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(variables_, "pb.set_$name$(_$name$);\n");
+                printer->Print(_variables, "pb.set_$name$(_$name$);\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "pb.mutable_$name$()->Reserve(_$name$.size());\n");
-                printer->Print(variables_, "for(size_t i = 0; i < _$name$.size(); ++i) {\n");
+                printer->Print(_variables, "pb.mutable_$name$()->Reserve(_$name$.size());\n");
+                printer->Print(_variables, "for(size_t i = 0; i < _$name$.size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(variables_, "*pb.mutable_$name$()->Add() = _$name$[i];\n");
+                printer->Print(_variables, "*pb.mutable_$name$()->Add() = _$name$[i];\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
@@ -97,7 +97,7 @@ namespace shark {
     }
 
     void EnumFieldViewGenerator::generate_members_declares(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "$deprecated$inline shark::EnumView<$type$> $name$() const;\n");
+        printer->Print(_variables, "$deprecated$inline shark::EnumView<$type$> $name$() const;\n");
     }
 
 

@@ -29,7 +29,7 @@ namespace shark {
     PrimitiveFieldViewGenerator(const google::protobuf::FieldDescriptor *descriptor)
         : FieldMetaGenerator(descriptor) {
         std::string c_type = get_ctype(descriptor_, descriptor_->containing_type());
-        variables_["c_type"] = c_type;
+        _variables["c_type"] = c_type;
         is_atomic = _ext_option.is_atomic();
     }
 
@@ -37,24 +37,24 @@ namespace shark {
     }
 
     void PrimitiveFieldViewGenerator::generate_members(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "shark::PrimitiveView<$c_type$> _$name$;\n");
+        printer->Print(_variables, "shark::PrimitiveView<$c_type$> _$name$;\n");
     }
 
     void PrimitiveFieldViewGenerator::generate_members_declares(google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "$deprecated$inline shark::PrimitiveView<$c_type$> $name$() const;\n");
+        printer->Print(_variables, "$deprecated$inline shark::PrimitiveView<$c_type$> $name$() const;\n");
     }
 
     void PrimitiveFieldViewGenerator::generate_members_inline_implementations(
         google::protobuf::io::Printer *printer) const {
-        printer->Print(variables_, "inline shark::PrimitiveView<$c_type$> $domain_view$::$name$$deprecated$() const {\n");
+        printer->Print(_variables, "inline shark::PrimitiveView<$c_type$> $domain_view$::$name$$deprecated$() const {\n");
         printer->Indent();
         if (is_atomic) {
-            printer->Print(variables_, "return _$name$.load();\n");
+            printer->Print(_variables, "return _$name$.load();\n");
         } else {
-            printer->Print(variables_, "return _$name$;\n");
+            printer->Print(_variables, "return _$name$;\n");
         }
         printer->Outdent();
-        printer->Print(variables_, "}\n");
+        printer->Print(_variables, "}\n");
     }
 
     void PrimitiveFieldViewGenerator::generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const {
@@ -63,17 +63,17 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
 
                 if (is_atomic) {
-                    printer->Print(variables_, "_$name$.store(pb.$name$());\n");
+                    printer->Print(_variables, "_$name$.store(pb.$name$());\n");
                 } else {
-                    printer->Print(variables_, "_$name$ = pb.$name$();\n");
+                    printer->Print(_variables, "_$name$ = pb.$name$();\n");
                 }
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "_$name$.reserve(pb.$name$_size());\n");
-                printer->Print(variables_, "auto &ref = pb.$name$();\n");
-                printer->Print(variables_, "for(size_t i = 0; i < pb.$name$_size(); ++i) {\n");
+                printer->Print(_variables, "_$name$.reserve(pb.$name$_size());\n");
+                printer->Print(_variables, "auto &ref = pb.$name$();\n");
+                printer->Print(_variables, "for(size_t i = 0; i < pb.$name$_size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(variables_, "_$name$.push_back(ref[i]);\n");
+                printer->Print(_variables, "_$name$.push_back(ref[i]);\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
@@ -86,14 +86,14 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 if (is_atomic) {
-                    printer->Print(variables_, "_$name$.store(rhs._$name$.load());\n");
+                    printer->Print(_variables, "_$name$.store(rhs._$name$.load());\n");
                 } else {
-                    printer->Print(variables_, "_$name$ = rhs._$name$;\n");
+                    printer->Print(_variables, "_$name$ = rhs._$name$;\n");
                 }
 
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "_$name$ = std::move(rhs._$name$);\n");
+                printer->Print(_variables, "_$name$ = std::move(rhs._$name$);\n");
                 break;
         }
     }
@@ -102,14 +102,14 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 if (is_atomic) {
-                    printer->Print(variables_, "_$name$.store(rhs._$name$.load());\n");
+                    printer->Print(_variables, "_$name$.store(rhs._$name$.load());\n");
                 } else {
-                    printer->Print(variables_, "_$name$ = rhs._$name$;\n");
+                    printer->Print(_variables, "_$name$ = rhs._$name$;\n");
                 }
 
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "_$name$ = rhs._$name$;\n");
+                printer->Print(_variables, "_$name$ = rhs._$name$;\n");
                 break;
         }
     }
@@ -119,16 +119,16 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 if (is_atomic) {
-                    printer->Print(variables_, "pb.set_$name$(_$name$.load());\n");
+                    printer->Print(_variables, "pb.set_$name$(_$name$.load());\n");
                 } else {
-                    printer->Print(variables_, "pb.set_$name$(_$name$);\n");
+                    printer->Print(_variables, "pb.set_$name$(_$name$);\n");
                 }
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(variables_, "pb.mutable_$name$()->Reserve(_$name$.size());\n");
-                printer->Print(variables_, "for(size_t i = 0; i < _$name$.size(); ++i) {\n");
+                printer->Print(_variables, "pb.mutable_$name$()->Reserve(_$name$.size());\n");
+                printer->Print(_variables, "for(size_t i = 0; i < _$name$.size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(variables_, "*pb.mutable_$name$()->Add() = _$name$[i];\n");
+                printer->Print(_variables, "*pb.mutable_$name$()->Add() = _$name$[i];\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;

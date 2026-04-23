@@ -14,19 +14,17 @@
 //
 
 
-
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 
 #include <shark/idl/shark_options.pb.h>
 
-#include <shark/builder/enum.h>
-#include <shark/builder/extension.h>
-#include <shark/skb/file.h>
+#include <shark/rt/enum.h>
+#include <shark/rt/extension.h>
+#include <shark/generator/rt_file.h>
 #include <shark/utility/helpers.h>
-#include <shark/builder/message.h>
-#include <shark/view/message.h>
-#include <shark/builder/service.h>
+#include <shark/rt/message.h>
+#include <shark/rt/service.h>
 #include <shark/version.h>
 #include <turbo/strings/str_replace.h>
 #include <shark/generator/global_state.h>
@@ -34,63 +32,45 @@
 namespace shark {
     // ===================================================================
 
-    FileSkbGenerator::FileSkbGenerator(const google::protobuf::FileDescriptor *file,
+    FileRtGenerator::FileRtGenerator(const google::protobuf::FileDescriptor *file,
                                  const std::string &dllexport_decl)
-        : FileGeneratorBase(file) {
-
-        message_generators_.resize(file->message_type_count());
+        : FileGeneratorBase(file),
+          message_generators_(
+              new std::unique_ptr<MessageGenerator>[file->message_type_count()]),
+          enum_generators_(
+              new std::unique_ptr<EnumGenerator>[file->enum_type_count()]),
+          service_generators_(
+              new std::unique_ptr<ServiceGenerator>[file->service_count()]),
+          extension_generators_(
+              new std::unique_ptr<ExtensionGenerator>[file->extension_count()]) {
         for (int i = 0; i < file->message_type_count(); i++) {
             message_generators_[i].reset(
-                new MessageSkbGenerator(file->message_type(i), dllexport_decl, nullptr));
+                new MessageGenerator(file->message_type(i), dllexport_decl, nullptr));
             if (!_have_one_of) {
                 _have_one_of = message_generators_[i]->have_oneof();
             }
         }
-        enum_generators_.resize(file->enum_type_count());
+
         for (int i = 0; i < file->enum_type_count(); i++) {
             enum_generators_[i].reset(
-                new EnumSkbGenerator(file->enum_type(i), dllexport_decl));
+                new EnumGenerator(file->enum_type(i), dllexport_decl));
         }
-        service_generators_.resize(file->service_count());
+
         for (int i = 0; i < file->service_count(); i++) {
             service_generators_[i].reset(
-                new ServiceSkbGenerator(file->service(i), dllexport_decl));
+                new ServiceGenerator(file->service(i), dllexport_decl));
         }
-        extension_generators_.resize(file->extension_count());
+
         for (int i = 0; i < file->extension_count(); i++) {
             extension_generators_[i].reset(
-                new ExtensionSkbGenerator(file->extension(i), dllexport_decl));
-        }
-
-        message_view_generators_.resize(file->message_type_count());
-        for (int i = 0; i < file->message_type_count(); i++) {
-            message_view_generators_[i].reset(
-                new MessageViewGenerator(file->message_type(i), dllexport_decl, nullptr));
-            if (!_have_one_of) {
-                _have_one_of = message_view_generators_[i]->have_oneof();
-            }
-        }
-        enum_view_generators_.resize(file->enum_type_count());
-        for (int i = 0; i < file->enum_type_count(); i++) {
-            enum_view_generators_[i].reset(
-                new EnumViewGenerator(file->enum_type(i), dllexport_decl));
-        }
-        service_view_generators_.resize(file->service_count());
-        for (int i = 0; i < file->service_count(); i++) {
-            service_view_generators_[i].reset(
-                new ServiceViewGenerator(file->service(i), dllexport_decl));
-        }
-        extension_view_generators_.resize(file->extension_count());
-        for (int i = 0; i < file->extension_count(); i++) {
-            extension_view_generators_[i].reset(
-                new ExtensionViewGenerator(file->extension(i), dllexport_decl));
+                new ExtensionGenerator(file->extension(i), dllexport_decl));
         }
     }
 
-    FileSkbGenerator::~FileSkbGenerator() {
+    FileRtGenerator::~FileRtGenerator() {
     }
 
-    void FileSkbGenerator::generate_header(google::protobuf::io::Printer *printer) {
+    void FileRtGenerator::generate_header(google::protobuf::io::Printer *printer) {
         std::string filename_identifier = FilenameIdentifier(_file->name());
 
         // Generate top of header.
@@ -111,8 +91,6 @@ namespace shark {
             "#include <optional>\n"
             "#include <google/protobuf/descriptor.h>\n"
             "#include <$basename$.pb.h>\n"
-            "#include <$basename$.sk.h>\n"
-            "#include <shark/shark.h>\n"
             "$INC$"
             "\n"
             "\n",
@@ -142,32 +120,19 @@ namespace shark {
         for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->generate_struct_typedef(printer);
         }
-        for (int i = 0; i < _file->message_type_count(); i++) {
-            message_view_generators_[i]->generate_struct_typedef(printer);
-        }
 
         printer->Print("\n");
 
         // Generate enum definitions.
         printer->Print("\n/// --- enums ---\n\n");
         for (int i = 0; i < _file->enum_type_count(); i++) {
-            enum_generators_[i]->generate_definition(printer, nullptr);
-        }
-
-        for (int i = 0; i < _file->enum_type_count(); i++) {
-            enum_view_generators_[i]->generate_definition(printer, nullptr);
+            enum_generators_[i]->generate_definition(printer);
         }
 
         // Generate class definitions.
-        printer->Print("\n//////////////////////////////////////////////////////////////////////////\n");
-        printer->Print("/// --- builders --- \n\n");
+        printer->Print("\n/// --- messages --- \n\n");
         for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->generate_struct_definition(printer);
-        }
-        printer->Print("\n//////////////////////////////////////////////////////////////////////////\n");
-        printer->Print("/// --- views ---\n\n");
-        for (int i = 0; i < _file->message_type_count(); i++) {
-            message_view_generators_[i]->generate_struct_definition(printer);
         }
 
         // Generate service definitions.
@@ -176,16 +141,9 @@ namespace shark {
             service_generators_[i]->GenerateMainHFile(printer);
         }
 
-        for (int i = 0; i < _file->service_count(); i++) {
-            service_view_generators_[i]->GenerateMainHFile(printer);
-        }
-
         // Declare extension identifiers.
         for (int i = 0; i < _file->extension_count(); i++) {
             extension_generators_[i]->GenerateDeclaration(printer);
-        }
-        for (int i = 0; i < _file->extension_count(); i++) {
-            extension_view_generators_[i]->GenerateDeclaration(printer);
         }
 
         printer->Print("\n/* --- descriptors --- */\n\n");
@@ -202,9 +160,6 @@ namespace shark {
         for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->generate_struct_inl(printer);
         }
-        for (int i = 0; i < _file->message_type_count(); i++) {
-            message_view_generators_[i]->generate_struct_inl(printer);
-        }
         printer->Outdent();
         printer->Print(
             "\n"
@@ -214,7 +169,7 @@ namespace shark {
             "filename_identifier", filename_identifier);
     }
 
-    void FileSkbGenerator::generate_source(google::protobuf::io::Printer *printer) {
+    void FileRtGenerator::generate_source(google::protobuf::io::Printer *printer) {
         printer->Print(
             "/* Generated by the protocol buffer compiler.  DO NOT EDIT! */\n"
             "/* Generated from: $filename$ */\n"
@@ -222,19 +177,14 @@ namespace shark {
             "/* Do not generate deprecated warnings for self */\n"
             "\n"
             "#include <$basename$.sk.h>\n"
-            "#include <$basename$.skb.h>\n"
             "#include <google/protobuf/json/json.h>\n\n"
             "namespace $NS$ {\n",
             "filename", _file->name(),
             "NS", GlobalState::instance().cnamespace,
             "basename", StripProto(_file->name()));
         printer->Indent();
-        /*
         for (int i = 0; i < _file->message_type_count(); i++) {
             message_generators_[i]->generate_struct_transfer(printer);
-        }*/
-        for (int i = 0; i < _file->message_type_count(); i++) {
-            message_view_generators_[i]->generate_struct_transfer(printer);
         }
 
         for (int i = 0; i < _file->message_type_count(); i++) {

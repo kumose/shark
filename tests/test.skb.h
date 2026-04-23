@@ -257,42 +257,6 @@ namespace my::custom::ns {
     inline const std::string& long_name() const;
     inline void set_long_name(const std::string &v);
     inline shark::OneOfView<Kind> kind() const;
-    ///////////////////////////////////////////////////////////////////////// 
-    /// serialize meta 
-    /// Metadata for a single field (leaf or internal node).
-    /// 
-    /// This structure captures all information needed to map a protobuf field
-    /// to a physical column in the zero-copy columnar layout.
-    /// For non-storage nodes (e.g., messages, maps, repeated containers), data_index = -1.
-    /// Physical columns (data_index >= 0) occupy actual storage.
-    struct FieldMeta {
-      /// Logical index for uri() mapping, uniquely identifies the field path
-      int index{0};
-
-      /// Physical column index, -1 for non-storage nodes (messages, maps, repeated containers)
-      int data_index{0};
-
-      /// Top-level protobuf descriptor (root of the message)
-      const google::protobuf::Descriptor* root{nullptr};
-
-      /// Full dotted path from root to this field, e.g., "address.detail.region"
-      std::string path;
-
-      /// Corresponding protobuf FieldDescriptor for low-level type info
-      const google::protobuf::FieldDescriptor* field{nullptr};
-
-      /// Sequence of physical column indices along the path from root to this field
-      std::vector<int> column;
-
-      /// True if this field is repeated (or map entry repeated)
-      bool repeated{false};
-
-      /// C++ runtime type string (e.g., "std::string", "int32_t", "std::vector<uint8_t>")
-      std::string cpp_type;
-    };
-
-    static const turbo:flat_hash_map<std::string, FieldMeta>& uri_data();
-
   private:
     ////////////////////// members
     std::pair<std::string,std::string> _any_one;
@@ -310,9 +274,6 @@ namespace my::custom::ns {
     shark::OneOfView<Kind> _kind;
 
   };
-
-  /* --- services --- */
-
 
   /* --- descriptors --- */
 
