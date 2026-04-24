@@ -25,7 +25,7 @@
 
 namespace shark {
     MapFieldGenerator::MapFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
-        : FieldMetaGenerator(descriptor) {
+        : FieldNoMetaGenerator(descriptor) {
         auto mtp = get_ctype(descriptor_, descriptor_->containing_type());
         _variables["map_type"] = mtp;
     }

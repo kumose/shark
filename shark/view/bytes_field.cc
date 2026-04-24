@@ -30,7 +30,7 @@ namespace shark {
 
     BytesFieldViewGenerator::
     BytesFieldViewGenerator(const google::protobuf::FieldDescriptor *descriptor)
-        : FieldMetaGenerator(descriptor) {
+        : FieldNoMetaGenerator(descriptor) {
     }
 
     BytesFieldViewGenerator::~BytesFieldViewGenerator() {

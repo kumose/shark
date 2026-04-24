@@ -71,6 +71,6 @@ message Person {
     Address ddd  = 13;
   }
   optional Address address = 6;
-  optional Address address2 = 17;
+  repeated Address address2 = 17;
   optional string long_name = 18;
 }

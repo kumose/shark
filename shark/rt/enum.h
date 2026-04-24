@@ -43,9 +43,6 @@ namespace shark {
 
         void generate_inline_definition(google::protobuf::io::Printer *printer, const google::protobuf::Descriptor *descriptor);
 
-        // void GenerateDescriptorDeclarations(google::protobuf::io::Printer *printer);
-
-
         // Source file stuff.
 
     private:

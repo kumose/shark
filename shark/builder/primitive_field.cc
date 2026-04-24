@@ -27,7 +27,7 @@
 namespace shark {
     PrimitiveFieldSkbGenerator::
     PrimitiveFieldSkbGenerator(const google::protobuf::FieldDescriptor *descriptor)
-        : FieldMetaGenerator(descriptor) {
+        : FieldNoMetaGenerator(descriptor) {
         std::string c_type = get_ctype(descriptor_, descriptor_->containing_type());
         _variables["c_type"] = c_type;
         is_atomic = _ext_option.is_atomic();

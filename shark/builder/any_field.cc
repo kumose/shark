@@ -29,7 +29,7 @@ namespace shark {
 
     AnyFieldSkbGenerator::
     AnyFieldSkbGenerator(const google::protobuf::FieldDescriptor *descriptor )
-        : FieldMetaGenerator(descriptor) {
+        : FieldNoMetaGenerator(descriptor) {
     }
 
     AnyFieldSkbGenerator::~AnyFieldSkbGenerator() {

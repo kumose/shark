@@ -19,13 +19,13 @@
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/wire_format.h>
 #include <turbo/strings/str_cat.h>
-#include <shark/utility/uri.h>
+#include <shark/uri.h>
 #include <shark/view/message_field.h>
 
 namespace shark {
     MessageFieldViewGenerator::
     MessageFieldViewGenerator(const google::protobuf::FieldDescriptor *descriptor)
-        : FieldMetaGenerator(descriptor) {
+        : FieldNoMetaGenerator(descriptor) {
         _variables["type"] = relative_message_type(descriptor_->message_type(), descriptor_->containing_type(),"View") ;
         _variables["domain_type"] = message_type(descriptor->message_type(), "View");
     }

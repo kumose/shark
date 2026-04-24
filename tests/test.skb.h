@@ -10,7 +10,6 @@
 #include <tests/test.pb.h>
 #include <tests/test.sk.h>
 #include <shark/shark.h>
-#include <atomic>
 #include <turbo/container/flat_hash_map.h>
 
 
@@ -251,9 +250,8 @@ namespace my::custom::ns {
     inline const Address& address() const;
     inline void set_address(const Address& val);
     inline void set_address(Address&& val);
-    inline const Address& address2() const;
-    inline void set_address2(const Address& val);
-    inline void set_address2(Address&& val);
+    inline const std::vector<Address>& address2() const;
+    std::vector<Address>& mutable_address2();
     inline const std::string& long_name() const;
     inline void set_long_name(const std::string &v);
     inline shark::OneOfView<Kind> kind() const;
@@ -268,7 +266,7 @@ namespace my::custom::ns {
     absl::flat_hash_map<std::string,int32_t> _scores;
     Color _favorite_color;
     Address _address;
-    Address _address2;
+    std::vector<Address> _address2;
     std::string _long_name;
     ////////////////////// unions
     shark::OneOfView<Kind> _kind;
@@ -407,14 +405,11 @@ namespace my::custom::ns {
   inline void Person::set_address(Address&& val) {
     _address = std::move(val);
   }
-  inline const Person::Address& Person::address2() const {
+  inline const std::vector<Person::Address>& Person::address2() const {
     return _address2;
   }
-  inline void Person::set_address2(const Address& val) {
-    _address2 = val;
-  }
-  inline void Person::set_address2(Address&& val) {
-    _address2 = std::move(val);
+  inline std::vector<Person::Address>& Person::mutable_address2() {
+    return _address2;
   }
   /// getter
   inline const std::string& Person::long_name() const {

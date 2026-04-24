@@ -57,8 +57,8 @@ namespace shark {
             _variable["type"] = type;
             printer->Print(_variable, "$type$ _$fieldname$;\n");
         }
-        printer->Print(_variable, "$foneofname$() {};\n\n");
-        printer->Print(_variable, "~$foneofname$() {};\n\n");
+        printer->Print(_variable, "$foneofname$() {}\n\n");
+        printer->Print(_variable, "~$foneofname$() {}\n\n");
         printer->Outdent();
         printer->Print(_variable, "} _$foneofname$;\n\n");
         printer->Print(_variable, "$foneofname$Case _$foneofname$_case{$foneofname$Case::NONE};\n\n");

@@ -38,23 +38,30 @@ namespace shark {
 
         void generate_definition(google::protobuf::io::Printer *printer) override;
 
-        void generate_inline_implement(google::protobuf::io::Printer *printer) override {
-
-        }
+        void generate_inline_implement(google::protobuf::io::Printer *printer) override;
 
 
         /// source range
         void generate_static_variable(google::protobuf::io::Printer *printer) override {
-
         }
 
         void generate_static_functions(google::protobuf::io::Printer *printer) override {
-
         }
 
-        void generate_implement(google::protobuf::io::Printer *printer) override {
+        void generate_implement(google::protobuf::io::Printer *printer) override;
 
-        }
+    private:
+        void generate_field_meta_definition(google::protobuf::io::Printer *printer);
+
+        void generate_member_definition(google::protobuf::io::Printer *printer);
+
+        void generate_private_definition(google::protobuf::io::Printer *printer);
+
+        void generate_get_descriptor_implement(google::protobuf::io::Printer *printer);
+
+        void generate_initialize_implement(google::protobuf::io::Printer *printer);
+
+        void generate_inline_extractor_implement(google::protobuf::io::Printer *printer);
 
     private:
         FieldMetaMap _field_generators;

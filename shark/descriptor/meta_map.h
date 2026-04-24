@@ -14,7 +14,6 @@
 //
 
 
-
 #pragma once
 
 
@@ -26,20 +25,22 @@
 #include <shark/idl/shark_options.pb.h>
 #include <turbo/utility/status.h>
 #include <shark/utility/helpers.h>
-#include <shark/generator/field_meta.h>
-namespace shark {
+#include <shark/generator/field_descriptor.h>
 
+namespace shark {
     struct FieldMeta {
         int index{0};
         int data_index{0};
-        const google::protobuf::Descriptor* root{nullptr};
+        const google::protobuf::Descriptor *root{nullptr};
         std::string path;
-        const google::protobuf::FieldDescriptor* field{nullptr};
+        const google::protobuf::FieldDescriptor *field{nullptr};
         std::vector<int> column;
         bool repeated{false};
         std::string cpp_type;
+        bool is_map{false};
+        bool is_any{false};
     };
-
+    class MetaFieldDescriptorGenerator;
     // Convenience class which constructs FieldGenerators for a Descriptor.
     class FieldMetaMap {
     public:
@@ -47,22 +48,30 @@ namespace shark {
 
         ~FieldMetaMap() = default;
 
-        const FieldGeneratorBase &get(const google::protobuf::FieldDescriptor *field) const;
+        const MetaFieldDescriptorGenerator &get(const google::protobuf::FieldDescriptor *field) const;
+
+        const std::vector<std::unique_ptr<FieldMeta> > &metas() const {
+            return field_metas;
+        }
+
+        const turbo::flat_hash_map<std::string, FieldMeta *> &meta_map() const {
+            return field_meta_map;
+        }
 
     private:
         const google::protobuf::Descriptor *descriptor_;
-        std::vector<std::unique_ptr<FieldGeneratorBase>> field_generators_;
+        std::vector<std::unique_ptr<MetaFieldDescriptorGenerator> > field_generators_;
 
         int _index{0};
         int _data_index{0};
-        turbo::flat_hash_map<std::string, FieldMeta*> field_map;
 
-        turbo::flat_hash_map<std::string, FieldMeta*> field_meta_map;
 
-        std::vector<std::unique_ptr<FieldMeta>> field_metas;
+        turbo::flat_hash_map<std::string, FieldMeta *> field_meta_map;
+
+        std::vector<std::unique_ptr<FieldMeta> > field_metas;
 
         void process_message();
 
-        static std::unique_ptr<FieldGeneratorBase> make_generator(const google::protobuf::FieldDescriptor *field);
+        static std::unique_ptr<MetaFieldDescriptorGenerator> make_generator(const google::protobuf::FieldDescriptor *field,const FieldMetaMap* map,std::string path);
     };
 } // namespace shark

@@ -19,21 +19,27 @@
 
 namespace shark {
 
-    class FieldMetaGenerator : public FieldGeneratorBase {
+    class FieldNoMetaGenerator : public FieldGeneratorBase {
     public:
-        explicit FieldMetaGenerator(const google::protobuf::FieldDescriptor *descriptor) : FieldGeneratorBase(descriptor) {
+        explicit FieldNoMetaGenerator(const google::protobuf::FieldDescriptor *descriptor) : FieldGeneratorBase(descriptor) {
         }
 
-        ~FieldMetaGenerator() override =default;
+        ~FieldNoMetaGenerator() override =default;
 
         ///////////////////////////////
         /// constructor and destructor calls
         ///
-        void generate_meta_declares(google::protobuf::io::Printer *printer) const override;
+        void generate_meta_declares(google::protobuf::io::Printer *printer) const override {
 
-        void generate_meta_definition(google::protobuf::io::Printer *printer) const override;
+        }
 
-        void generate_meta_definition_inline(google::protobuf::io::Printer *printer) const override;
+        void generate_meta_definition(google::protobuf::io::Printer *printer) const override {
+
+        }
+
+        void generate_meta_definition_inline(google::protobuf::io::Printer *printer) const override {
+
+        }
     };
 
 }  // namespace shark

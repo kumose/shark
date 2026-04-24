@@ -29,7 +29,7 @@ namespace shark {
 
     AnyFieldViewGenerator::
     AnyFieldViewGenerator(const google::protobuf::FieldDescriptor *descriptor )
-        : FieldMetaGenerator(descriptor) {
+        : FieldNoMetaGenerator(descriptor) {
     }
 
     AnyFieldViewGenerator::~AnyFieldViewGenerator() {

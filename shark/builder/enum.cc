@@ -22,7 +22,7 @@
 #include <shark/builder/enum.h>
 #include <shark/utility/helpers.h>
 
-#include <shark/utility/uri.h>
+#include <shark/uri.h>
 
 namespace shark {
     EnumSkbGenerator::EnumSkbGenerator(const google::protobuf::EnumDescriptor *descriptor,

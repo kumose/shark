@@ -30,11 +30,28 @@ kmcmake_cc_proto(
         ${PROJECT_SOURCE_DIR}
 )
 
+kmcmake_cc_library(
+        NAMESPACE ${PROJECT_NAME}
+        NAME shark
+        SOURCES
+        lib/shark.cc
+        lib/uri.cc
+        lib/type.cc
+        ${shark_idl_proto_gen_SRCS}
+        PINCLUDES
+        ${PROTOBUF_INCLUDE_DIRS}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        PLINKS
+        ${KMCMAKE_DEPS_LINK}
+        PUBLIC
+        UNITY
+)
+
 
 set(GENERATOR_SRC
         generator/global_state.cc
         generator/field_base.cc
-        generator/field_meta.cc
         generator/generator.cc
         generator/field_map.cc
         generator/rt_file.cc
@@ -44,11 +61,14 @@ set(GENERATOR_SRC
         descriptor/meta_map.cc
         descriptor/meta_file.cc
         descriptor/meta_message.cc
+        descriptor/file.cc
+        descriptor/meta_field.cc
         rt/any_field.cc
         rt/bytes_field.cc
         rt/enum.cc
         rt/enum_field.cc
         rt/extension.cc
+        rt/file.cc
         rt/map_field.cc
         rt/message.cc
         rt/message_field.cc
@@ -79,36 +99,19 @@ set(GENERATOR_SRC
         view/primitive_field.cc
         view/string_field.cc
         utility/helpers.cc
-        utility/uri.cc
-        utility/type.cc
 )
 
 kmcmake_cc_library(
         NAMESPACE ${PROJECT_NAME}
         NAME idl_proto
         SOURCES
-        ${shark_idl_proto_gen_SRCS}
         ${GENERATOR_SRC}
         PINCLUDES
         ${PROTOBUF_INCLUDE_DIRS}
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
         PLINKS
-        ${KMCMAKE_DEPS_LINK}
-        PUBLIC
-        UNITY
-)
-
-kmcmake_cc_library(
-        NAMESPACE ${PROJECT_NAME}
-        NAME shark
-        SOURCES
-        lib/shark.cc
-        PINCLUDES
-        ${PROTOBUF_INCLUDE_DIRS}
-        CXXOPTS
-        ${KMCMAKE_CXX_OPTIONS}
-        PLINKS
+        shark::shark_static
         ${KMCMAKE_DEPS_LINK}
         PUBLIC
         UNITY

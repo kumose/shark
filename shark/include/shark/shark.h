@@ -20,4 +20,9 @@
 #include <shark/view.h>
 #include <shark/megic.h>
 #include <shark/aligned.h>
+#include <shark/uri.h>
+#include <shark/type.h>
+#include <shark/sharp.h>
+
+
 

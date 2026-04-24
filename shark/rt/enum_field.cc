@@ -34,7 +34,7 @@ namespace shark {
 
     EnumFieldGenerator::
     EnumFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
-        : FieldMetaGenerator(descriptor) {
+        : FieldNoMetaGenerator(descriptor) {
         SetEnumVariables(descriptor, &_variables);
     }
 

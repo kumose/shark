@@ -8,7 +8,7 @@
 #include <optional>
 #include <google/protobuf/descriptor.h>
 #include <tests/test.pb.h>
-#include <atomic>
+#include <shark/shark.h>
 #include <turbo/container/flat_hash_map.h>
 
 
@@ -18,6 +18,14 @@ namespace my::custom::ns {
   class Person;
   class Address;
   class Detail;
+  ///////////////////////////////////////////////////////////////////////// 
+  /// Serialize Descriptor 
+  class PersonDescriptor;
+
+  /// Serialize Extractor 
+  template <int INDEX>
+  struct PersonExtractor;
+
 
 
   /// --- enums ---
@@ -56,12 +64,6 @@ namespace my::custom::ns {
 
     Person& operator= (Person&& rhs) noexcept;
 
-    /////////////////////////////////////////////////////////////////////// 
-    /// meta describe 
-    static const google::protobuf::Descriptor* get_descriptor();
-
-    const google::protobuf::Descriptor *descriptor() const;
-
     class  Address {
     public:
       /// constructor
@@ -78,12 +80,6 @@ namespace my::custom::ns {
 
       Address& operator= (Address&& rhs) noexcept;
 
-      /////////////////////////////////////////////////////////////////////// 
-      /// meta describe 
-      static const google::protobuf::Descriptor* get_descriptor();
-
-      const google::protobuf::Descriptor *descriptor() const;
-
       class  Detail {
       public:
         /// constructor
@@ -99,12 +95,6 @@ namespace my::custom::ns {
         Detail(Detail&& rhs) noexcept;
 
         Detail& operator= (Detail&& rhs) noexcept;
-
-        /////////////////////////////////////////////////////////////////////// 
-        /// meta describe 
-        static const google::protobuf::Descriptor* get_descriptor();
-
-        const google::protobuf::Descriptor *descriptor() const;
 
         /// -----enums-------- 
       public:
@@ -199,9 +189,8 @@ namespace my::custom::ns {
     inline const Address& address() const;
     inline void set_address(const Address& val);
     inline void set_address(Address&& val);
-    inline const Address& address2() const;
-    inline void set_address2(const Address& val);
-    inline void set_address2(Address&& val);
+    inline const std::vector<Address>& address2() const;
+    std::vector<Address>& mutable_address2();
     inline const std::string& long_name() const;
     inline void set_long_name(const std::string &v);
     inline kindCase kind_case() const;
@@ -239,7 +228,7 @@ namespace my::custom::ns {
     absl::flat_hash_map<std::string,int32_t> _scores;
     Color _favorite_color;
     Address _address;
-    Address _address2;
+    std::vector<Address> _address2;
     std::string _long_name;
     ////////////////////// unions
     union kind {
@@ -247,9 +236,9 @@ namespace my::custom::ns {
       std::string _aaa;
       uint32_t _bbb;
       Address _ddd;
-      kind() {};
+      kind() {}
 
-      ~kind() {};
+      ~kind() {}
 
     } _kind;
 
@@ -257,11 +246,83 @@ namespace my::custom::ns {
 
   };
 
-  /* --- services --- */
+  //////////////////////////////////
+
+  ///  services
 
 
-  /* --- descriptors --- */
 
+  /// --- messages --- 
+
+  ///////////////////////////////////////////////////////////////////////// 
+  /// Serialize Descriptor 
+  class PersonDescriptor {
+  public:
+
+    static const google::protobuf::Descriptor* get_descriptor();
+
+    /// Metadata for a single field (leaf or internal node).
+    /// 
+    /// This structure captures all information needed to map a protobuf field
+    /// to a physical column in the zero-copy columnar layout.
+    /// For non-storage nodes (e.g., messages, maps, repeated containers), data_index = -1.
+    /// Physical columns (data_index >= 0) occupy actual storage.
+    struct FieldMeta {
+      /// Logical index for uri() mapping, uniquely identifies the field path
+      int index{0};
+
+      /// Physical column index, -1 for non-storage nodes (messages, maps, repeated containers)
+      int data_index{0};
+
+      /// Top-level protobuf descriptor (root of the message)
+      const google::protobuf::Descriptor* root{nullptr};
+
+      /// Full dotted path from root to this field, e.g., "address.detail.region"
+      std::string path;
+
+      /// Corresponding protobuf FieldDescriptor for low-level type info
+      const google::protobuf::FieldDescriptor* field{nullptr};
+
+      /// Sequence of physical column indices along the path from root to this field
+      std::vector<int> column;
+
+      /// True if this field is repeated (or map entry repeated)
+      bool repeated{false};
+
+      /// True if this field is map
+      bool is_map{false};
+
+      /// True if this field is google.protobuf.any
+      bool is_any{false};
+
+      /// C++ runtime type string (e.g., "std::string", "int32_t", "std::vector<uint8_t>")
+      std::string cpp_type;
+    };
+
+    static const turbo::flat_hash_map<std::string, FieldMeta*>& field_description() {
+
+      return instance().field_map;
+    }
+
+  private:
+    PersonDescriptor() {
+      initialize();
+    }
+
+    void initialize();
+
+    static PersonDescriptor& instance() {
+      static PersonDescriptor ins;
+      return ins;
+    }
+
+    int _data_index{0};
+    int _index{0};
+    turbo::flat_hash_map<std::string, FieldMeta*> field_map;
+    std::vector<std::unique_ptr<FieldMeta> > field_metas;
+  };
+
+  ///////////////////////////////////////////////////////////
   inline std::string_view to_string(Color value) {
     switch (value) {
       case Color::RED: return "RED";
@@ -286,13 +347,6 @@ namespace my::custom::ns {
       default: return "UNKNOWN";
     }
   }
-
-  ///////////////////////////////////////////////////////////
-  /// --- inlines ---
-  inline const google::protobuf::Descriptor* Person::Address::Detail::descriptor() const {
-    return get_descriptor();
-  }
-
   /// getter
   inline const std::string& Person::Address::Detail::region() const {
     return _region;
@@ -309,10 +363,6 @@ namespace my::custom::ns {
   inline void Person::Address::Detail::set_prcode(const std::string &v) {
     _prcode = v;
   }
-  inline const google::protobuf::Descriptor* Person::Address::descriptor() const {
-    return get_descriptor();
-  }
-
   /// getter
   inline const std::string& Person::Address::street() const {
     return _street;
@@ -336,10 +386,6 @@ namespace my::custom::ns {
   inline void Person::Address::set_detail(Detail&& val) {
     _detail = std::move(val);
   }
-  inline const google::protobuf::Descriptor* Person::descriptor() const {
-    return get_descriptor();
-  }
-
   /// getter
   inline const std::pair<std::string,std::string>& Person::any_one() const {
     return _any_one;
@@ -411,14 +457,11 @@ namespace my::custom::ns {
   inline void Person::set_address(Address&& val) {
     _address = std::move(val);
   }
-  inline const Person::Address& Person::address2() const {
+  inline const std::vector<Person::Address>& Person::address2() const {
     return _address2;
   }
-  inline void Person::set_address2(const Address& val) {
-    _address2 = val;
-  }
-  inline void Person::set_address2(Address&& val) {
-    _address2 = std::move(val);
+  inline std::vector<Person::Address>& Person::mutable_address2() {
+    return _address2;
   }
   /// getter
   inline const std::string& Person::long_name() const {
@@ -502,6 +545,617 @@ namespace my::custom::ns {
       default: return "UNKNOWN";
     }
   }
+
+  ///////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////
+  /// Serialize Extractor 
+  template <>
+  struct PersonExtractor<0> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 0;
+    static constexpr std::string_view path = "";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 0> paths = {};
+  };
+
+  template <>
+  struct PersonExtractor<1> {
+    static constexpr bool is_data_column = false;
+    static constexpr int data_index = -1;
+    static constexpr std::string_view path = "any_one";
+    static constexpr std::array<int, 2> columns = {15, 16};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static const std::pair<std::string, std::string> &extract(const Person &src) {
+      return src.any_one();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<2> {
+    static constexpr bool is_data_column = false;
+    static constexpr int data_index = -1;
+    static constexpr std::string_view path = "any_two";
+    static constexpr std::array<int, 2> columns = {17, 18};
+    static constexpr bool is_repeat = true;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static const std::pair<std::string, std::string> &extract(const Person &src, int any_two_size) {
+      return src.any_two()[any_two_size];
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<3> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 1;
+    static constexpr std::string_view path = "name";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src) {
+      return src.name();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<4> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 2;
+    static constexpr std::string_view path = "age";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static int8_t extract(const Person &src) {
+      return src.age();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<5> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 3;
+    static constexpr std::string_view path = "emails";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = true;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src, int emails_size) {
+      return src.emails()[emails_size];
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<6> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 4;
+    static constexpr std::string_view path = "ages";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = true;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static void extract(std::vector<int64_t> &src, std::vector<int32_t> &data) {
+      return src.ages()[ages_size];
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<7> {
+    static constexpr bool is_data_column = false;
+    static constexpr int data_index = -1;
+    static constexpr std::string_view path = "scores";
+    static constexpr std::array<int, 2> columns = {19, 20};
+    static constexpr bool is_repeat = true;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static const absl::flat_hash_map<std::string,int32_t> &extract(const Person &src, int scores_size) {
+      return src.scores()[scores_size];
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<8> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 5;
+    static constexpr std::string_view path = "favorite_color";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static test::pb::pa::Color extract(const Person &src) {
+      return src.favorite_color();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<9> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 6;
+    static constexpr std::string_view path = "aaa";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src) {
+      return src.aaa();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<10> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 7;
+    static constexpr std::string_view path = "bbb";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static uint32_t extract(const Person &src) {
+      return src.bbb();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<11> {
+    static constexpr bool is_data_column = false;
+    static constexpr int data_index = -1;
+    static constexpr std::string_view path = "ddd";
+    static constexpr std::array<int, 3> columns = {21, 22, 23};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static const Person::Address &extract(const Person &src) {
+      return src.ddd();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<12> {
+    static constexpr bool is_data_column = false;
+    static constexpr int data_index = -1;
+    static constexpr std::string_view path = "address";
+    static constexpr std::array<int, 3> columns = {24, 25, 26};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static const Person::Address &extract(const Person &src) {
+      return src.address();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<13> {
+    static constexpr bool is_data_column = false;
+    static constexpr int data_index = -1;
+    static constexpr std::string_view path = "address2";
+    static constexpr std::array<int, 3> columns = {27, 28, 29};
+    static constexpr bool is_repeat = true;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static const Person::Address &extract(const Person &src, int address2_size) {
+      return src.address2()[address2_size];
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<14> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 8;
+    static constexpr std::string_view path = "long_name";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 0> paths = {};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src) {
+      return src.long_name();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<15> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 9;
+    static constexpr std::string_view path = "any_one.type_url";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {1};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src) {
+      return src.any_one().type_url();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<16> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 10;
+    static constexpr std::string_view path = "any_one.value";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {1};
+    ///////////////////////////////////////////////////////////
+
+    static std::vector<uint8_t> extract(const Person &src) {
+      return src.any_one().value();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<17> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 11;
+    static constexpr std::string_view path = "any_two.type_url";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {2};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src, int any_two_size) {
+      return src.any_two()[any_two_size].type_url();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<18> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 12;
+    static constexpr std::string_view path = "any_two.value";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {2};
+    ///////////////////////////////////////////////////////////
+
+    static std::vector<uint8_t> extract(const Person &src, int any_two_size) {
+      return src.any_two()[any_two_size].value();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<19> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 13;
+    static constexpr std::string_view path = "scores.key";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {7};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src, int scores_size) {
+      return src.scores()[scores_size].key();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<20> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 14;
+    static constexpr std::string_view path = "scores.value";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {7};
+    ///////////////////////////////////////////////////////////
+
+    static int32_t extract(const Person &src, int scores_size) {
+      return src.scores()[scores_size].value();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<21> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 15;
+    static constexpr std::string_view path = "ddd.street";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {11};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src) {
+      return src.ddd().street();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<22> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 16;
+    static constexpr std::string_view path = "ddd.number";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {11};
+    ///////////////////////////////////////////////////////////
+
+    static int32_t extract(const Person &src) {
+      return src.ddd().number();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<23> {
+    static constexpr bool is_data_column = false;
+    static constexpr int data_index = -1;
+    static constexpr std::string_view path = "ddd.detail";
+    static constexpr std::array<int, 2> columns = {30, 31};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {11};
+    ///////////////////////////////////////////////////////////
+
+    static const Person::Address::Detail &extract(const Person &src) {
+      return src.ddd().detail();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<24> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 17;
+    static constexpr std::string_view path = "address.street";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {12};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src) {
+      return src.address().street();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<25> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 18;
+    static constexpr std::string_view path = "address.number";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {12};
+    ///////////////////////////////////////////////////////////
+
+    static int32_t extract(const Person &src) {
+      return src.address().number();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<26> {
+    static constexpr bool is_data_column = false;
+    static constexpr int data_index = -1;
+    static constexpr std::string_view path = "address.detail";
+    static constexpr std::array<int, 2> columns = {32, 33};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {12};
+    ///////////////////////////////////////////////////////////
+
+    static const Person::Address::Detail &extract(const Person &src) {
+      return src.address().detail();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<27> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 19;
+    static constexpr std::string_view path = "address2.street";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {13};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src, int address2_size) {
+      return src.address2()[address2_size].street();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<28> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 20;
+    static constexpr std::string_view path = "address2.number";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {13};
+    ///////////////////////////////////////////////////////////
+
+    static int32_t extract(const Person &src, int address2_size) {
+      return src.address2()[address2_size].number();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<29> {
+    static constexpr bool is_data_column = false;
+    static constexpr int data_index = -1;
+    static constexpr std::string_view path = "address2.detail";
+    static constexpr std::array<int, 2> columns = {34, 35};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 1> paths = {13};
+    ///////////////////////////////////////////////////////////
+
+    static const Person::Address::Detail &extract(std::vector<int64_t> &shar, std::vector<>) {
+      return src.address2()[address2_size].detail();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<30> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 21;
+    static constexpr std::string_view path = "ddd.detail.region";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 2> paths = {11, 23};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src) {
+      return src.ddd().detail().region();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<31> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 22;
+    static constexpr std::string_view path = "ddd.detail.prcode";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 2> paths = {11, 23};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src) {
+      return src.ddd().detail().prcode();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<32> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 23;
+    static constexpr std::string_view path = "address.detail.region";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 2> paths = {12, 26};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src) {
+      return src.address().detail().region();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<33> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 24;
+    static constexpr std::string_view path = "address.detail.prcode";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 2> paths = {12, 26};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src) {
+      return src.address().detail().prcode();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<34> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 25;
+    static constexpr std::string_view path = "address2.detail.region";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 2> paths = {13, 29};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src, int address2_size) {
+      return src.address2()[address2_size].detail().region();
+    }
+
+  };
+
+  template <>
+  struct PersonExtractor<35> {
+    static constexpr bool is_data_column = true;
+    static constexpr int data_index = 26;
+    static constexpr std::string_view path = "address2.detail.prcode";
+    static constexpr std::array<int, 0> columns = {};
+    static constexpr bool is_repeat = false;
+
+    static constexpr std::array<int, 2> paths = {13, 29};
+    ///////////////////////////////////////////////////////////
+
+    static std::string extract(const Person &src, int address2_size) {
+      return src.address2()[address2_size].detail().prcode();
+    }
+
+  };
+
 
 }  // my::custom::ns
 

@@ -25,13 +25,10 @@
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/stubs/common.h>
-
-#include <shark/rt/enum.h>
-#include <shark/rt/extension.h>
 #include <shark/generator/field_map.h>
 #include <shark/generator/file.h>
-#include <shark/rt/message.h>
-#include <shark/rt/service.h>
+#include <shark/rt/file.h>
+#include <shark/descriptor/file.h>
 
 namespace shark {
     class FileRtGenerator : public FileGeneratorBase {
@@ -48,10 +45,7 @@ namespace shark {
 
     private:
         bool  _have_one_of{false};
-
-        std::unique_ptr<std::unique_ptr<MessageGenerator>[]> message_generators_;
-        std::unique_ptr<std::unique_ptr<EnumGenerator>[]> enum_generators_;
-        std::unique_ptr<std::unique_ptr<ServiceGenerator>[]> service_generators_;
-        std::unique_ptr<std::unique_ptr<ExtensionGenerator>[]> extension_generators_;
+        std::unique_ptr<SubFileGeneratorBase> _rt_file;
+        std::unique_ptr<SubFileGeneratorBase> _descriptor_file;
     };
 } // namespace shark

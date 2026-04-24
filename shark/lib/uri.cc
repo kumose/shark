@@ -13,7 +13,7 @@
 // limitations under the License.
 //
 
-#include <shark/utility/uri.h>
+#include <shark/uri.h>
 #include <turbo/strings/ascii.h>
 #include <turbo/strings/str_split.h>
 #include <turbo/strings/str_replace.h>

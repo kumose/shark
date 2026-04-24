@@ -6,6 +6,8 @@
 #include <tests/test.sk.h>
 #include <google/protobuf/json/json.h>
 
+
+
 namespace my::custom::ns {
   Person::Address::Detail::Detail() {
   }
@@ -33,12 +35,6 @@ namespace my::custom::ns {
     _region = std::move(rhs._region);
     _prcode = std::move(rhs._prcode);
     return *this;
-  }
-
-  ///////////////////////////////////////////////////////////////////////// 
-  /// metas 
-  const google::protobuf::Descriptor* Person::Address::Detail::get_descriptor() {
-    return test::pb::pa::Person::Address::Detail::descriptor();
   }
 
   ///////////////////////////////////////////////////////////////////////// 
@@ -113,12 +109,6 @@ namespace my::custom::ns {
     _number = rhs._number;
     _detail = std::move(rhs._detail);
     return *this;
-  }
-
-  ///////////////////////////////////////////////////////////////////////// 
-  /// metas 
-  const google::protobuf::Descriptor* Person::Address::get_descriptor() {
-    return test::pb::pa::Person::Address::descriptor();
   }
 
   ///////////////////////////////////////////////////////////////////////// 
@@ -292,12 +282,6 @@ namespace my::custom::ns {
   }
 
   ///////////////////////////////////////////////////////////////////////// 
-  /// metas 
-  const google::protobuf::Descriptor* Person::get_descriptor() {
-    return test::pb::pa::Person::descriptor();
-  }
-
-  ///////////////////////////////////////////////////////////////////////// 
   /// transfers 
   void Person::parse_from_proto(const test::pb::pa::Person& pb) {
     _any_one.first = pb.any_one().type_url();
@@ -324,7 +308,9 @@ namespace my::custom::ns {
     }
     _favorite_color = pb.favorite_color();
     _address.parse_from_proto(pb.address());
-    _address2.parse_from_proto(pb.address2());
+    _address2.resize(pb.address2_size());for(size_t i = 0; i < pb.address2_size(); ++i) {
+      _address2[i].parse_from_proto(pb.address2(i));
+    }
     _long_name = pb.long_name();
     clear_kind();
     switch(pb.kind_case()) {
@@ -369,7 +355,10 @@ namespace my::custom::ns {
     }
     pb.set_favorite_color(_favorite_color);
     _address.serialize_to_proto(*pb.mutable_address());
-    _address2.serialize_to_proto(*pb.mutable_address2());
+    pb.mutable_address2()->Reserve(_address2.size());
+    for(size_t i = 0; i < _address2.size(); ++i) {
+      _address2[i].serialize_to_proto(*pb.mutable_address2()->Add());
+    }
     pb.set_long_name(_long_name);
     switch(kind_case()) {
       case kindCase::AAA:
@@ -416,5 +405,81 @@ namespace my::custom::ns {
     return "";
   }
 
+  ///////////////////////////////////////////////////////////////////////// 
+  /// metas 
+  const google::protobuf::Descriptor* PersonDescriptor::get_descriptor() {
+    return test::pb::pa::Person::descriptor();
+  }
+
+  /// Returns a static map from field path to FieldMeta.
+  /// This map is initialized once and provides metadata for all fields.
+  void PersonDescriptor::initialize() {
+    auto descriptor_ = get_descriptor();
+
+    auto r = std::make_unique<FieldMeta>();
+
+    auto rptr = r.get();
+    field_map["root"] = rptr;
+    auto rptr = r.get();
+    rptr->index = _index++;
+    rptr->data_index = _data_index++;
+    std::deque<FieldMeta*> que;
+    for (auto i = 0; i < descriptor_->field_count(); ++i ) {
+      auto field = descriptor_->field(i);
+      auto meta = std::make_unique<FieldMeta>();
+      meta->field = field;
+      meta->repeated = field->is_repeated();
+      meta->path =field->name();
+      meta->index = _index++;
+      meta->is_map = is_protobuf_map(field);
+      meta->is_any = is_protobuf_any(field);
+      meta->root = descriptor_;
+      auto ptr = meta.get();
+      field_map[meta->path] = ptr;
+      field_metas.push_back(std::move(meta));
+      if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
+        ptr->data_index = -1;
+        que.push_back(ptr);
+        continue;
+      }
+
+      ptr->data_index = _data_index++;
+      if (field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
+         ptr->cpp_type = shark::cpp_type(field,true);
+      } else {
+         ptr->cpp_type = "enum";
+      }
+
+    }
+
+    while (!que.empty()) {
+      auto entity = que.front();
+      que.pop_front();
+      for (auto i = 0; i < entity->field->message_type()->field_count(); ++i) {
+        auto field = entity->field->message_type()->field(i);
+        auto meta = std::make_unique<FieldMeta>();
+        meta->field = field;
+        meta->path =entity->path + "." + field->name();
+        meta->index = _index++;
+        meta->is_map = is_protobuf_map(field) || entity->is_map;
+        meta->is_any = is_protobuf_any(field) || entity->is_map;
+        meta->root = descriptor_;
+        entity->column.push_back(meta->index);
+        auto ptr = meta.get();
+        field_map[meta->path] = ptr;
+        field_metas.push_back(std::move(meta));
+        if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
+          ptr->data_index  = -1;
+          continue;
+        }
+        ptr->data_index = _data_index++;
+        if (field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
+          ptr->cpp_type = shark::cpp_type(field,true);
+         } else {
+          ptr->cpp_type = "enum";
+        }
+      }
+    }
+  }
 }  // my::custom::ns
 

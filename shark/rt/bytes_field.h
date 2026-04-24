@@ -25,7 +25,7 @@
 #include <shark/generator/field_map.h>
 
 namespace shark {
-    class BytesFieldGenerator : public FieldMetaGenerator {
+    class BytesFieldGenerator : public FieldNoMetaGenerator {
     public:
         explicit BytesFieldGenerator(const google::protobuf::FieldDescriptor *descriptor);
 

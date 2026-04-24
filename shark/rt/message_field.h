@@ -24,7 +24,7 @@
 #include <shark/generator/field_map.h>
 
 namespace shark {
-    class MessageFieldGenerator : public FieldMetaGenerator {
+    class MessageFieldGenerator : public FieldNoMetaGenerator {
     public:
         explicit MessageFieldGenerator(const google::protobuf::FieldDescriptor *descriptor);
 

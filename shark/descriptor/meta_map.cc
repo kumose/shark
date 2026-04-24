@@ -14,60 +14,35 @@
 //
 
 
-
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/stubs/common.h>
 
 #include <shark/idl/shark_options.pb.h>
 #include <shark/descriptor/meta_map.h>
+#include <shark/descriptor/meta_field.h>
 #include <shark/utility/helpers.h>
 #include <shark/utility/compat.h>
 
 namespace shark {
-
     FieldMetaMap::FieldMetaMap(const google::protobuf::Descriptor *descriptor)
         : descriptor_(descriptor) {
         // Construct all the FieldGenerators.
         process_message();
     }
 
-    std::unique_ptr<FieldGeneratorBase> FieldMetaMap::make_generator(const google::protobuf::FieldDescriptor *field) {
-        const idl::SharkFieldOptions opt = field->options().GetExtension(idl::shark_field);
-        switch (field->type()) {
-            case google::protobuf::FieldDescriptor::TYPE_MESSAGE:
-                if (field->is_map()) {
-                    return std::make_unique<MapFieldGenerator>(field);
-                }
-                if (is_protobuf_any(field)) {
-                    return std::make_unique<AnyFieldGenerator>(field);
-                }
-                return std::make_unique<MessageFieldGenerator>(field);
-            case google::protobuf::FieldDescriptor::TYPE_STRING:
-                if (opt.string_as_bytes())
-                    return std::make_unique<BytesFieldGenerator>(field);
-                else
-                    return std::make_unique<StringFieldGenerator>(field);
-            case google::protobuf::FieldDescriptor::TYPE_BYTES:
-                return std::make_unique<BytesFieldGenerator>(field);
-            case google::protobuf::FieldDescriptor::TYPE_ENUM:
-                return std::make_unique<EnumFieldGenerator>(field);
-            case google::protobuf::FieldDescriptor::TYPE_GROUP:
-                return nullptr; // XXX
-            default:
-                return std::make_unique<PrimitiveFieldGenerator>(field);
-        }
+    std::unique_ptr<MetaFieldDescriptorGenerator> FieldMetaMap::make_generator(const google::protobuf::FieldDescriptor *field,const FieldMetaMap* map, std::string path) {
+        return std::make_unique<MetaFieldDescriptorGenerator>(field, map, path);
     }
 
-    const FieldGeneratorBase &FieldMetaMap::get(
+    const MetaFieldDescriptorGenerator &FieldMetaMap::get(
         const google::protobuf::FieldDescriptor *field) const {
         KCHECK_EQ(field->containing_type(), descriptor_);
         return *field_generators_[field->index()];
     }
 
 
-
-     void FieldMetaMap::process_message() {
+    void FieldMetaMap::process_message() {
         auto r = std::make_unique<FieldMeta>();
 
         auto rptr = r.get();
@@ -75,22 +50,26 @@ namespace shark {
         field_metas.push_back(std::move(r));
         rptr->index = _index++;
         rptr->data_index = _data_index++;
-        std::deque<FieldMeta*> que;
-        for (auto i = 0; i < descriptor_->field_count(); ++i ) {
+        std::deque<FieldMeta *> que;
+        for (auto i = 0; i < descriptor_->field_count(); ++i) {
             auto field = descriptor_->field(i);
 
-            auto field_ptr = make_generator(field);
-            field_ptr->initialize();
-            field_generators_.push_back(std::move(field_ptr));
+
 
             auto meta = std::make_unique<FieldMeta>();
             meta->field = field;
             meta->repeated = field->is_repeated();
-            meta->path =field->name();
+            meta->path = field->name();
             meta->index = _index++;
+
+            auto field_ptr = make_generator(field, this, meta->path);
+            field_ptr->initialize();
+            field_generators_.push_back(std::move(field_ptr));
+
             meta->root = descriptor_;
+            meta->is_map = is_protobuf_map(field);
+            meta->is_any = is_protobuf_any(field);
             auto ptr = meta.get();
-            field_map[meta->path] = ptr;
             field_meta_map[meta->path] = ptr;
             field_metas.push_back(std::move(meta));
 
@@ -101,11 +80,11 @@ namespace shark {
             }
             ptr->data_index = _data_index++;
             if (field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
-                ptr->cpp_type = cpp_type(field,true);
+                ptr->cpp_type = cpp_type(field, true);
             } else {
                 ptr->cpp_type = "enum";
             }
-            KLOG(INFO)<<"uri:"<<field->full_name()<<"cpp type:"<<ptr->cpp_type;
+            KLOG(INFO) << "uri:" << field->full_name() << "cpp type:" << ptr->cpp_type;
         }
 
         while (!que.empty()) {
@@ -114,29 +93,32 @@ namespace shark {
             for (auto i = 0; i < entity->field->message_type()->field_count(); ++i) {
                 auto field = entity->field->message_type()->field(i);
 
-                auto field_ptr = make_generator(field);
-                field_ptr->initialize();
-                field_generators_.push_back(std::move(field_ptr));
-
                 auto meta = std::make_unique<FieldMeta>();
                 meta->field = field;
-                meta->path =entity->path + "." + field->name();
+                meta->path = entity->path + "." + field->name();
+
+                auto field_ptr = make_generator(field, this, meta->path);
+                field_ptr->initialize();
+                field_generators_.push_back(std::move(field_ptr));
+                KLOG(INFO)<<6;
+
                 meta->index = _index++;
+                meta->is_map = is_protobuf_map(field) || entity->is_map;
+                meta->is_any = is_protobuf_any(field) || entity->is_any;
                 meta->root = descriptor_;
                 entity->column.push_back(meta->index);
                 auto ptr = meta.get();
-                field_map[meta->path] = ptr;
                 field_meta_map[meta->path] = ptr;
                 field_metas.push_back(std::move(meta));
 
                 if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
-                    ptr->data_index  = -1;
+                    ptr->data_index = -1;
                     que.push_back(ptr);
                     continue;
                 }
                 ptr->data_index = _data_index++;
                 if (field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
-                    ptr->cpp_type = cpp_type(field,true);
+                    ptr->cpp_type = cpp_type(field, true);
                 } else {
                     ptr->cpp_type = "enum";
                 }

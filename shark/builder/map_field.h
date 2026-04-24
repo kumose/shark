@@ -7,7 +7,7 @@
 #include <shark/generator/field_map.h>
 
 namespace shark {
-    class MapFieldSkbGenerator : public FieldMetaGenerator {
+    class MapFieldSkbGenerator : public FieldNoMetaGenerator {
     public:
         explicit MapFieldSkbGenerator(const google::protobuf::FieldDescriptor *descriptor);
 

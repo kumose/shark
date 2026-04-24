@@ -18,7 +18,7 @@
 #include <map>
 #include <string>
 #include <string_view>
-#include <shark/utility/uri.h>
+#include <shark/uri.h>
 #include <google/protobuf/descriptor.h>
 
 namespace shark {

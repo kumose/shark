@@ -27,7 +27,7 @@ namespace shark {
 
     EnumFieldViewGenerator::
     EnumFieldViewGenerator(const google::protobuf::FieldDescriptor *descriptor)
-        : FieldMetaGenerator(descriptor) {
+        : FieldNoMetaGenerator(descriptor) {
        _variables["type"] = descriptor->enum_type()->name();
     }
 

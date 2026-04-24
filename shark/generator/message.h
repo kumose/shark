@@ -50,7 +50,7 @@ namespace shark {
         }
 
     protected:
-        const google::protobuf::Descriptor *descriptor_{nullptr};
+        const google::protobuf::Descriptor *_descriptor{nullptr};
         std::map<std::string, std::string> _variables;
         std::string _dllexport_decl;
         bool _have_one_of{false};

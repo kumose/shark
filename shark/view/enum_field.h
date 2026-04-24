@@ -27,7 +27,7 @@
 #include <shark/generator/field_map.h>
 
 namespace shark {
-    class EnumFieldViewGenerator : public FieldMetaGenerator {
+    class EnumFieldViewGenerator : public FieldNoMetaGenerator {
     public:
         explicit EnumFieldViewGenerator(const google::protobuf::FieldDescriptor *descriptor);
 

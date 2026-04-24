@@ -36,14 +36,31 @@ namespace shark {
         virtual ~SubFileGeneratorBase() = default;
 
         /// header region
+        virtual void generate_preprocessor_before_include(google::protobuf::io::Printer *printer) {
+
+        }
+
+        virtual void generate_header_include(google::protobuf::io::Printer *printer) {
+
+        }
+
+        virtual void generate_preprocessor_after_include(google::protobuf::io::Printer *printer) {
+
+        }
+
         virtual void generate_fwd_typedef(google::protobuf::io::Printer *printer) = 0;
 
         virtual void generate_definition(google::protobuf::io::Printer *printer) = 0;
 
         virtual void generate_inline_implement(google::protobuf::io::Printer *printer) = 0;
 
+        virtual void generate_preprocessor_end(google::protobuf::io::Printer *printer) {
+
+        }
 
         /// source range
+        virtual void generate_source_include(google::protobuf::io::Printer *printer) {
+        }
         virtual void generate_static_variable(google::protobuf::io::Printer *printer) = 0;
 
         virtual void generate_static_functions(google::protobuf::io::Printer *printer) = 0;

@@ -16,19 +16,19 @@
 #include <shark/generator/message.h>
 #include <turbo/strings/str_cat.h>
 #include <turbo/strings/str_replace.h>
-#include <shark/utility/uri.h>
+#include <shark/uri.h>
 #include <shark/utility/helpers.h>
 
 namespace shark {
     MessageGeneratorBase::MessageGeneratorBase(const google::protobuf::Descriptor *descriptor,
-                                               const std::string &dllexport_decl) : descriptor_(descriptor),
+                                               const std::string &dllexport_decl) : _descriptor(descriptor),
         _dllexport_decl(dllexport_decl) {
-        _variables["classname"] = descriptor_->name();
-        _variables["domain"] = message_type(descriptor_);
-        _variables["lcclassname"] = FullNameToLower(descriptor_->full_name(), descriptor_->file());
-        _variables["ucclassname"] = FullNameToUpper(descriptor_->full_name(), descriptor_->file());
-        _variables["field_count"] = turbo::str_cat(descriptor_->field_count());
-        _variables["PBTYPE"] = turbo::str_replace_all(descriptor_->full_name(), {{".", "::"}});
+        _variables["classname"] = _descriptor->name();
+        _variables["domain"] = message_type(_descriptor);
+        _variables["lcclassname"] = FullNameToLower(_descriptor->full_name(), _descriptor->file());
+        _variables["ucclassname"] = FullNameToUpper(_descriptor->full_name(), _descriptor->file());
+        _variables["field_count"] = turbo::str_cat(_descriptor->field_count());
+        _variables["PBTYPE"] = turbo::str_replace_all(_descriptor->full_name(), {{".", "::"}});
         if (_dllexport_decl.empty()) {
             _variables["dllexport"] = "";
         } else {

@@ -20,7 +20,7 @@
 #include <string_view>
 #include <shark/generator/field_map.h>
 
-#include <shark/utility/uri.h>
+#include <shark/uri.h>
 
 
 namespace shark {

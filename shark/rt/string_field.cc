@@ -30,7 +30,7 @@ namespace shark {
 
     StringFieldGenerator::
     StringFieldGenerator(const google::protobuf::FieldDescriptor *descriptor )
-        : FieldMetaGenerator(descriptor) {
+        : FieldNoMetaGenerator(descriptor) {
     }
 
     StringFieldGenerator::~StringFieldGenerator() {

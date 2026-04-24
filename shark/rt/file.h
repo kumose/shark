@@ -14,58 +14,47 @@
 //
 
 
-
 #pragma once
 
 
-#include <memory>
-#include <string>
-
-#include <google/protobuf/io/printer.h>
-#include <google/protobuf/stubs/common.h>
-#include <shark/rt/oneof_field.h>
+#include <shark/generator/sub_file.h>
 #include <shark/rt/enum.h>
 #include <shark/rt/extension.h>
 #include <shark/generator/field_map.h>
-#include <shark/rt/oneof_field.h>
-#include <shark/generator/message.h>
+#include <shark/generator/file.h>
+#include <shark/rt/message.h>
+#include <shark/rt/service.h>
 
 namespace shark {
-    class MessageGenerator : public MessageGeneratorBase {
+    class RtFileGenerator : public SubFileGeneratorBase {
     public:
         // See generator.cc for the meaning of dllexport_decl.
-        explicit MessageGenerator(const google::protobuf::Descriptor *descriptor,
-                                  const std::string &dllexport_decl);
+        explicit RtFileGenerator(const google::protobuf::FileDescriptor *file,
+                               const std::string &dllexport_decl);
 
-        ~MessageGenerator() override;
+        ~RtFileGenerator() override = default;
 
-        // Header stuff.
-
-        // Generate typedef.
+        /// header region
         void generate_fwd_typedef(google::protobuf::io::Printer *printer) override;
 
-        // Generate definitions for this class and all its nested types.
         void generate_definition(google::protobuf::io::Printer *printer) override;
 
         void generate_inline_implement(google::protobuf::io::Printer *printer) override;
 
-        // Source file stuff.
-        void generate_static_variable(google::protobuf::io::Printer *printer) override ;
+
+        /// source range
+        void generate_static_variable(google::protobuf::io::Printer *printer) override;
 
         void generate_static_functions(google::protobuf::io::Printer *printer) override;
 
         void generate_implement(google::protobuf::io::Printer *printer) override;
 
-    private:
-        // Generate definitions of all nested enums (must come before class
-        // definitions because those classes use the enums definitions).
-        void generate_enum_definitions(google::protobuf::io::Printer *printer);
+    protected:
+        bool  _have_one_of{false};
 
-        FieldGeneratorMap field_generators_;
-        std::vector<std::unique_ptr<MessageGeneratorBase>> nested_generators_;
+        std::vector<std::unique_ptr<MessageGeneratorBase>> message_generators_;
         std::vector<std::unique_ptr<EnumGenerator>> enum_generators_;
+        std::vector<std::unique_ptr<ServiceGenerator>> service_generators_;
         std::vector<std::unique_ptr<ExtensionGenerator>> extension_generators_;
-        std::map<std::string, std::string> _vars;
-        std::vector<std::unique_ptr<OneofFieldGeneratorBase>> _oneof_generator;
     };
 } // namespace shark

@@ -27,7 +27,7 @@
 #include <shark/generator/field_map.h>
 
 namespace shark {
-    class EnumFieldSkbGenerator : public FieldMetaGenerator {
+    class EnumFieldSkbGenerator : public FieldNoMetaGenerator {
     public:
         explicit EnumFieldSkbGenerator(const google::protobuf::FieldDescriptor *descriptor);
 

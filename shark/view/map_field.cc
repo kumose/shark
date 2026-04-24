@@ -25,7 +25,7 @@
 
 namespace shark {
     MapFieldViewGenerator::MapFieldViewGenerator(const google::protobuf::FieldDescriptor *descriptor)
-        : FieldMetaGenerator(descriptor) {
+        : FieldNoMetaGenerator(descriptor) {
         auto mtp = get_ctype(descriptor_, descriptor_->containing_type());
         auto k = protobuf_map_key(descriptor_);
         auto v = protobuf_map_value(descriptor_);

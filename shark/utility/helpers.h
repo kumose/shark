@@ -30,7 +30,7 @@
 #include <turbo/strings/str_format.h>
 #include <turbo/strings/match.h>
 #include <shark/utility/compat.h>
-#include <shark/utility/type.h>
+#include <shark/type.h>
 
 namespace shark {
 

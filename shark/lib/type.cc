@@ -13,8 +13,8 @@
 // limitations under the License.
 //
 
-#include <shark/utility/type.h>
-#include <shark/utility/uri.h>
+#include <shark/type.h>
+#include <shark/uri.h>
 #include <turbo/strings/ascii.h>
 #include <turbo/strings/str_split.h>
 #include <turbo/strings/str_replace.h>
@@ -144,9 +144,11 @@ namespace shark {
         }
         ////////////////
         /// google::protobuf::FieldDescriptor::TYPE_MESSAGE:
-        if (descriptor->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE &&
-            descriptor->message_type()->options().map_entry()) {
+        if (is_protobuf_map(descriptor)) {
             return map_type(descriptor, relative,true);
+        }
+        if (is_protobuf_any(descriptor)) {
+            return "std::pair<std::string, std::string>";
         }
         return relative_message_type(descriptor->message_type(), relative);
     }
