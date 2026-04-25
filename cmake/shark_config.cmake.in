@@ -28,7 +28,7 @@ set(@PROJECT_NAME@_VERSION_PATCH @PROJECT_VERSION_PATCH@)
 set(@PROJECT_NAME@_VERSION @PROJECT_VERSION@)
 set(@PROJECT_NAME@_INCLUDE_DIR ${PACKAGE_PREFIX_DIR}/include)
 
-get_target_property(SHARK_EXEC_FILE shark::protoc-gen-sk IMPORTED_LOCATION)
+set(SHARK_EXEC_FILE "$<TARGET_FILE:shark::protoc-gen-sk>")
 if(NOT SHARK_EXEC_FILE)
     message(FATAL_ERROR "Failed to get IMPORTED_LOCATION of shark::protoc-gen-sk")
 endif()
