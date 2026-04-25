@@ -72,7 +72,7 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "inline $c_type$ $domain$::$name$$deprecated$() const {\n");
+                printer->Print(_variables, "$deprecated$inline $c_type$ $domain$::$name$() const {\n");
                 printer->Indent();
                 if (is_atomic) {
                     printer->Print(_variables, "return _$name$.load();\n");
@@ -81,7 +81,7 @@ namespace shark {
                 }
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
-                printer->Print(_variables, "inline void $domain$::$name$$deprecated$($c_type$ value) {\n");
+                printer->Print(_variables, "$deprecated$inline void $domain$::$name$($c_type$ value) {\n");
                 printer->Indent();
                 if (is_atomic) {
                     printer->Print(_variables, "_$name$.store(value);\n");
@@ -94,12 +94,12 @@ namespace shark {
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
                 printer->Print(
-                    _variables, "inline const std::vector<$c_type$>& $domain$::$name$$deprecated$() const {\n");
+                    _variables, "inline const std::vector<$c_type$>& $domain$::$name$() const {\n");
                 printer->Indent();
-                printer->Print(_variables, "return _$name$$deprecated$;\n");
+                printer->Print(_variables, "return _$name$;\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
-                printer->Print(_variables, "inline std::vector<$c_type$>& $domain$::mutable_$name$$deprecated$() {\n");
+                printer->Print(_variables, "inline std::vector<$c_type$>& $domain$::mutable_$name$() {\n");
                 printer->Indent();
                 printer->Print(_variables, "return _$name$;\n");
                 printer->Outdent();
@@ -209,7 +209,7 @@ namespace shark {
     }
 
     std::string PrimitiveFieldGenerator::get_default_value() const {
-        return do_get_default_value();
+        return turbo::str_format("{%s}",do_get_default_value());
     }
 
 

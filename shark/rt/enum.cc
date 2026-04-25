@@ -90,12 +90,22 @@ namespace shark {
         printer->Print(vars, "};  // $classname$\n");
     }
 
-    void EnumGenerator::generate_inline_declarations(google::protobuf::io::Printer* printer,
-                                                 const google::protobuf::Descriptor* parent) {
-        if (parent == nullptr) return;  // Global enum, no declaration needed inside a class.
+    void EnumGenerator::generate_global_declarations(google::protobuf::io::Printer* printer,
+                                             const google::protobuf::Descriptor* parent) {
         std::map<std::string, std::string> vars;
         vars["fullname"] =descriptor_->name();
-        printer->Print(vars, "static std::string_view to_string($fullname$ value);\n");
+        printer->Print(vars, "std::optional<$fullname$> parse_$fullname$(std::string_view value);\n");
+    }
+
+    void EnumGenerator::generate_inline_declarations(google::protobuf::io::Printer* printer,
+                                                 const google::protobuf::Descriptor* parent) {
+        std::map<std::string, std::string> vars;
+        vars["fullname"] =descriptor_->name();
+        // Global enum, no declaration needed inside a class.
+        if (parent != nullptr) {
+            printer->Print(vars, "static std::string_view to_string($fullname$ value);\n");
+            printer->Print(vars, "static std::optional<$fullname$> parse_$fullname$(std::string_view value);\n");
+        }
     }
 
     void EnumGenerator::generate_inline_definition(google::protobuf::io::Printer* printer,
@@ -120,6 +130,42 @@ namespace shark {
         printer->Outdent();
         printer->Print("}\n");
     }
+
+    void EnumGenerator::generate_implement(google::protobuf::io::Printer *printer, const google::protobuf::Descriptor *parent) {
+        std::map<std::string, std::string> vars;
+        vars["shortname"] = descriptor_->name();
+        std::string prefix;
+        if (parent != nullptr) {
+            prefix = parent->name() + "::";
+        }
+        vars["PREFIX"] = prefix;
+
+        printer->Print(vars, "std::optional<$PREFIX$$shortname$> $PREFIX$parse_$shortname$(std::string_view value) {\n");
+        printer->Indent();
+
+        printer->Print(vars, "static turbo::flat_hash_map<std::string, $shortname$> enum_map = {\n");
+        printer->Indent();
+        vars["opt_comma"] = ",";
+        for (int i = 0; i < descriptor_->value_count(); ++i) {
+            vars["enumerator"] = descriptor_->value(i)->name();
+            if (i + 1 == descriptor_->value_count())
+                vars["opt_comma"] = "";
+            printer->Print(vars, "{\"$enumerator$\", $PREFIX$$shortname$::$enumerator$},\n");
+        }
+
+        printer->Outdent();
+        printer->Print(vars, "};\n\n");
+        printer->Print("auto it = enum_map.find(value);\n");
+        printer->Print("if (it == enum_map.end()) {\n");
+        printer->Indent();
+        printer->Print("return std::nullopt;\n");
+        printer->Outdent();
+        printer->Print("}\n");
+        printer->Print("return it->second;\n");
+        printer->Outdent();
+        printer->Print("}\n");
+    }
+
     struct ValueIndex {
         int value;
         unsigned index;

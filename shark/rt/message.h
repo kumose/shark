@@ -61,6 +61,17 @@ namespace shark {
         // definitions because those classes use the enums definitions).
         void generate_enum_definitions(google::protobuf::io::Printer *printer);
 
+        void generate_ctor_implemention(google::protobuf::io::Printer *printer);
+
+        void generate_cpy_ctor_implemention(google::protobuf::io::Printer *printer);
+
+        void generate_move_ctor_implement(google::protobuf::io::Printer *printer);
+
+        void generate_trans_implement(google::protobuf::io::Printer *printer);
+
+        void generate_serialize_implement(google::protobuf::io::Printer *printer);
+
+
         FieldGeneratorMap field_generators_;
         std::vector<std::unique_ptr<MessageGeneratorBase>> nested_generators_;
         std::vector<std::unique_ptr<EnumGenerator>> enum_generators_;

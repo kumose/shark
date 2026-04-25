@@ -39,14 +39,19 @@ namespace shark {
         // nested enums.
         void generate_definition(google::protobuf::io::Printer *printer);
 
+        void generate_global_declarations(google::protobuf::io::Printer *printer, const google::protobuf::Descriptor *descriptor);
+
         void generate_inline_declarations(google::protobuf::io::Printer *printer, const google::protobuf::Descriptor *descriptor);
 
         void generate_inline_definition(google::protobuf::io::Printer *printer, const google::protobuf::Descriptor *descriptor);
+
+        void generate_implement(google::protobuf::io::Printer *printer, const google::protobuf::Descriptor *descriptor);
 
         // Source file stuff.
 
     private:
         const google::protobuf::EnumDescriptor *descriptor_;
         std::string _dllexport_decl;
+        std::map<std::string, std::string> _variables;
     };
 } // namespace shark

@@ -13,26 +13,21 @@
 // limitations under the License.
 //
 
+#pragma once
 
-
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/io/printer.h>
-
-#include <shark/builder/extension.h>
+#include <type_traits>
 
 namespace shark {
-    ExtensionSkbGenerator::ExtensionSkbGenerator(const google::protobuf::FieldDescriptor *descriptor,
-                                           const std::string &dllexport_decl)
-        : descriptor_(descriptor),
-          _dllexport_decl(dllexport_decl) {
-    }
+    template<typename T, typename = void>
+    struct RuntimeTraits {
+        static constexpr bool is_runtime_type = false;
 
-    ExtensionSkbGenerator::~ExtensionSkbGenerator() {
-    }
+        using proto_type = void;
+    };
 
-    void ExtensionSkbGenerator::GenerateDeclaration(google::protobuf::io::Printer *printer) {
-    }
-
-    void ExtensionSkbGenerator::GenerateDefinition(google::protobuf::io::Printer *printer) {
-    }
+    template<typename T>
+    struct RuntimeTraits<T, std::void_t<decltype(T::is_runtime_type)> > {
+        static constexpr bool is_runtime_type = std::integral_constant<bool, T::is_runtime_type>::value;
+        using proto_type = typename T::proto_type;
+    };
 } // namespace shark

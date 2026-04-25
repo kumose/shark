@@ -28,7 +28,7 @@
 #include <shark/generator/field_map.h>
 #include <shark/generator/file.h>
 #include <shark/rt/file.h>
-#include <shark/descriptor/file.h>
+
 
 namespace shark {
     class FileRtGenerator : public FileGeneratorBase {
@@ -46,6 +46,5 @@ namespace shark {
     private:
         bool  _have_one_of{false};
         std::unique_ptr<SubFileGeneratorBase> _rt_file;
-        std::unique_ptr<SubFileGeneratorBase> _descriptor_file;
     };
 } // namespace shark

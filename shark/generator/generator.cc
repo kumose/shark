@@ -24,7 +24,6 @@
 
 #include <shark/idl/shark_options.pb.h>
 #include <shark/generator/rt_file.h>
-#include <shark/generator/skb_file.h>
 #include <shark/generator/generator.h>
 #include <shark/utility/helpers.h>
 
@@ -119,28 +118,6 @@ namespace shark {
                     output_directory->Open(basename + ".cc"));
                 google::protobuf::io::Printer printer(output.get(), '$');
                 file_generator.generate_source(&printer);
-            }
-        }
-        {
-            std::string skb_basename = StripProto(file->name());
-            skb_basename.append(".skb");
-
-            FileSkbGenerator file_skb_generator(file, dllexport_decl);
-
-            // Generate header.
-            {
-                std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
-                    output_directory->Open(skb_basename + ".h"));
-                google::protobuf::io::Printer printer(output.get(), '$');
-                file_skb_generator.generate_header(&printer);
-            }
-
-            // Generate cc file.
-            {
-                std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
-                    output_directory->Open(skb_basename + ".cc"));
-                google::protobuf::io::Printer printer(output.get(), '$');
-                file_skb_generator.generate_source(&printer);
             }
         }
 

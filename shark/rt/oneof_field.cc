@@ -55,7 +55,11 @@ namespace shark {
             auto type = get_ctype(field, _descriptor);
             _variable["fieldname"] = field->name();
             _variable["type"] = type;
-            printer->Print(_variable, "$type$ _$fieldname$;\n");
+            if (is_primitive_type(field->type())) {
+                printer->Print(_variable, "$type$ _$fieldname$;\n");
+            } else {
+                printer->Print(_variable, "std::unique_ptr<$type$> _$fieldname$;\n");
+            }
         }
         printer->Print(_variable, "$foneofname$() {}\n\n");
         printer->Print(_variable, "~$foneofname$() {}\n\n");
@@ -75,7 +79,11 @@ namespace shark {
             _variable["type"] = type;
             printer->Print(_variable, "inline bool has_$fieldname$() const;\n");
             printer->Print(_variable, "inline void set_$fieldname$($type$ val);\n");
-            printer->Print(_variable, "inline std::optional<$type$> $fieldname$() const;\n");
+            if (is_primitive_type(field->type())) {
+                printer->Print(_variable, "inline $type$ $fieldname$() const;\n");
+            } else {
+                printer->Print(_variable, "inline const $type$& $fieldname$() const;\n");
+            }
         }
     }
 
@@ -99,11 +107,18 @@ namespace shark {
             _variable["type"] = type;
             printer->Print(_variable, "case $pb_uri$::$Coneofname$Case::$pbenumname$:\n");
             printer->Indent();
-            if (!is_primitive_type(field->type())) {
+
+            if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
+                printer->Print(_variable, "_$foneofname$._$fieldname$ = std::make_unique<$type$>();\n");
+                printer->Print(_variable, "_$foneofname$._$fieldname$->parse_from_proto(pb.$fieldname$());\n");
+            } else if (field->type() == google::protobuf::FieldDescriptor::TYPE_ENUM) {
+                printer->Print(_variable, "_$foneofname$._$fieldname$ = static_cast<$type$>(pb.$fieldname$());\n");
+            } else if (!is_primitive_type(field->type())) {
+                printer->Print(_variable, "_$foneofname$._$fieldname$ = std::make_unique<$type$>();\n");
                 printer->Print(
                     _variable,
-                    "new (&_$foneofname$._$fieldname$) decltype(_$foneofname$._$fieldname$)(pb.$fieldname$());\n");
-            } else {
+                    "*_$foneofname$._$fieldname$ = pb.$fieldname$();\n");
+            }  else {
                 printer->Print(_variable, "_$foneofname$._$fieldname$ = pb.$fieldname$();\n");
             }
             printer->Print(_variable, "_$foneofname$_case = $foneofname$Case::$enumname$;\n");
@@ -130,7 +145,13 @@ namespace shark {
             _variable["type"] = type;
             printer->Print(_variable, "case $foneofname$Case::$enumname$:\n");
             printer->Indent();
-            printer->Print(_variable, "pb.set_$fieldname$(_$foneofname$._$fieldname$);\n");
+            if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
+                printer->Print(_variable, "_$foneofname$._$fieldname$->serialize_to_proto(*pb.mutable_$fieldname$());\n");
+            }  else if (field->type() == google::protobuf::FieldDescriptor::TYPE_ENUM) {
+                printer->Print(_variable, "pb.set_$fieldname$(static_cast<$pb_type$>(_$foneofname$._$fieldname$));\n");
+            }else  {
+                printer->Print(_variable, "pb.set_$fieldname$($fieldname$());\n");
+            }
             printer->Print(_variable, "break;\n");
             printer->Outdent();
         }
@@ -155,10 +176,11 @@ namespace shark {
             _variable["type"] = type;
             printer->Print(_variable, "case $foneofname$Case::$enumname$:\n");
             printer->Indent();
-            if (!is_primitive_type(field->type())) {
+            if (!is_primitive_type(field->type()) && field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
+                printer->Print(_variable, "_$foneofname$._$fieldname$ = std::make_unique<$type$>();\n");
                 printer->Print(
                     _variable,
-                    "new (&_$foneofname$._$fieldname$) decltype(_$foneofname$._$fieldname$)(rhs._$foneofname$._$fieldname$);\n");
+                    "*_$foneofname$._$fieldname$ = *rhs._$foneofname$._$fieldname$;\n");
             } else {
                 printer->Print(_variable, "_$foneofname$._$fieldname$ = rhs._$foneofname$._$fieldname$;\n");
             }
@@ -189,7 +211,7 @@ namespace shark {
             if (!is_primitive_type(field->type())) {
                 printer->Print(
                     _variable,
-                    "new (&_$foneofname$._$fieldname$) decltype(_$foneofname$._$fieldname$)(std::move(rhs._$foneofname$._$fieldname$));\n");
+                    "_$foneofname$._$fieldname$ = std::move(rhs._$foneofname$._$fieldname$);\n");
             } else {
                 printer->Print(_variable, "_$foneofname$._$fieldname$ = rhs._$foneofname$._$fieldname$;\n");
             }
@@ -236,7 +258,7 @@ namespace shark {
                 printer->Print(_variable, "case $foneofname$Case::$enumname$:\n");
                 printer->Indent();
                 if (!is_primitive_type(field->type())) {
-                    printer->Print(_variable, "_$foneofname$._$fieldname$.~decltype(_$foneofname$._$fieldname$)();\n");
+                    printer->Print(_variable, "_$foneofname$._$fieldname$.reset();\n");
                 }
                 printer->Print(_variable, "break;\n");
                 printer->Outdent();
@@ -271,19 +293,23 @@ namespace shark {
             if (is_primitive_type(field->type())) {
                 printer->Print(_variable, "_$foneofname$._$fieldname$ = val;\n");
             } else {
-                printer->Print(_variable, "new (&_$foneofname$._$fieldname$) $type$(std::move(val));\n");
+                printer->Print(_variable, "_$foneofname$._$fieldname$ = std::make_unique<$type$>(val);\n");
             }
             printer->Print(_variable, "_$foneofname$_case = $foneofname$Case::$enumname$;\n");
             printer->Outdent();
             printer->Print(_variable, "}\n");
-            printer->Print(_variable, "inline std::optional<$g_type$> $domain$::$fieldname$() const {\n");
+            if (is_primitive_type(field->type())) {
+                printer->Print(_variable, "inline $g_type$ $domain$::$fieldname$() const {\n");
+            } else {
+                printer->Print(_variable, "inline const $g_type$& $domain$::$fieldname$() const {\n");
+            }
             printer->Indent();
-            printer->Print(_variable, "if(_$foneofname$_case != $foneofname$Case::$enumname$) {\n");
-            printer->Indent();
-            printer->Print(_variable, "return std::nullopt;\n");
-            printer->Outdent();
-            printer->Print(_variable, "}\n");
-            printer->Print(_variable, "return _$foneofname$._$fieldname$;\n");
+            if (is_primitive_type(field->type())) {
+                printer->Print(_variable, "return _$foneofname$._$fieldname$;\n");
+            } else {
+                printer->Print(_variable, "return *_$foneofname$._$fieldname$;\n");
+            }
+
             printer->Outdent();
             printer->Print(_variable, "}\n");
         }

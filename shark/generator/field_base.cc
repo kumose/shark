@@ -26,6 +26,8 @@ namespace shark {
 
         auto d = get_default_value();
         if (!d.empty()) {
+            _variables["default_init"] = d;
+        } else {
             _variables["default_init"] = "";
         }
 

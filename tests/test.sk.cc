@@ -9,6 +9,38 @@
 
 
 namespace my::custom::ns {
+  std::optional<Color> parse_Color(std::string_view value) {
+    static turbo::flat_hash_map<std::string, Color> enum_map = {
+      {"RED", Color::RED},
+      {"GREEN", Color::GREEN},
+      {"BLUE", Color::BLUE},
+    };
+
+    auto it = enum_map.find(value);
+    if (it == enum_map.end()) {
+      return std::nullopt;
+    }
+    return it->second;
+  }
+  std::optional<Person::Dolor> Person::parse_Dolor(std::string_view value) {
+    static turbo::flat_hash_map<std::string, Dolor> enum_map = {
+      {"DRED", Person::Dolor::DRED},
+      {"DGREEN", Person::Dolor::DGREEN},
+      {"DBLUE", Person::Dolor::DBLUE},
+    };
+
+    auto it = enum_map.find(value);
+    if (it == enum_map.end()) {
+      return std::nullopt;
+    }
+    return it->second;
+  }
+  ///////////////////////////////////////////////////////////////////////// 
+  /// metas 
+  const google::protobuf::Descriptor* Person::Address::Detail::get_descriptor() {
+    return test::pb::pa::Person::Address::Detail::descriptor();
+  }
+
   Person::Address::Detail::Detail() {
   }
 
@@ -49,34 +81,42 @@ namespace my::custom::ns {
     pb.set_prcode(_prcode);
   }
 
-  bool Person::Address::Detail::parse_from_json(const std::string& json) {
+  turbo::Status Person::Address::Detail::parse_from_json(const std::string& json) {
     test::pb::pa::Person::Address::Detail pb;
-    if(!google::protobuf::json::JsonStringToMessage(json, &pb, google::protobuf::json::ParseOptions()).ok()) {
-      return false;
+    auto rs = google::protobuf::json::JsonStringToMessage(json, &pb, google::protobuf::json::ParseOptions());
+    if(!rs.ok()) {
+      return turbo::make_status(rs.code(), rs.message());
     }
 
     parse_from_proto(pb);
-    return true;
+    return turbo::OkStatus();
   }
 
-  bool Person::Address::Detail::serialize_to_json(std::string& json) const {
+  turbo::Status Person::Address::Detail::serialize_to_json(std::string& json) const {
     test::pb::pa::Person::Address::Detail pb;
     serialize_to_proto(pb);
-    if(!google::protobuf::json::MessageToJsonString(pb, &json).ok()) {
-      return false;
+    auto rs = google::protobuf::json::MessageToJsonString(pb, &json);
+    if(!rs.ok()) {
+      return turbo::make_status(rs.code(), rs.message());
     }
 
-    return true;
+    return turbo::OkStatus();
   }
 
   std::string Person::Address::Detail::to_string() const {
     std::string json;
     auto b = serialize_to_json(json);
-    if(b) {
+    if(b.ok()) {
       return json;
     }
 
     return "";
+  }
+
+  ///////////////////////////////////////////////////////////////////////// 
+  /// metas 
+  const google::protobuf::Descriptor* Person::Address::get_descriptor() {
+    return test::pb::pa::Person::Address::descriptor();
   }
 
   Person::Address::Address() {
@@ -125,34 +165,42 @@ namespace my::custom::ns {
     _detail.serialize_to_proto(*pb.mutable_detail());
   }
 
-  bool Person::Address::parse_from_json(const std::string& json) {
+  turbo::Status Person::Address::parse_from_json(const std::string& json) {
     test::pb::pa::Person::Address pb;
-    if(!google::protobuf::json::JsonStringToMessage(json, &pb, google::protobuf::json::ParseOptions()).ok()) {
-      return false;
+    auto rs = google::protobuf::json::JsonStringToMessage(json, &pb, google::protobuf::json::ParseOptions());
+    if(!rs.ok()) {
+      return turbo::make_status(rs.code(), rs.message());
     }
 
     parse_from_proto(pb);
-    return true;
+    return turbo::OkStatus();
   }
 
-  bool Person::Address::serialize_to_json(std::string& json) const {
+  turbo::Status Person::Address::serialize_to_json(std::string& json) const {
     test::pb::pa::Person::Address pb;
     serialize_to_proto(pb);
-    if(!google::protobuf::json::MessageToJsonString(pb, &json).ok()) {
-      return false;
+    auto rs = google::protobuf::json::MessageToJsonString(pb, &json);
+    if(!rs.ok()) {
+      return turbo::make_status(rs.code(), rs.message());
     }
 
-    return true;
+    return turbo::OkStatus();
   }
 
   std::string Person::Address::to_string() const {
     std::string json;
     auto b = serialize_to_json(json);
-    if(b) {
+    if(b.ok()) {
       return json;
     }
 
     return "";
+  }
+
+  ///////////////////////////////////////////////////////////////////////// 
+  /// metas 
+  const google::protobuf::Descriptor* Person::get_descriptor() {
+    return test::pb::pa::Person::descriptor();
   }
 
   Person::Person() {
@@ -167,13 +215,15 @@ namespace my::custom::ns {
     clear_kind();
     switch(rhs.kind_case()) {
       case kindCase::AAA:
-        new (&_kind._aaa) decltype(_kind._aaa)(rhs._kind._aaa);
+        _kind._aaa = std::make_unique<std::string>();
+        *_kind._aaa = *rhs._kind._aaa;
         break;
       case kindCase::BBB:
         _kind._bbb = rhs._kind._bbb;
         break;
       case kindCase::DDD:
-        new (&_kind._ddd) decltype(_kind._ddd)(rhs._kind._ddd);
+        _kind._ddd = std::make_unique<Address>();
+        *_kind._ddd = *rhs._kind._ddd;
         break;
       default:
         break;
@@ -196,13 +246,15 @@ namespace my::custom::ns {
     clear_kind();
     switch(rhs.kind_case()) {
       case kindCase::AAA:
-        new (&_kind._aaa) decltype(_kind._aaa)(rhs._kind._aaa);
+        _kind._aaa = std::make_unique<std::string>();
+        *_kind._aaa = *rhs._kind._aaa;
         break;
       case kindCase::BBB:
         _kind._bbb = rhs._kind._bbb;
         break;
       case kindCase::DDD:
-        new (&_kind._ddd) decltype(_kind._ddd)(rhs._kind._ddd);
+        _kind._ddd = std::make_unique<Address>();
+        *_kind._ddd = *rhs._kind._ddd;
         break;
       default:
         break;
@@ -226,13 +278,13 @@ namespace my::custom::ns {
     clear_kind();
     switch(rhs.kind_case()) {
       case kindCase::AAA:
-        new (&_kind._aaa) decltype(_kind._aaa)(std::move(rhs._kind._aaa));
+        _kind._aaa = std::move(rhs._kind._aaa);
         break;
       case kindCase::BBB:
         _kind._bbb = rhs._kind._bbb;
         break;
       case kindCase::DDD:
-        new (&_kind._ddd) decltype(_kind._ddd)(std::move(rhs._kind._ddd));
+        _kind._ddd = std::move(rhs._kind._ddd);
         break;
       default:
         break;
@@ -255,13 +307,13 @@ namespace my::custom::ns {
     clear_kind();
     switch(rhs.kind_case()) {
       case kindCase::AAA:
-        new (&_kind._aaa) decltype(_kind._aaa)(std::move(rhs._kind._aaa));
+        _kind._aaa = std::move(rhs._kind._aaa);
         break;
       case kindCase::BBB:
         _kind._bbb = rhs._kind._bbb;
         break;
       case kindCase::DDD:
-        new (&_kind._ddd) decltype(_kind._ddd)(std::move(rhs._kind._ddd));
+        _kind._ddd = std::move(rhs._kind._ddd);
         break;
       default:
         break;
@@ -306,7 +358,7 @@ namespace my::custom::ns {
     for(auto &it : pb.scores()) {
       _scores[it.first] = it.second;
     }
-    _favorite_color = pb.favorite_color();
+    _favorite_color = static_cast<Color>(pb.favorite_color());
     _address.parse_from_proto(pb.address());
     _address2.resize(pb.address2_size());for(size_t i = 0; i < pb.address2_size(); ++i) {
       _address2[i].parse_from_proto(pb.address2(i));
@@ -315,7 +367,8 @@ namespace my::custom::ns {
     clear_kind();
     switch(pb.kind_case()) {
       case test::pb::pa::Person::KindCase::kAaa:
-        new (&_kind._aaa) decltype(_kind._aaa)(pb.aaa());
+        _kind._aaa = std::make_unique<std::string>();
+        *_kind._aaa = pb.aaa();
         _kind_case = kindCase::AAA;
         break;
       case test::pb::pa::Person::KindCase::kBbb:
@@ -323,7 +376,8 @@ namespace my::custom::ns {
         _kind_case = kindCase::BBB;
         break;
       case test::pb::pa::Person::KindCase::kDdd:
-        new (&_kind._ddd) decltype(_kind._ddd)(pb.ddd());
+        _kind._ddd = std::make_unique<Address>();
+        _kind._ddd->parse_from_proto(pb.ddd());
         _kind_case = kindCase::DDD;
         break;
       default:
@@ -353,7 +407,7 @@ namespace my::custom::ns {
     for(auto &it : _scores) {
       (*pb.mutable_scores())[it.first] = it.second;
     }
-    pb.set_favorite_color(_favorite_color);
+    pb.set_favorite_color(static_cast<test::pb::pa::Color>(_favorite_color));
     _address.serialize_to_proto(*pb.mutable_address());
     pb.mutable_address2()->Reserve(_address2.size());
     for(size_t i = 0; i < _address2.size(); ++i) {
@@ -362,124 +416,50 @@ namespace my::custom::ns {
     pb.set_long_name(_long_name);
     switch(kind_case()) {
       case kindCase::AAA:
-        pb.set_aaa(_kind._aaa);
+        pb.set_aaa(aaa());
         break;
       case kindCase::BBB:
-        pb.set_bbb(_kind._bbb);
+        pb.set_bbb(bbb());
         break;
       case kindCase::DDD:
-        pb.set_ddd(_kind._ddd);
+        _kind._ddd->serialize_to_proto(*pb.mutable_ddd());
         break;
       default:
         break;
     };
   }
 
-  bool Person::parse_from_json(const std::string& json) {
+  turbo::Status Person::parse_from_json(const std::string& json) {
     test::pb::pa::Person pb;
-    if(!google::protobuf::json::JsonStringToMessage(json, &pb, google::protobuf::json::ParseOptions()).ok()) {
-      return false;
+    auto rs = google::protobuf::json::JsonStringToMessage(json, &pb, google::protobuf::json::ParseOptions());
+    if(!rs.ok()) {
+      return turbo::make_status(rs.code(), rs.message());
     }
 
     parse_from_proto(pb);
-    return true;
+    return turbo::OkStatus();
   }
 
-  bool Person::serialize_to_json(std::string& json) const {
+  turbo::Status Person::serialize_to_json(std::string& json) const {
     test::pb::pa::Person pb;
     serialize_to_proto(pb);
-    if(!google::protobuf::json::MessageToJsonString(pb, &json).ok()) {
-      return false;
+    auto rs = google::protobuf::json::MessageToJsonString(pb, &json);
+    if(!rs.ok()) {
+      return turbo::make_status(rs.code(), rs.message());
     }
 
-    return true;
+    return turbo::OkStatus();
   }
 
   std::string Person::to_string() const {
     std::string json;
     auto b = serialize_to_json(json);
-    if(b) {
+    if(b.ok()) {
       return json;
     }
 
     return "";
   }
 
-  ///////////////////////////////////////////////////////////////////////// 
-  /// metas 
-  const google::protobuf::Descriptor* PersonDescriptor::get_descriptor() {
-    return test::pb::pa::Person::descriptor();
-  }
-
-  /// Returns a static map from field path to FieldMeta.
-  /// This map is initialized once and provides metadata for all fields.
-  void PersonDescriptor::initialize() {
-    auto descriptor_ = get_descriptor();
-
-    auto r = std::make_unique<FieldMeta>();
-
-    auto rptr = r.get();
-    field_map["root"] = rptr;
-    auto rptr = r.get();
-    rptr->index = _index++;
-    rptr->data_index = _data_index++;
-    std::deque<FieldMeta*> que;
-    for (auto i = 0; i < descriptor_->field_count(); ++i ) {
-      auto field = descriptor_->field(i);
-      auto meta = std::make_unique<FieldMeta>();
-      meta->field = field;
-      meta->repeated = field->is_repeated();
-      meta->path =field->name();
-      meta->index = _index++;
-      meta->is_map = is_protobuf_map(field);
-      meta->is_any = is_protobuf_any(field);
-      meta->root = descriptor_;
-      auto ptr = meta.get();
-      field_map[meta->path] = ptr;
-      field_metas.push_back(std::move(meta));
-      if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
-        ptr->data_index = -1;
-        que.push_back(ptr);
-        continue;
-      }
-
-      ptr->data_index = _data_index++;
-      if (field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
-         ptr->cpp_type = shark::cpp_type(field,true);
-      } else {
-         ptr->cpp_type = "enum";
-      }
-
-    }
-
-    while (!que.empty()) {
-      auto entity = que.front();
-      que.pop_front();
-      for (auto i = 0; i < entity->field->message_type()->field_count(); ++i) {
-        auto field = entity->field->message_type()->field(i);
-        auto meta = std::make_unique<FieldMeta>();
-        meta->field = field;
-        meta->path =entity->path + "." + field->name();
-        meta->index = _index++;
-        meta->is_map = is_protobuf_map(field) || entity->is_map;
-        meta->is_any = is_protobuf_any(field) || entity->is_map;
-        meta->root = descriptor_;
-        entity->column.push_back(meta->index);
-        auto ptr = meta.get();
-        field_map[meta->path] = ptr;
-        field_metas.push_back(std::move(meta));
-        if (field->type() == google::protobuf::FieldDescriptor::TYPE_MESSAGE) {
-          ptr->data_index  = -1;
-          continue;
-        }
-        ptr->data_index = _data_index++;
-        if (field->type() != google::protobuf::FieldDescriptor::TYPE_ENUM) {
-          ptr->cpp_type = shark::cpp_type(field,true);
-         } else {
-          ptr->cpp_type = "enum";
-        }
-      }
-    }
-  }
 }  // my::custom::ns
 

@@ -131,7 +131,15 @@ namespace shark {
     void MessageGenerator::generate_definition(google::protobuf::io::Printer *printer) {
         printer->Print(_vars,
                        "class $dllexport$ $classname$ {\n"
-                       "public:\n");
+                       "public:\n\n");
+        printer->Print(_variables, "static const google::protobuf::Descriptor* get_descriptor();\n\n");
+        printer->Print(_vars, "///  runtime identify for traits\n");
+        printer->Print(_variables, "static constexpr bool is_runtime_type = true;\n\n");
+        printer->Print(_variables, "using proto_type = $PBTYPE$;\n\n");
+
+
+        printer->Print(_vars,
+                       "\npublic:\n");
         printer->Indent();
         printer->Print(_vars, "/// constructor\n");
         printer->Print(_vars, "$classname$();\n\n");
@@ -143,7 +151,6 @@ namespace shark {
 
         printer->Print(_vars, "$classname$($classname$&& rhs) noexcept;\n\n");
         printer->Print(_vars, "$classname$& operator= ($classname$&& rhs) noexcept;\n\n");
-
 
         for (int i = 0; i < nested_generators_.size(); i++) {
             nested_generators_[i]->generate_definition(printer);
@@ -190,13 +197,15 @@ namespace shark {
         printer->Print("/// transfers \n");
         printer->Print(_vars, "void parse_from_proto(const $PBTYPE$& pb);\n\n");
         printer->Print(_vars, "void serialize_to_proto($PBTYPE$& pb) const;\n\n");
-        printer->Print(_vars, "bool parse_from_json(const std::string& json);\n\n");
-        printer->Print(_vars, "bool serialize_to_json(std::string& json) const;\n\n");
+        printer->Print(_vars, "turbo::Status parse_from_json(const std::string& json);\n\n");
+        printer->Print(_vars, "turbo::Status serialize_to_json(std::string& json) const;\n\n");
         printer->Print(_vars, "std::string to_string() const;\n\n");
         printer->Outdent();
-        printer->Print("private:\n");
+        printer->Print("\n//////////////////////////////////////////////////////////////////////\n");
+        printer->Print("/// members\n");
+        printer->Print("/// Keep members protected for inheritance and extension\n");
+        printer->Print("protected:\n");
         printer->Indent();
-        printer->Print("////////////////////// members\n");
         for (int i = 0; i < _descriptor->field_count(); i++) {
             const google::protobuf::FieldDescriptor *field = _descriptor->field(i);
             if (field->containing_oneof() == NULL) {
@@ -218,18 +227,13 @@ namespace shark {
         printer->Print(_vars, "};\n");
     }
 
-    void MessageGenerator::generate_static_variable(google::protobuf::io::Printer *printer)  {
-
+    void MessageGenerator::generate_static_variable(google::protobuf::io::Printer *printer) {
     }
 
     void MessageGenerator::generate_static_functions(google::protobuf::io::Printer *printer) {
-
     }
 
-    void MessageGenerator::generate_implement(google::protobuf::io::Printer *printer) {
-        for (int i = 0; i < nested_generators_.size(); i++) {
-            nested_generators_[i]->generate_implement(printer);
-        }
+    void MessageGenerator::generate_ctor_implemention(google::protobuf::io::Printer *printer) {
         printer->Print(_vars, "$domain$::$classname$() {\n");
         printer->Indent();
         for (auto &it: _oneof_generator) {
@@ -246,8 +250,9 @@ namespace shark {
 
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
+    }
 
-
+    void MessageGenerator::generate_cpy_ctor_implemention(google::protobuf::io::Printer *printer) {
         printer->Print(_vars, "$domain$::$classname$(const $classname$& rhs) {\n");
         printer->Indent();
         for (auto &it: _oneof_generator) {
@@ -277,7 +282,9 @@ namespace shark {
         printer->Print(_vars, "return *this;\n");
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
+    }
 
+    void MessageGenerator::generate_move_ctor_implement(google::protobuf::io::Printer *printer) {
         printer->Print(_vars, "$domain$::$classname$($classname$&& rhs) noexcept {\n");
         printer->Indent();
         for (auto &it: _oneof_generator) {
@@ -309,7 +316,9 @@ namespace shark {
         printer->Print(_vars, "return *this;\n");
         printer->Outdent();
         printer->Print(_vars, "}\n\n");
+    }
 
+    void MessageGenerator::generate_trans_implement(google::protobuf::io::Printer *printer) {
         printer->Print("///////////////////////////////////////////////////////////////////////// \n");
         printer->Print("/// transfers \n");
         printer->Print(_vars, "void $domain$::parse_from_proto(const $PBTYPE$& pb) {\n");
@@ -341,38 +350,40 @@ namespace shark {
         printer->Outdent();
         printer->Print("}\n\n");
         ////
-        printer->Print(_vars, "bool $domain$::parse_from_json(const std::string& json) {\n");
+        printer->Print(_vars, "turbo::Status $domain$::parse_from_json(const std::string& json) {\n");
         printer->Indent();
         printer->Print(_vars, "$PBTYPE$ pb;\n");
-        printer->Print(
-            _vars,
-            "if(!google::protobuf::json::JsonStringToMessage(json, &pb, google::protobuf::json::ParseOptions()).ok()) {\n");
+        printer->Print(_vars,
+            "auto rs = google::protobuf::json::JsonStringToMessage(json, &pb, google::protobuf::json::ParseOptions());\n");
+        printer->Print(_vars,
+            "if(!rs.ok()) {\n");
         printer->Indent();
-        printer->Print(_vars, "return false;\n");
+        printer->Print(_vars, "return turbo::make_status(rs.code(), rs.message());\n");
         printer->Outdent();
         printer->Print("}\n\n");
         printer->Print(_vars, "parse_from_proto(pb);\n");
-        printer->Print(_vars, "return true;\n");
+        printer->Print(_vars, "return turbo::OkStatus();\n");
         printer->Outdent();
         printer->Print("}\n\n");
         ////
-        printer->Print(_vars, "bool $domain$::serialize_to_json(std::string& json) const {\n");
+        printer->Print(_vars, "turbo::Status $domain$::serialize_to_json(std::string& json) const {\n");
         printer->Indent();
         printer->Print(_vars, "$PBTYPE$ pb;\n");
         printer->Print(_vars, "serialize_to_proto(pb);\n");
-        printer->Print(_vars, "if(!google::protobuf::json::MessageToJsonString(pb, &json).ok()) {\n");
+        printer->Print(_vars, "auto rs = google::protobuf::json::MessageToJsonString(pb, &json);\n");
+        printer->Print(_vars, "if(!rs.ok()) {\n");
         printer->Indent();
-        printer->Print(_vars, "return false;\n");
+        printer->Print(_vars, "return turbo::make_status(rs.code(), rs.message());\n");
         printer->Outdent();
         printer->Print("}\n\n");
-        printer->Print(_vars, "return true;\n");
+        printer->Print(_vars, "return turbo::OkStatus();\n");
         printer->Outdent();
         printer->Print("}\n\n");
         printer->Print(_vars, "std::string $domain$::to_string() const {\n");
         printer->Indent();
         printer->Print(_vars, "std::string json;\n");
         printer->Print(_vars, "auto b = serialize_to_json(json);\n");
-        printer->Print(_vars, "if(b) {\n");
+        printer->Print(_vars, "if(b.ok()) {\n");
         printer->Indent();
         printer->Print(_vars, "return json;\n");
         printer->Outdent();
@@ -382,4 +393,28 @@ namespace shark {
         printer->Print("}\n\n");
     }
 
+    void MessageGenerator::generate_implement(google::protobuf::io::Printer *printer) {
+        for (int i = 0; i < enum_generators_.size(); i++) {
+            enum_generators_[i]->generate_implement(printer, _descriptor);
+        }
+        for (int i = 0; i < nested_generators_.size(); i++) {
+            nested_generators_[i]->generate_implement(printer);
+        }
+
+
+        printer->Print("///////////////////////////////////////////////////////////////////////// \n");
+        printer->Print("/// metas \n");
+        printer->Print(_variables, "const google::protobuf::Descriptor* $domain$::get_descriptor() {\n");
+        printer->Indent();
+        printer->Print(_variables, "return $PBTYPE$::descriptor();\n");
+        printer->Outdent();
+        printer->Print(_variables, "}\n\n");
+
+        generate_ctor_implemention(printer);
+
+        generate_cpy_ctor_implemention(printer);
+        generate_move_ctor_implement(printer);
+
+        generate_trans_implement(printer);
+    }
 } // namespace shark

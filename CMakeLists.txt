@@ -30,7 +30,7 @@ endif ()
 
 set(PROJECT_DESCRIPTION "Hercules is an ahead of time compiler for a subset of the Python language framework.")
 set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 0)
+set(PROJECT_VERSION_MINOR 3)
 set(PROJECT_VERSION_PATCH 5)
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
@@ -98,12 +98,25 @@ if(NOT PYTHON_EXTENSION)
             PATTERN "*.h"
             PATTERN "*.hpp"
             )
+    install(DIRECTORY ${PROJECT_NAME}/idl
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/shark
+            FILES_MATCHING
+            PATTERN "*.inc"
+            PATTERN "*.h"
+            PATTERN "*.hpp"
+            PATTERN "*.proto"
+    )
+
 
     # Layout. This works for all platforms:
     #   * <prefix>//cmake/<PROJECT-NAME>
     #   * <prefix>/*/
     #   * <prefix>/include/
     set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
+
+    install(FILES cmake/kmcmake_cc_sk.cmake
+            DESTINATION ${config_install_dir}
+    )
 
     set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 

@@ -14,7 +14,6 @@
 //
 
 
-
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/wire_format.h>
 
@@ -28,6 +27,7 @@ namespace shark {
     void SetEnumVariables(const google::protobuf::FieldDescriptor *descriptor,
                           std::map<std::string, std::string> *variables) {
         (*variables)["type"] = descriptor->enum_type()->name();
+        (*variables)["pb_type"] = turbo::str_replace_all(descriptor->enum_type()->full_name(), {{".", "::"}});
     }
 
     // ===================================================================
@@ -65,6 +65,7 @@ namespace shark {
                 break;
         }
     }
+
     void EnumFieldGenerator::generate_copy_ctor_define(google::protobuf::io::Printer *printer) const {
         printer->Print(_variables, "_$name$ = rhs._$name$;\n");
     }
@@ -105,13 +106,13 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "_$name$ = pb.$name$();\n");
+                printer->Print(_variables, "_$name$ = static_cast<$type$>(pb.$name$());\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
                 printer->Print(_variables, "_$name$.reserve(pb.$name$_size());");
                 printer->Print(_variables, "for(size_t i = 0; i < pb.$name$_size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(_variables, "_$name$.push_back(pb.$name$(i));\n");
+                printer->Print(_variables, "_$name$.push_back(static_cast<$type$>(pb.$name$(i)));\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
@@ -122,13 +123,13 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "pb.set_$name$(_$name$);\n");
+                printer->Print(_variables, "pb.set_$name$(static_cast<$pb_type$>(_$name$));\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
                 printer->Print(_variables, "pb.mutable_$name$()->Reserve(_$name$.size());\n");
                 printer->Print(_variables, "for(size_t i = 0; i < _$name$.size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(_variables, "*pb.mutable_$name$()->Add() = _$name$[i];\n");
+                printer->Print(_variables, "*pb.mutable_$name$()->Add() = static_cast<$pb_type$>(_$name$[i]);\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
@@ -151,19 +152,16 @@ namespace shark {
     }
 
 
-
     std::string EnumFieldGenerator::do_get_default_value(void) const {
-        const google::protobuf::EnumValueDescriptor* d = descriptor_->default_value_enum();
+        const google::protobuf::EnumValueDescriptor *d = descriptor_->default_value_enum();
         if (!d) {
             return "";
         }
         std::string enum_type_name = descriptor_->enum_type()->name();
-       return enum_type_name + "::" + d->name();
+        return turbo::str_format("{%s::%s}", enum_type_name, d->name());
     }
+
     std::string EnumFieldGenerator::get_default_value(void) const {
         return do_get_default_value();
     }
-
-
-
 } // namespace shark

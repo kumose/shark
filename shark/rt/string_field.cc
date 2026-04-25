@@ -53,7 +53,7 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 printer->Print(_variables, "$deprecated$inline const std::string& $name$() const;\n");
-                printer->Print(_variables, "$deprecated$inline void set_$name$(const std::string &v);\n");
+                printer->Print(_variables, "$deprecated$inline void set_$name$(std::string v);\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
                 printer->Print(_variables, "$deprecated$inline const std::vector<std::string>& $name$() const;\n");
@@ -73,9 +73,9 @@ namespace shark {
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
                 printer->Print(_variables, "/// setter\n");
-                printer->Print(_variables, "inline void $domain$::set_$name$(const std::string &v) {\n");
+                printer->Print(_variables, "inline void $domain$::set_$name$(std::string v) {\n");
                 printer->Indent();
-                printer->Print(_variables, "_$name$ = v;\n");
+                printer->Print(_variables, "_$name$ = std::move(v);\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
 
@@ -154,7 +154,7 @@ namespace shark {
         return d;
     }
     std::string StringFieldGenerator::get_default_value(void) const {
-        return do_get_default_value();
+        return turbo::str_format("{\"%s\"}", do_get_default_value());
     }
 
 } // namespace shark

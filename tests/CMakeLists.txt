@@ -99,3 +99,63 @@ kmcmake_cc_test(
         ${KMCMAKE_DEPS_LINK}
 )
 ]]
+
+find_package(GTest REQUIRED)
+
+set(SHARK_EXEC_FILE ${PROJECT_BINARY_DIR}/shark/protoc-gen-sk)
+#set(SHAR_EXEC_FILE ${SK_EXE_DIR}/protoc-gen-sk)
+message(STATUS ${SHARK_EXEC_FILE})
+include(kmcmake_cc_sk)
+
+set(SHARK_IDL_TEST_FILES
+        test.proto
+)
+
+kmcmake_cc_proto(
+        NAME test_proto_gen
+        PROTOS
+        ${SHARK_IDL_TEST_FILES}
+        OUTDIR
+        ${PROJECT_SOURCE_DIR}
+)
+
+kmcmake_cc_sk(
+        NAME test_sk_gen
+        PROTOS
+        ${SHARK_IDL_TEST_FILES}
+        OUTDIR
+        ${PROJECT_SOURCE_DIR}
+)
+
+
+
+kmcmake_cc_library(
+        NAMESPACE ${PROJECT_NAME}
+        NAME sk_test
+        SOURCES
+        ${test_sk_gen_SRCS}
+        ${test_proto_gen_SRCS}
+        PINCLUDES
+        ${PROTOBUF_INCLUDE_DIRS}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        PLINKS
+        shark::shark_static
+        ${KMCMAKE_DEPS_LINK}
+        UNITY
+)
+
+kmcmake_cc_test(
+        NAME test_proto_test
+        MODULE runtime
+        SOURCES
+        test_proto_test.cc
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        LINKS
+        shark::sk_test_static
+        shark::shark_static
+        GTest::gtest_main
+        GTest::gtest
+        ${KMCMAKE_DEPS_LINK}
+)

@@ -22,6 +22,7 @@ set(SHARK_IDL_PROTO_FILES
 
 include_directories(include)
 
+
 kmcmake_cc_proto(
         NAME shark_idl_proto_gen
         PROTOS
@@ -55,14 +56,8 @@ set(GENERATOR_SRC
         generator/generator.cc
         generator/field_map.cc
         generator/rt_file.cc
-        generator/skb_file.cc
         generator/message.cc
         generator/oneof_field.cc
-        descriptor/meta_map.cc
-        descriptor/meta_file.cc
-        descriptor/meta_message.cc
-        descriptor/file.cc
-        descriptor/meta_field.cc
         rt/any_field.cc
         rt/bytes_field.cc
         rt/enum.cc
@@ -76,34 +71,12 @@ set(GENERATOR_SRC
         rt/primitive_field.cc
         rt/service.cc
         rt/string_field.cc
-        builder/bytes_field.cc
-        builder/enum.cc
-        builder/enum_field.cc
-        builder/extension.cc
-        builder/any_field.cc
-        builder/map_field.cc
-        builder/message.cc
-        builder/message_field.cc
-        builder/oneof_field.cc
-        builder/primitive_field.cc
-        builder/string_field.cc
-        view/bytes_field.cc
-        view/enum.cc
-        view/enum_field.cc
-        view/extension.cc
-        view/any_field.cc
-        view/map_field.cc
-        view/message.cc
-        view/message_field.cc
-        view/oneof_field.cc
-        view/primitive_field.cc
-        view/string_field.cc
         utility/helpers.cc
 )
 
 kmcmake_cc_library(
         NAMESPACE ${PROJECT_NAME}
-        NAME idl_proto
+        NAME inner_lib
         SOURCES
         ${GENERATOR_SRC}
         PINCLUDES
@@ -113,7 +86,6 @@ kmcmake_cc_library(
         PLINKS
         shark::shark_static
         ${KMCMAKE_DEPS_LINK}
-        PUBLIC
         UNITY
 )
 
@@ -124,12 +96,11 @@ kmcmake_cc_binary(
         main.cc
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
-        -fsanitize=address
         LINKS
-        ${PROJECT_NAME}::idl_proto_static
+        ${PROJECT_NAME}::inner_lib_static
         ${KMCMAKE_DEPS_LINK}
         LINKOPTS
-        -fsanitize=address
+        ${KMCMAKE_STATIC_BIN_OPTION}
         PUBLIC
 )
 #[[
@@ -165,3 +136,4 @@ kmcmake_cc_binary(
 ]]
 
 ###kmcmake_example
+
