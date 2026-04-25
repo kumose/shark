@@ -1,2 +1,5 @@
 *.pb.h
-*.pb.sk
+*.sk.cc
+*.pb.cc
+*.sh.cc
+
