@@ -1,0 +1,13 @@
+{
+  "dependencies": [
+    "gtest",
+    {
+      "name": "protobuf",
+      "features": [
+        "zlib"
+      ]
+    },
+    "turbo",
+    "xsimd"
+  ]
+}

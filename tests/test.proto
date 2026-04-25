@@ -1,0 +1,76 @@
+syntax = "proto2";
+
+import "shark/idl/shark_options.proto";
+import "google/protobuf/any.proto";
+
+option (shark.idl.shark_file) = {
+  runtime_namespace: "my::custom::ns"
+  cpp_includes: ["turbo/container/flat_hash_map.h"]
+  sk_map_type: "absl::flat_hash_map< %s, %s>"
+  sk_vector: "absl::InlinedVector<%s, 2>"
+  sk_stand: CXX_20
+};
+
+package test.pb.pa;
+
+
+enum Color {
+  option (shark.idl.shark_enum) = {
+    underlying_type :ENUM_UNDERLYING_U8
+  };
+  RED = 0;
+  GREEN = 1;
+  BLUE = 2;
+}
+
+enum ColorU16 {
+  option (shark.idl.shark_enum) = {
+    underlying_type :ENUM_UNDERLYING_U16
+  };
+  RED16 = 0;
+  GREEN16 = 1;
+  BLUE16 = 2;
+}
+
+enum ColorU32 {
+  option (shark.idl.shark_enum) = {
+    underlying_type :ENUM_UNDERLYING_U32
+  };
+  RED32 = 0;
+  GREEN32 = 1;
+  BLUE32 = 2;
+}
+
+
+message Person {
+  enum Dolor {
+    DRED = 0;
+    DGREEN = 1;
+    DBLUE = 2;
+  }
+  optional google.protobuf.Any any_one = 100;
+  repeated google.protobuf.Any any_two = 101;
+  optional string name = 1 [default = "Lothar", deprecated = true];
+  optional int32 age = 2 [(shark.idl.shark_field) = {is_atomic : true, ctype : "int8_t"}];
+  repeated string emails = 3;
+  repeated int32  ages = 8;
+  map<string, int32> scores = 4;
+  optional Color favorite_color = 5  [default = GREEN];
+  message Address {
+    optional string street = 1;
+    optional int32 number = 2 [default = 20];
+    optional Detail detail = 3;
+    message Detail {
+      optional string region = 1;
+      optional string prcode = 2;
+    }
+  }
+  oneof kind {
+    string aaa = 10;
+    uint32  bbb = 12;
+    Address ddd  = 13;
+  }
+  optional Address address = 6;
+  repeated Address address2 = 17;
+  optional string long_name = 18;
+}

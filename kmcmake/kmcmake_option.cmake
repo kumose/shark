@@ -1,18 +1,16 @@
 # Copyright (C) Kumo inc. and its affiliates.
-# Author: Jeff.li lijippy@163.com
-# All rights reserved.
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published
-# by the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 
 ################################################################################################
@@ -42,6 +40,34 @@ option(KMCMAKE_STATUS_PRINT "kmcmake print or not, default on" ON)
 
 option(KMCMAKE_INSTALL_LIB "avoid centos install to lib64" OFF)
 
+option(KMCMAKE_ENABLE_SHARE "enable shared library" OFF)
+
 option(WITH_DEBUG_SYMBOLS "With debug symbols" ON)
+
+# Runtime SIMD target level used by dispatch/config logic.
+# Valid values:
+#   NONE, SSE, SSE2, SSE3, SSSE3, SSE4_1, SSE4_2, AVX, AVX2, AVX512
+set(KMCMAKE_RUNTIME_SIMD_LEVEL "AVX2" CACHE STRING "Runtime SIMD level from NONE to AVX512")
+set_property(CACHE KMCMAKE_RUNTIME_SIMD_LEVEL PROPERTY STRINGS
+        NONE
+        SSE
+        SSE2
+        SSE3
+        SSSE3
+        SSE4_1
+        SSE4_2
+        AVX
+        AVX2
+        AVX512
+)
+
+string(TOUPPER "${KMCMAKE_RUNTIME_SIMD_LEVEL}" KMCMAKE_RUNTIME_SIMD_LEVEL)
+set(_KMCMAKE_RUNTIME_SIMD_LEVEL_VALUES
+        NONE SSE SSE2 SSE3 SSSE3 SSE4_1 SSE4_2 AVX AVX2 AVX512)
+if (NOT KMCMAKE_RUNTIME_SIMD_LEVEL IN_LIST _KMCMAKE_RUNTIME_SIMD_LEVEL_VALUES)
+    message(FATAL_ERROR
+            "Invalid KMCMAKE_RUNTIME_SIMD_LEVEL='${KMCMAKE_RUNTIME_SIMD_LEVEL}'. "
+            "Valid values: NONE, SSE, SSE2, SSE3, SSSE3, SSE4_1, SSE4_2, AVX, AVX2, AVX512.")
+endif ()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

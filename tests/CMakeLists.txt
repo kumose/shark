@@ -1,18 +1,16 @@
 # Copyright (C) Kumo inc. and its affiliates.
-# Author: Jeff.li lijippy@163.com
-# All rights reserved.
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as published
-# by the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 
 #[[kmcmake_cc_test(
@@ -38,125 +36,126 @@ kmcmake_cc_test(
 ]]
 
 configure_file(${PROJECT_SOURCE_DIR}/tests/config.h.in ${PROJECT_SOURCE_DIR}/tests/config.h @ONLY)
+#[[
 
-kmcmake_cc_test(
-        NAME raw_test
-        MODULE base
-        SOURCES raw_test.cc
-        CXXOPTS ${KMCMAKE_CXX_OPTIONS}
+set(SHARK_ENUM_PROTO "${PROJECT_SOURCE_DIR}/tests/proto/enum_runtime.proto")
+set(SHARK_ENUM_GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
+set(SHARK_ENUM_GEN_HEADER "${SHARK_ENUM_GEN_DIR}/tests/proto/enum_runtime.runtime.h")
+set(SHARK_ENUM_GEN_SOURCE "${SHARK_ENUM_GEN_DIR}/tests/proto/enum_runtime.runtime.cc")
+set(SHARK_ENUM_PB_HEADER "${SHARK_ENUM_GEN_DIR}/tests/proto/enum_runtime.pb.h")
+set(SHARK_ENUM_PB_SOURCE "${SHARK_ENUM_GEN_DIR}/tests/proto/enum_runtime.pb.cc")
+
+add_custom_command(
+        OUTPUT ${SHARK_ENUM_GEN_HEADER} ${SHARK_ENUM_GEN_SOURCE} ${SHARK_ENUM_PB_HEADER} ${SHARK_ENUM_PB_SOURCE}
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${SHARK_ENUM_GEN_DIR}/tests/proto"
+        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+        --plugin=protoc-gen-shark=$<TARGET_FILE:protoc_gen_shark>
+        -I${PROJECT_SOURCE_DIR}
+        -I${PROTOBUF_INCLUDE_DIRS}
+        --shark_out=${SHARK_ENUM_GEN_DIR}
+        --cpp_out=${SHARK_ENUM_GEN_DIR}
+        ${SHARK_ENUM_PROTO}
+        DEPENDS ${SHARK_ENUM_PROTO} protoc_gen_shark
+        VERBATIM
+)
+
+add_custom_target(enum_runtime_codegen
+        DEPENDS ${SHARK_ENUM_GEN_HEADER} ${SHARK_ENUM_GEN_SOURCE} ${SHARK_ENUM_PB_HEADER} ${SHARK_ENUM_PB_SOURCE}
 )
 
 kmcmake_cc_test(
-        NAME pass_test
-        MODULE base
-        SOURCES pass_test.cc
-        CXXOPTS ${KMCMAKE_CXX_OPTIONS}
-        EXT
-)
-
-# base_pass_test_1
-kmcmake_cc_test_ext(
-        NAME pass_test
-        MODULE base
-        ALIAS 1
-        PASS_EXP "pass;Passed"
-)
-
-# base_pass_test_2
-kmcmake_cc_test_ext(
-        NAME pass_test
-        MODULE base
-        ALIAS 2
-        PASS_EXP "pass;Passed"
-)
-# base_pass_test_foo
-kmcmake_cc_test_ext(
-        NAME pass_test
-        MODULE base
-        ALIAS foo
-        PASS_EXP "pass;Passed"
-)
-
-# base_pass_test_bar not run
-kmcmake_cc_test_ext(
-        NAME pass_test
-        MODULE base
-        ALIAS bar
-        PASS_EXP "pass;Passed"
-        DISABLED
+        NAME enum_runtime_test
+        MODULE runtime
+        SOURCES
+        enum_runtime_test.cc
+        ${SHARK_ENUM_GEN_SOURCE}
+        ${SHARK_ENUM_PB_SOURCE}
+        DEPS
+        enum_runtime_codegen
+        INCLUDES
+        ${SHARK_ENUM_GEN_DIR}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        LINKS
+        ${PROJECT_NAME}::idl_proto_static
+        ${KMCMAKE_DEPS_LINK}
 )
 
 kmcmake_cc_test(
-        NAME args_test
-        MODULE base
-        SOURCES args_test.cc
-        EXT
+        NAME enum_runtime_golden_test
+        MODULE runtime
+        SOURCES
+        enum_runtime_golden_test.cc
+        DEPS
+        enum_runtime_codegen
+        INCLUDES
+        ${SHARK_ENUM_GEN_DIR}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        DEFINES
+        SHARK_ENUM_RUNTIME_HEADER="${SHARK_ENUM_GEN_HEADER}"
+        SHARK_ENUM_RUNTIME_SOURCE="${SHARK_ENUM_GEN_SOURCE}"
+        LINKS
+        ${KMCMAKE_DEPS_LINK}
+)
+]]
+
+find_package(GTest REQUIRED)
+
+set(SHARK_EXEC_FILE ${PROJECT_BINARY_DIR}/shark/protoc-gen-sk)
+#set(SHAR_EXEC_FILE ${SK_EXE_DIR}/protoc-gen-sk)
+message(STATUS ${SHARK_EXEC_FILE})
+include(kmcmake_cc_sk)
+
+set(SHARK_IDL_TEST_FILES
+        test.proto
 )
 
-# base_args_test_fail fail
-kmcmake_cc_test_ext(
-        NAME args_test
-        MODULE base
-        ALIAS fail
-        FAIL_EXP "[^a-z]Error;ERROR;Failed"
+kmcmake_cc_proto(
+        NAME test_proto_gen
+        PROTOS
+        ${SHARK_IDL_TEST_FILES}
+        OUTDIR
+        ${PROJECT_SOURCE_DIR}
 )
 
-# base_args_test_fail fail
-kmcmake_cc_test_ext(
-        NAME args_test
-        MODULE base
-        ALIAS fail_args
-        ARGS "Failed"
-        FAIL_EXP "[^a-z]Error;ERROR;Failed"
+kmcmake_cc_sk(
+        NAME test_sk_gen
+        PROTOS
+        ${SHARK_IDL_TEST_FILES}
+        OUTDIR
+        ${PROJECT_SOURCE_DIR}
 )
 
-# base_args_test_skip fail
-kmcmake_cc_test_ext(
-        NAME args_test
-        MODULE base
-        ALIAS skip_fail
-        PASS_EXP "pass;Passed"
-        FAIL_EXP "[^a-z]Error;ERROR;Failed"
-        SKIP_EXP "[^a-z]Skip" "SKIP" "Skipped"
-)
 
-# base_args_test_skip fail
-kmcmake_cc_test_ext(
-        NAME args_test
-        MODULE base
-        ALIAS skip
-        ARGS "SKIP"
-        PASS_EXP "pass;Passed"
-        FAIL_EXP "[^a-z]Error;ERROR;Failed"
-        SKIP_EXP "[^a-z]Skip" "SKIP" "Skipped"
-)
 
-# base_args_test_skip fail
-kmcmake_cc_test_ext(
-        NAME args_test
-        MODULE base
-        ALIAS skip_pass
-        ARGS "Passed"
-        PASS_EXP "pass;Passed"
-        FAIL_EXP "[^a-z]Error;ERROR;Failed"
-        SKIP_EXP "[^a-z]Skip" "SKIP" "Skipped"
-)
-
-# base_args_test_skip fail
-kmcmake_cc_test_ext(
-        NAME args_test
-        MODULE base
-        ALIAS skip_diabled
-        ARGS "Passed"
-        PASS_EXP "pass;Passed"
-        FAIL_EXP "[^a-z]Error;ERROR;Failed"
-        SKIP_EXP "[^a-z]Skip" "SKIP" "Skipped"
-        DISABLED
+kmcmake_cc_library(
+        NAMESPACE ${PROJECT_NAME}
+        NAME sk_test
+        SOURCES
+        ${test_sk_gen_SRCS}
+        ${test_proto_gen_SRCS}
+        PINCLUDES
+        ${PROTOBUF_INCLUDE_DIRS}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        PLINKS
+        shark::shark_static
+        ${KMCMAKE_DEPS_LINK}
+        UNITY
 )
 
 kmcmake_cc_test(
-        NAME raw_test
-        MODULE norun
-        SOURCES raw_test.cc
-        CXXOPTS ${KMCMAKE_CXX_OPTIONS}
+        NAME test_proto_test
+        MODULE runtime
+        SOURCES
+        test_proto_test.cc
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        LINKS
+        shark::sk_test_static
+        shark::shark_static
+        GTest::gtest_main
+        GTest::gtest
+        ${KMCMAKE_DEPS_LINK}
 )

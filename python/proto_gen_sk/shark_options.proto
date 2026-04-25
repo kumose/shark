@@ -1,0 +1,86 @@
+syntax = "proto2";
+
+package shark.idl;
+
+import "google/protobuf/descriptor.proto";
+
+option cc_enable_arenas = true;
+
+// Underlying integer width used by generated runtime enum.
+enum EnumUnderlyingType {
+  ENUM_UNDERLYING_UNSPECIFIED = 0;
+  ENUM_UNDERLYING_U8 = 1;
+  ENUM_UNDERLYING_U16 = 2;
+  ENUM_UNDERLYING_U32 = 3;
+  ENUM_UNDERLYING_U64 = 4;
+}
+
+// Strategy to provide enum-to-string conversion in generated code.
+enum EnumStringSource {
+  ENUM_STRING_SOURCE_UNSPECIFIED = 0;
+  ENUM_STRING_SOURCE_PROTO_REFLECTION = 1;  // Use protobuf descriptors/name table.
+  ENUM_STRING_SOURCE_CUSTOM_TABLE = 2;      // Use generated/custom static table.
+}
+
+enum CppStand {
+  CXX_UNSPECIFIED = 0;
+  CXX_17 = 1;
+  CXX_20 = 2;
+  CXX_23 = 3;
+}
+enum SharkEdition {
+  EDITION_UNSPECIFIED = 0;
+  SK_EDITION = 2026;
+}
+
+// File-level generation controls for shark runtime output.
+message SharkFileOptions {
+  optional string                   runtime_namespace = 1;
+  repeated string                   cpp_includes      = 2;
+  optional string                   sk_map_type = 3 [default = "std::unordered_map<%s, %s>"];
+  optional string                   sk_vector   = 4 [default = "std::vector<%s>"];
+  optional CppStand                 sk_stand          = 5 [ default = CXX_17];
+  optional SharkEdition             edition           = 6 [ default = SK_EDITION];
+}
+
+// Enum-definition level controls.
+message SharkEnumOptions {
+  optional EnumUnderlyingType underlying_type = 1 [default = ENUM_UNDERLYING_UNSPECIFIED];
+  optional bool bit_flags = 4;               // Generate bitwise operators: | & ~ ^.
+}
+
+// Message-level controls for owned/view runtime generation.
+message SharkMessageOptions {
+  optional bool virtual_dtor = 1;
+  optional bool private_ctor = 2;
+  optional bool is_instance  = 3;
+}
+
+// Field-level controls for generated runtime code.
+message SharkFieldOptions {
+  optional string            ctype     = 1;
+  optional bool              is_atomic = 2;
+}
+
+message SharkEnumValueOptions {
+  optional string sk_enum_name = 1;
+}
+
+extend google.protobuf.FileOptions {
+  optional SharkFileOptions shark_file = 52001;
+}
+
+extend google.protobuf.MessageOptions {
+  optional SharkMessageOptions shark_message = 52002;
+}
+
+extend google.protobuf.EnumOptions {
+  optional SharkEnumOptions shark_enum = 52004;
+}
+extend google.protobuf.EnumValueOptions {
+  optional SharkEnumValueOptions sk_enum_value = 52005;
+}
+
+extend google.protobuf.FieldOptions {
+  optional SharkFieldOptions shark_field = 52006;
+}
