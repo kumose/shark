@@ -115,7 +115,7 @@ namespace shark {
     }
 
     void RtFileGenerator::generate_implement(google::protobuf::io::Printer *printer) {
-        for (int i = 0; i < _file->message_type_count(); i++) {
+        for (int i = 0; i < _file->enum_type_count(); i++) {
             enum_generators_[i]->generate_implement(printer, nullptr);
         }
         for (int i = 0; i < _file->message_type_count(); i++) {

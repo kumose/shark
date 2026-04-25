@@ -66,7 +66,14 @@ namespace shark {
         vars["opt_comma"] = ",";
         for (int i = 0; i < descriptor_->value_count(); i++) {
             vars["name"] = std::string(descriptor_->value(i)->name());
+            if (_nums.count(descriptor_->value(i)->number()) == 0) {
+                _nums[descriptor_->value(i)->number()] = descriptor_->value(i)->name();
+                _dones[descriptor_->value(i)->name()] = descriptor_->value(i)->number();
+            }
+
+
             vars["number"] = turbo::str_cat(descriptor_->value(i)->number());
+
             if (i + 1 == descriptor_->value_count())
                 vars["opt_comma"] = "";
 
@@ -112,6 +119,7 @@ namespace shark {
                                                const google::protobuf::Descriptor* parent) {
         std::map<std::string, std::string> vars;
         vars["shortname"] = descriptor_->name();
+        std::unordered_set<std::string> dones;
         std::string prefix;
         if (parent != nullptr) {
             prefix = parent->name() + "::";
@@ -122,6 +130,9 @@ namespace shark {
         printer->Indent();
         printer->Print("switch (value) {\n");
         for (int i = 0; i < descriptor_->value_count(); ++i) {
+            if (_dones.count(descriptor_->value(i)->name()) == 0) {
+                continue;
+            }
             vars["enumerator"] = descriptor_->value(i)->name();
             printer->Print(vars, "  case $PREFIX$$shortname$::$enumerator$: return \"$enumerator$\";\n");
         }
@@ -133,13 +144,18 @@ namespace shark {
 
     void EnumGenerator::generate_implement(google::protobuf::io::Printer *printer, const google::protobuf::Descriptor *parent) {
         std::map<std::string, std::string> vars;
-        vars["shortname"] = descriptor_->name();
+
+        KLOG(INFO)<<0;
+        auto n = descriptor_->name();
+        KLOG(INFO)<<0.1;
+        vars["shortname"] = n;
+        KLOG(INFO)<<"name:"<<descriptor_->name();
         std::string prefix;
         if (parent != nullptr) {
             prefix = parent->name() + "::";
         }
         vars["PREFIX"] = prefix;
-
+        KLOG(INFO)<<2;
         printer->Print(vars, "std::optional<$PREFIX$$shortname$> $PREFIX$parse_$shortname$(std::string_view value) {\n");
         printer->Indent();
 
@@ -148,11 +164,12 @@ namespace shark {
         vars["opt_comma"] = ",";
         for (int i = 0; i < descriptor_->value_count(); ++i) {
             vars["enumerator"] = descriptor_->value(i)->name();
+            vars["number"] = turbo::str_cat(descriptor_->value(i)->number());
             if (i + 1 == descriptor_->value_count())
                 vars["opt_comma"] = "";
-            printer->Print(vars, "{\"$enumerator$\", $PREFIX$$shortname$::$enumerator$},\n");
+            printer->Print(vars, "{\"$enumerator$\", static_cast<$PREFIX$$shortname$>($number$)},\n");
         }
-
+        KLOG(INFO)<<3;
         printer->Outdent();
         printer->Print(vars, "};\n\n");
         printer->Print("auto it = enum_map.find(value);\n");
@@ -164,6 +181,7 @@ namespace shark {
         printer->Print("return it->second;\n");
         printer->Outdent();
         printer->Print("}\n");
+        KLOG(INFO)<<4;
     }
 
     struct ValueIndex {

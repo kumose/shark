@@ -1,0 +1,319 @@
+// Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto2";
+
+import "shark/idl/shark_options.proto";
+
+package granite.pb;
+option (shark.idl.shark_file) = {
+  runtime_namespace: "granite"
+  cpp_includes: ["turbo/container/flat_hash_map.h"]
+  sk_map_type: "turbo::flat_hash_map< %s, %s>"
+  sk_vector: "absl::InlinedVector<%s, 2>"
+  sk_stand: CXX_17
+};
+
+message ReadOptions {
+  optional bool async_io = 1 [default = true];
+}
+
+message WriteOptions {
+  optional bool sync = 1 [default = false];
+  optional bool disable_wal = 2 [default = false];
+  optional bool no_slowdown = 3 [default = false];
+  optional bool low_pri = 4 [default = false];
+  optional bool memtable_insert_hint_per_batch = 5 [default = false];
+  optional int32 write_batch_max_bytes = 6 [default = 0];
+}
+
+
+message RocksDBConfig {
+  optional int32 block_size = 1 [default = 16384];
+  optional bool cache_index_and_filter_blocks = 2 [default = true];
+  optional int64 block_cache_size = 3 [default = 0];
+  optional BlockCacheType block_cache_type = 4 [default = LRU];
+  optional int64 metadata_block_cache_size = 5 [default = 2048];
+  optional int64 subkey_block_cache_size = 6 [default = 2048];
+  optional bool share_metadata_and_subkey_block_cache = 7 [default = true];
+  optional int32 max_open_files = 8 [default = 8096];
+  optional int64 write_buffer_size = 9 [default = 67108864];
+  optional int32 max_write_buffer_number = 10 [default = 4];
+  optional int32 min_write_buffer_number_to_merge = 11 [default = 1];
+  optional int32 max_background_compactions = 12 [default = -1];
+  optional int32 max_background_flushes = 13 [default = -1];
+  optional int32 max_subcompactions = 14 [default = 2];
+  optional int32 stats_dump_period_sec = 15 [default = 0];
+  optional bool enable_pipelined_write = 16 [default = false];
+  optional int64 delayed_write_rate = 17 [default = 0];
+  optional int32 compaction_readahead_size = 18 [default = 2097152];
+  optional int64 target_file_size_base = 19 [default = 134217728];
+  optional CompressionType wal_compression = 20 [default = K_NO_COMPRESSION];
+  optional int32 wal_ttl_seconds = 21 [default = 10800];
+  optional int32 wal_size_limit_mb = 22 [default = 16384];
+  optional int64 max_total_wal_size = 23 [default = 536870912];
+  optional bool dump_malloc_stats = 24 [default = true];
+  optional int32 level0_slowdown_writes_trigger = 25 [default = 20];
+  optional int32 level0_stop_writes_trigger = 26 [default = 40];
+  optional int32 level0_file_num_compaction_trigger = 27 [default = 4];
+  optional CompressionType compression = 28 [default = K_NO_COMPRESSION];
+  optional int32 compression_start_level = 29 [default = 2];
+  optional int32 compression_level = 30 [default = 32767];
+  optional uint32 compression_max_dict_bytes = 31 [default = 0];
+  optional uint32 compression_zstd_max_train_bytes = 32 [default = 0];
+  optional bool disable_auto_compactions = 33 [default = false];
+  optional bool enable_blob_files = 34 [default = false];
+  optional int32 min_blob_size = 35 [default = 4096];
+  optional int32 blob_file_size = 36 [default = 268435456];
+  optional bool enable_blob_garbage_collection = 37 [default = true];
+  optional int32 blob_garbage_collection_age_cutoff = 38 [default = 25];
+  optional uint64 max_bytes_for_level_base = 39 [default = 268435456];
+  optional int32 max_bytes_for_level_multiplier = 40 [default = 10];
+  optional bool level_compaction_dynamic_level_bytes = 41 [default = true];
+  optional int32 max_background_jobs = 42 [default = 4];
+  optional bool rate_limiter_auto_tuned = 43 [default = true];
+  optional bool avoid_unnecessary_blocking_io = 44 [default = true];
+  optional bool partition_filters = 45 [default = true];
+  optional int64 max_compaction_bytes = 46 [default = 0];
+  optional int64 sst_file_delete_rate_bytes_per_sec = 47 [default = 0];
+  optional uint64 periodic_compaction_seconds = 48 [default = 0];
+  optional uint64 ttl = 49 [default = 0];
+  optional string daily_offpeak_time_utc = 50 [default = ""];
+
+  optional WriteOptions write_options = 51;
+  optional ReadOptions read_options = 52;
+}
+
+
+
+
+// Main server configuration structure
+// Matches your C++ Config struct 1:1
+message Config {
+  // Basic backup and retention settings
+  optional int32 max_backup_to_keep = 1 [default = 1];
+  optional int32 max_backup_keep_hours = 2 [default = 24];
+  optional uint64 proto_max_bulk_len = 3 [default = 536870912];
+  optional int32 max_db_size = 4 [default = 0];
+  optional int32 max_io_mb = 5 [default = 0];
+  optional bool enable_blob_cache = 6 [default = false];
+  optional int32 max_bitmap_to_string_mb = 7 [default = 16];
+  optional bool use_rsid_psync = 8 [default = false];
+
+  // Core directory paths
+  optional string dir = 9 [default = "/tmp/granite"];
+  optional string db_dir = 10 [default = "/tmp/granite/db"];
+  optional string backup_dir = 11 [default = "/tmp/granite/backup"];
+  optional string backup_sync_dir = 12 [default = "/tmp/granite/backup_for_sync"];
+  optional string checkpoint_dir = 13 [default = "/tmp/granite/checkpoint"];
+  optional string sync_checkpoint_dir = 14 [default = "/tmp/granite/sync_checkpoint"];
+  optional string db_name = 15 [default = "change.me.db"];
+
+  // Cron schedule expressions
+  optional string compact_cron = 16 [default = ""];
+  optional string bgsave_cron = 17 [default = ""];
+  optional string dbsize_scan_cron = 18 [default = ""];
+  optional string compaction_checker_cron = 19 [default = ""];
+
+  // Compaction policy
+  optional int64 force_compact_file_age = 20 [default = 172800];
+  optional int32 force_compact_file_min_deleted_percentage = 21 [default = 10];
+
+  // Redis compatibility flags
+  optional bool redis_cursor_compatible = 22 [default = true];
+  optional int32 redis_databases = 23 [default = 0];
+  optional bool resp3_enabled = 24 [default = true];
+
+  // Authentication tokens (loaded only, not persisted)
+  map<string, string> load_tokens = 25;
+
+  // Profiling and sampling settings
+  optional int32 profiling_sample_ratio = 26 [default = 0];
+  optional int32 profiling_sample_record_threshold_ms = 27 [default = 100];
+  optional int32 profiling_sample_record_max_len = 28 [default = 128];
+  repeated string profiling_sample_commands = 29;
+  optional bool profiling_sample_all_commands = 30 [default = false];
+
+  // JSON processing configuration
+  optional int32 json_max_nesting_depth = 31 [default = 1024];
+  optional JsonStorageFormat json_storage_format = 32 [default = JSON];
+
+  // Transaction context mode
+  optional bool txn_context_enabled = 33 [default = false];
+
+  // Performance tuning flags
+  optional bool skip_block_cache_deallocation_on_close = 34 [default = false];
+
+  // Histogram metrics bucket boundaries
+  repeated double histogram_bucket_boundaries = 35;
+
+  optional RocksDBConfig rocks_db = 36;
+}
+
+enum JsonStorageFormat {
+  JSON_DEFAULT = 0;
+  JSON = 1;
+  CBOR = 2;
+}
+
+enum BlockCacheType {
+  LRU = 0;
+  CLOCK = 1;
+}
+
+enum CompressionType {
+  option allow_alias = true;
+  K_NO_COMPRESSION = 0x00;
+  K_SNAPPY_COMPRESSION = 0x01;
+  K_ZLIB_COMPRESSION = 0x02;
+  K_BZIP2_COMPRESSION = 0x03;
+  K_LZ4_COMPRESSION = 0x04;
+  K_LZ4HC_COMPRESSION = 0x05;
+  K_XPRESS_COMPRESSION = 0x06;
+  K_ZSTD = 0x07;
+  K_LAST_BUILTIN_COMPRESSION = 0x07;
+
+  K_CUSTOM_COMPRESSION_80 = 0x80;
+  K_FIRST_CUSTOM_COMPRESSION = 0x80;
+  K_CUSTOM_COMPRESSION_81 = 0x81;
+  K_CUSTOM_COMPRESSION_82 = 0x82;
+  K_CUSTOM_COMPRESSION_83 = 0x83;
+  K_CUSTOM_COMPRESSION_84 = 0x84;
+  K_CUSTOM_COMPRESSION_85 = 0x85;
+  K_CUSTOM_COMPRESSION_86 = 0x86;
+  K_CUSTOM_COMPRESSION_87 = 0x87;
+  K_CUSTOM_COMPRESSION_88 = 0x88;
+  K_CUSTOM_COMPRESSION_89 = 0x89;
+  K_CUSTOM_COMPRESSION_8A = 0x8A;
+  K_CUSTOM_COMPRESSION_8B = 0x8B;
+  K_CUSTOM_COMPRESSION_8C = 0x8C;
+  K_CUSTOM_COMPRESSION_8D = 0x8D;
+  K_CUSTOM_COMPRESSION_8E = 0x8E;
+  K_CUSTOM_COMPRESSION_8F = 0x8F;
+  K_CUSTOM_COMPRESSION_90 = 0x90;
+  K_CUSTOM_COMPRESSION_91 = 0x91;
+  K_CUSTOM_COMPRESSION_92 = 0x92;
+  K_CUSTOM_COMPRESSION_93 = 0x93;
+  K_CUSTOM_COMPRESSION_94 = 0x94;
+  K_CUSTOM_COMPRESSION_95 = 0x95;
+  K_CUSTOM_COMPRESSION_96 = 0x96;
+  K_CUSTOM_COMPRESSION_97 = 0x97;
+  K_CUSTOM_COMPRESSION_98 = 0x98;
+  K_CUSTOM_COMPRESSION_99 = 0x99;
+  K_CUSTOM_COMPRESSION_9A = 0x9A;
+  K_CUSTOM_COMPRESSION_9B = 0x9B;
+  K_CUSTOM_COMPRESSION_9C = 0x9C;
+  K_CUSTOM_COMPRESSION_9D = 0x9D;
+  K_CUSTOM_COMPRESSION_9E = 0x9E;
+  K_CUSTOM_COMPRESSION_9F = 0x9F;
+  K_CUSTOM_COMPRESSION_A0 = 0xA0;
+  K_CUSTOM_COMPRESSION_A1 = 0xA1;
+  K_CUSTOM_COMPRESSION_A2 = 0xA2;
+  K_CUSTOM_COMPRESSION_A3 = 0xA3;
+  K_CUSTOM_COMPRESSION_A4 = 0xA4;
+  K_CUSTOM_COMPRESSION_A5 = 0xA5;
+  K_CUSTOM_COMPRESSION_A6 = 0xA6;
+  K_CUSTOM_COMPRESSION_A7 = 0xA7;
+  K_CUSTOM_COMPRESSION_A8 = 0xA8;
+  K_CUSTOM_COMPRESSION_A9 = 0xA9;
+  K_CUSTOM_COMPRESSION_AA = 0xAA;
+  K_CUSTOM_COMPRESSION_AB = 0xAB;
+  K_CUSTOM_COMPRESSION_AC = 0xAC;
+  K_CUSTOM_COMPRESSION_AD = 0xAD;
+  K_CUSTOM_COMPRESSION_AE = 0xAE;
+  K_CUSTOM_COMPRESSION_AF = 0xAF;
+  K_CUSTOM_COMPRESSION_B0 = 0xB0;
+  K_CUSTOM_COMPRESSION_B1 = 0xB1;
+  K_CUSTOM_COMPRESSION_B2 = 0xB2;
+  K_CUSTOM_COMPRESSION_B3 = 0xB3;
+  K_CUSTOM_COMPRESSION_B4 = 0xB4;
+  K_CUSTOM_COMPRESSION_B5 = 0xB5;
+  K_CUSTOM_COMPRESSION_B6 = 0xB6;
+  K_CUSTOM_COMPRESSION_B7 = 0xB7;
+  K_CUSTOM_COMPRESSION_B8 = 0xB8;
+  K_CUSTOM_COMPRESSION_B9 = 0xB9;
+  K_CUSTOM_COMPRESSION_BA = 0xBA;
+  K_CUSTOM_COMPRESSION_BB = 0xBB;
+  K_CUSTOM_COMPRESSION_BC = 0xBC;
+  K_CUSTOM_COMPRESSION_BD = 0xBD;
+  K_CUSTOM_COMPRESSION_BE = 0xBE;
+  K_CUSTOM_COMPRESSION_BF = 0xBF;
+  K_CUSTOM_COMPRESSION_C0 = 0xC0;
+  K_CUSTOM_COMPRESSION_C1 = 0xC1;
+  K_CUSTOM_COMPRESSION_C2 = 0xC2;
+  K_CUSTOM_COMPRESSION_C3 = 0xC3;
+  K_CUSTOM_COMPRESSION_C4 = 0xC4;
+  K_CUSTOM_COMPRESSION_C5 = 0xC5;
+  K_CUSTOM_COMPRESSION_C6 = 0xC6;
+  K_CUSTOM_COMPRESSION_C7 = 0xC7;
+  K_CUSTOM_COMPRESSION_C8 = 0xC8;
+  K_CUSTOM_COMPRESSION_C9 = 0xC9;
+  K_CUSTOM_COMPRESSION_CA = 0xCA;
+  K_CUSTOM_COMPRESSION_CB = 0xCB;
+  K_CUSTOM_COMPRESSION_CC = 0xCC;
+  K_CUSTOM_COMPRESSION_CD = 0xCD;
+  K_CUSTOM_COMPRESSION_CE = 0xCE;
+  K_CUSTOM_COMPRESSION_CF = 0xCF;
+  K_CUSTOM_COMPRESSION_D0 = 0xD0;
+  K_CUSTOM_COMPRESSION_D1 = 0xD1;
+  K_CUSTOM_COMPRESSION_D2 = 0xD2;
+  K_CUSTOM_COMPRESSION_D3 = 0xD3;
+  K_CUSTOM_COMPRESSION_D4 = 0xD4;
+  K_CUSTOM_COMPRESSION_D5 = 0xD5;
+  K_CUSTOM_COMPRESSION_D6 = 0xD6;
+  K_CUSTOM_COMPRESSION_D7 = 0xD7;
+  K_CUSTOM_COMPRESSION_D8 = 0xD8;
+  K_CUSTOM_COMPRESSION_D9 = 0xD9;
+  K_CUSTOM_COMPRESSION_DA = 0xDA;
+  K_CUSTOM_COMPRESSION_DB = 0xDB;
+  K_CUSTOM_COMPRESSION_DC = 0xDC;
+  K_CUSTOM_COMPRESSION_DD = 0xDD;
+  K_CUSTOM_COMPRESSION_DE = 0xDE;
+  K_CUSTOM_COMPRESSION_DF = 0xDF;
+  K_CUSTOM_COMPRESSION_E0 = 0xE0;
+  K_CUSTOM_COMPRESSION_E1 = 0xE1;
+  K_CUSTOM_COMPRESSION_E2 = 0xE2;
+  K_CUSTOM_COMPRESSION_E3 = 0xE3;
+  K_CUSTOM_COMPRESSION_E4 = 0xE4;
+  K_CUSTOM_COMPRESSION_E5 = 0xE5;
+  K_CUSTOM_COMPRESSION_E6 = 0xE6;
+  K_CUSTOM_COMPRESSION_E7 = 0xE7;
+  K_CUSTOM_COMPRESSION_E8 = 0xE8;
+  K_CUSTOM_COMPRESSION_E9 = 0xE9;
+  K_CUSTOM_COMPRESSION_EA = 0xEA;
+  K_CUSTOM_COMPRESSION_EB = 0xEB;
+  K_CUSTOM_COMPRESSION_EC = 0xEC;
+  K_CUSTOM_COMPRESSION_ED = 0xED;
+  K_CUSTOM_COMPRESSION_EE = 0xEE;
+  K_CUSTOM_COMPRESSION_EF = 0xEF;
+  K_CUSTOM_COMPRESSION_F0 = 0xF0;
+  K_CUSTOM_COMPRESSION_F1 = 0xF1;
+  K_CUSTOM_COMPRESSION_F2 = 0xF2;
+  K_CUSTOM_COMPRESSION_F3 = 0xF3;
+  K_CUSTOM_COMPRESSION_F4 = 0xF4;
+  K_CUSTOM_COMPRESSION_F5 = 0xF5;
+  K_CUSTOM_COMPRESSION_F6 = 0xF6;
+  K_CUSTOM_COMPRESSION_F7 = 0xF7;
+  K_CUSTOM_COMPRESSION_F8 = 0xF8;
+  K_CUSTOM_COMPRESSION_F9 = 0xF9;
+  K_CUSTOM_COMPRESSION_FA = 0xFA;
+  K_CUSTOM_COMPRESSION_FB = 0xFB;
+  K_CUSTOM_COMPRESSION_FC = 0xFC;
+  K_CUSTOM_COMPRESSION_FD = 0xFD;
+  K_CUSTOM_COMPRESSION_FE = 0xFE;
+  K_LAST_CUSTOM_COMPRESSION = 0xFE;
+
+  K_DISABLE_COMPRESSION_OPTION = 0xFF;
+}

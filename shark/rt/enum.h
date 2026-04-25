@@ -53,5 +53,7 @@ namespace shark {
         const google::protobuf::EnumDescriptor *descriptor_;
         std::string _dllexport_decl;
         std::map<std::string, std::string> _variables;
+        std::map<std::string, int> _dones;
+        std::map<int, std::string> _nums;
     };
 } // namespace shark

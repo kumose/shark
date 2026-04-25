@@ -11,9 +11,35 @@
 namespace my::custom::ns {
   std::optional<Color> parse_Color(std::string_view value) {
     static turbo::flat_hash_map<std::string, Color> enum_map = {
-      {"RED", Color::RED},
-      {"GREEN", Color::GREEN},
-      {"BLUE", Color::BLUE},
+      {"RED", static_cast<Color>(0)},
+      {"GREEN", static_cast<Color>(1)},
+      {"BLUE", static_cast<Color>(2)},
+    };
+
+    auto it = enum_map.find(value);
+    if (it == enum_map.end()) {
+      return std::nullopt;
+    }
+    return it->second;
+  }
+  std::optional<ColorU16> parse_ColorU16(std::string_view value) {
+    static turbo::flat_hash_map<std::string, ColorU16> enum_map = {
+      {"RED16", static_cast<ColorU16>(0)},
+      {"GREEN16", static_cast<ColorU16>(1)},
+      {"BLUE16", static_cast<ColorU16>(2)},
+    };
+
+    auto it = enum_map.find(value);
+    if (it == enum_map.end()) {
+      return std::nullopt;
+    }
+    return it->second;
+  }
+  std::optional<ColorU32> parse_ColorU32(std::string_view value) {
+    static turbo::flat_hash_map<std::string, ColorU32> enum_map = {
+      {"RED32", static_cast<ColorU32>(0)},
+      {"GREEN32", static_cast<ColorU32>(1)},
+      {"BLUE32", static_cast<ColorU32>(2)},
     };
 
     auto it = enum_map.find(value);
@@ -24,9 +50,9 @@ namespace my::custom::ns {
   }
   std::optional<Person::Dolor> Person::parse_Dolor(std::string_view value) {
     static turbo::flat_hash_map<std::string, Dolor> enum_map = {
-      {"DRED", Person::Dolor::DRED},
-      {"DGREEN", Person::Dolor::DGREEN},
-      {"DBLUE", Person::Dolor::DBLUE},
+      {"DRED", static_cast<Person::Dolor>(0)},
+      {"DGREEN", static_cast<Person::Dolor>(1)},
+      {"DBLUE", static_cast<Person::Dolor>(2)},
     };
 
     auto it = enum_map.find(value);

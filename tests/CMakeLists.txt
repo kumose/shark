@@ -109,6 +109,7 @@ include(kmcmake_cc_sk)
 
 set(SHARK_IDL_TEST_FILES
         test.proto
+        config.proto
 )
 
 kmcmake_cc_proto(
@@ -142,7 +143,7 @@ kmcmake_cc_library(
         PLINKS
         shark::shark_static
         ${KMCMAKE_DEPS_LINK}
-        UNITY
+
 )
 
 kmcmake_cc_test(

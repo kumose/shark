@@ -96,10 +96,12 @@ kmcmake_cc_binary(
         main.cc
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
+        -fsanitize=address
         LINKS
         ${PROJECT_NAME}::inner_lib_static
         ${KMCMAKE_DEPS_LINK}
         LINKOPTS
+        -fsanitize=address
         ${KMCMAKE_STATIC_BIN_OPTION}
         PUBLIC
 )
