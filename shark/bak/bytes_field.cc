@@ -15,86 +15,88 @@
 
 
 
-#include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/wire_format.h>
-#include <turbo/strings/str_cat.h>
-#include <shark/utility/uri.h>
-#include <shark/rt/message_field.h>
+
+#include <shark/idl/shark_options.pb.h>
+
+#include <shark/rt/bytes_field.h>
+#include <shark/utility/helpers.h>
 
 namespace shark {
-    MessageFieldGenerator::
-    MessageFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
+
+
+    // ===================================================================
+
+    BytesFieldGenerator::
+    BytesFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
         : FieldNoMetaGenerator(descriptor) {
-        _variables["type"] = descriptor_->message_type()->name();
-        _variables["domain_type"] = message_type(descriptor->message_type());
     }
 
-    MessageFieldGenerator::~MessageFieldGenerator() {
+    BytesFieldGenerator::~BytesFieldGenerator() {
     }
 
-    void MessageFieldGenerator::generate_members(google::protobuf::io::Printer *printer) const {
+    void BytesFieldGenerator::generate_members(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
+
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "$type$ _$name$;\n");
+                printer->Print(_variables, "std::vector<uint8> _$name$;\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "std::vector<$type$> _$name$;\n");
+                printer->Print(_variables, "std::vector<std::vector<uint8>> _$name$;\n");
                 break;
         }
     }
 
-    void MessageFieldGenerator::generate_move_ctor_define(google::protobuf::io::Printer *printer) const {
+
+    void BytesFieldGenerator::generate_move_ctor_define(google::protobuf::io::Printer *printer) const {
         printer->Print(_variables, "_$name$ = std::move(rhs._$name$);\n");
     }
-    void MessageFieldGenerator::generate_copy_ctor_define(google::protobuf::io::Printer *printer) const {
+    void BytesFieldGenerator::generate_copy_ctor_define(google::protobuf::io::Printer *printer) const {
         printer->Print(_variables, "_$name$ = rhs._$name$;\n");
     }
 
-    void MessageFieldGenerator::generate_members_declares(google::protobuf::io::Printer *printer) const {
+
+    void BytesFieldGenerator::generate_members_declares(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
+
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "$deprecated$inline const $type$& $name$() const;\n");
-                printer->Print(_variables, "$deprecated$inline void set_$name$(const $type$& val);\n");
-                printer->Print(_variables, "$deprecated$inline void set_$name$($type$&& val);\n");
+                printer->Print(_variables, "$deprecated$inline const std::vector<uint8>& $name$() const;\n");
+                printer->Print(_variables, "$deprecated$std::vector<uint8>& mutable_$name$();\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "$deprecated$inline const std::vector<$type$>& $name$() const;\n");
-                printer->Print(_variables, "$deprecated$std::vector<$type$>& mutable_$name$();\n");
+                printer->Print(_variables, "$deprecated$inline const std::vector<std::vector<uint8>> $name$() const;\n");
+                printer->Print(_variables, "$deprecated$std::vector<std::vector<uint8>> mutable_$name$();\n");
                 break;
         }
     }
 
-    void MessageFieldGenerator::generate_members_inline_implementations(google::protobuf::io::Printer *printer) const {
+    void BytesFieldGenerator::generate_members_inline_implementations(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
+
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "inline const $domain_type$& $domain$::$name$() const {\n");
+                printer->Print(_variables, "inline const std::vector<uint8>& $domain$::$name$() const {\n");
                 printer->Indent();
                 printer->Print(_variables, "return _$name$;\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
-                printer->Print(_variables, "inline void $domain$::set_$name$(const $type$& val) {\n");
+                printer->Print(_variables, "inline std::vector<uint8>& $domain$::mutable_$name$() {\n");
                 printer->Indent();
-                printer->Print(_variables, "_$name$ = val;\n");
-                printer->Outdent();
-                printer->Print(_variables, "}\n");
-                printer->Print(_variables, "inline void $domain$::set_$name$($type$&& val) {\n");
-                printer->Indent();
-                printer->Print(_variables, "_$name$ = std::move(val);\n");
+                printer->Print(_variables, "return _$name$();\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(
-                    _variables, "inline const std::vector<$domain_type$>& $domain$::$name$() const {\n");
+                printer->Print(_variables, "inline const std::vector<std::vector<uint8>> $domain$::$name$() const {\n");
                 printer->Indent();
                 printer->Print(_variables, "return _$name$;\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
-                printer->Print(_variables, "inline std::vector<$domain_type$>& $domain$::mutable_$name$() {\n");
+
+                printer->Print(_variables, "inline std::vector<std::vector<uint8>> $domain$::mutable_$name$() {\n");
                 printer->Indent();
                 printer->Print(_variables, "return _$name$;\n");
                 printer->Outdent();
@@ -103,35 +105,34 @@ namespace shark {
         }
     }
 
-    void MessageFieldGenerator::generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const {
+    void BytesFieldGenerator::generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "_$name$.parse_from_proto(pb.$name$());\n");
+                printer->Print(_variables, "_$name$ = pb.$name$();\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "_$name$.resize(pb.$name$_size());");
+                printer->Print(_variables, "_$name$.reserve(pb.$name$_size());");
                 printer->Print(_variables, "for(size_t i = 0; i < pb.$name$_size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(_variables, "_$name$[i].parse_from_proto(pb.$name$(i));\n");
+                printer->Print(_variables, "_$name$.push_back(pb.$name$(i));\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
         }
     }
 
-
-    void MessageFieldGenerator::generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const {
+    void BytesFieldGenerator::generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "_$name$.serialize_to_proto(*pb.mutable_$name$());\n");
+                printer->Print(_variables, "pb.set_$name$(_$name$);\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
                 printer->Print(_variables, "pb.mutable_$name$()->Reserve(_$name$.size());\n");
                 printer->Print(_variables, "for(size_t i = 0; i < _$name$.size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(_variables, "_$name$[i].serialize_to_proto(*pb.mutable_$name$()->Add());\n");
+                printer->Print(_variables, "*pb.mutable_$name$()->Add() = _$name$[i];\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
@@ -139,11 +140,13 @@ namespace shark {
     }
 
 
-    std::string MessageFieldGenerator::get_default_value(void) const {
-        /* XXX: update when protobuf gets support
-         *   for default-values of message fields.
-         */
-        return "";
+
+    void BytesFieldGenerator::GenerateDefaultValueImplementations(google::protobuf::io::Printer *printer) const {
+
+    }
+
+    std::string BytesFieldGenerator::get_default_value(void) const{
+       return  "\"" + CEscape(descriptor_->default_value_string()) + "\"";
     }
 
 

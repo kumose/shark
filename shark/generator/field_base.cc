@@ -14,7 +14,7 @@
 //
 
 #include <shark/generator/field_base.h>
-#include <shark/uri.h>
+#include <shark/utility/uri.h>
 
 namespace shark {
 

@@ -106,7 +106,7 @@ set(SHARK_EXEC_FILE ${PROJECT_BINARY_DIR}/shark/protoc-gen-sk)
 #set(SHAR_EXEC_FILE ${SK_EXE_DIR}/protoc-gen-sk)
 message(STATUS ${SHARK_EXEC_FILE})
 include(kmcmake_cc_sk)
-
+#[[
 set(SHARK_IDL_TEST_FILES
         test.proto
         config.proto
@@ -141,7 +141,6 @@ kmcmake_cc_library(
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
         PLINKS
-        shark::shark_static
         ${KMCMAKE_DEPS_LINK}
 
 )
@@ -155,8 +154,9 @@ kmcmake_cc_test(
         ${KMCMAKE_CXX_OPTIONS}
         LINKS
         shark::sk_test_static
-        shark::shark_static
+        ${PROJECT_NAME}::inner_lib_static
         GTest::gtest_main
         GTest::gtest
         ${KMCMAKE_DEPS_LINK}
 )
+]]

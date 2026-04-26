@@ -16,7 +16,7 @@
 #include <shark/generator/message.h>
 #include <turbo/strings/str_cat.h>
 #include <turbo/strings/str_replace.h>
-#include <shark/uri.h>
+#include <shark/utility/uri.h>
 #include <shark/utility/helpers.h>
 
 namespace shark {
