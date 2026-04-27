@@ -2,17 +2,17 @@
 #define TOML11_INTO_HPP
 #include <shark/toml/version.h>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         template<typename T>
         struct into;
         // {
-        //     static xconfig::value into_toml(const T& user_defined_type)
+        //     static shark::Value into_toml(const T& user_defined_type)
         //     {
         //         // User-defined conversions ...
         //     }
         // };
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_INTO_HPP

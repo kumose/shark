@@ -51,22 +51,18 @@ set(GENERATOR_SRC
         generator/field_base.cc
         generator/generator.cc
         generator/field_map.cc
-        generator/rt_file.cc
+        generator/tml_file.cc
         generator/message.cc
         generator/oneof_field.cc
-        rt/any_field.cc
-        rt/bytes_field.cc
-        rt/enum.cc
-        rt/enum_field.cc
-        rt/extension.cc
-        rt/file.cc
-        rt/map_field.cc
-        rt/message.cc
-        rt/message_field.cc
-        rt/oneof_field.cc
-        rt/primitive_field.cc
-        rt/service.cc
-        rt/string_field.cc
+        tml/enum.cc
+        tml/enum_field.cc
+        tml/extension.cc
+        tml/file.cc
+        tml/message.cc
+        tml/message_field.cc
+        tml/primitive_field.cc
+        tml/service.cc
+        tml/string_field.cc
         utility/helpers.cc
         utility/uri.cc
         utility/type.cc
@@ -89,7 +85,7 @@ kmcmake_cc_library(
 
 kmcmake_cc_binary(
         NAMESPACE ${PROJECT_NAME}
-        NAME protoc-gen-sk
+        NAME protoc-gen-tml
         SOURCES
         main.cc
         CXXOPTS
@@ -104,21 +100,6 @@ kmcmake_cc_binary(
         PUBLIC
 )
 
-kmcmake_cc_binary(
-        NAMESPACE ${PROJECT_NAME}
-        NAME cmm
-        SOURCES
-        comment.cc
-        CXXOPTS
-        ${KMCMAKE_CXX_OPTIONS}
-        -fsanitize=address
-        LINKS
-        shark::shark_static
-        ${KMCMAKE_DEPS_LINK}
-        LINKOPTS
-        -fsanitize=address
-        ${KMCMAKE_STATIC_BIN_OPTION}
-)
+
 
 ###kmcmake_example
-

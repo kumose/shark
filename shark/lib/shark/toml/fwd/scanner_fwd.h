@@ -13,7 +13,7 @@
 #include <cstdio>
 #include <cctype>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -366,5 +366,5 @@ class maybe final: public scanner_base
 
 } // detail
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_SCANNER_FWD_HPP

@@ -10,7 +10,7 @@
 #include <cstdlib>
 #include <ctime>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         // To avoid non-threadsafe std::localtime. In C11 (not C++11!), localtime_s is
@@ -435,7 +435,7 @@ namespace xconfig {
             std::array<char, 6> buf;
             const auto result = std::strftime(buf.data(), 6, "%z", &t); // +hhmm\0
             if (result != 5) {
-                throw std::runtime_error("xconfig::offset_datetime: cannot obtain "
+                throw std::runtime_error("shark::offset_datetime: cannot obtain "
                     "timezone information of current env");
             }
             const int ofs = std::atoi(buf.data());
@@ -482,4 +482,4 @@ namespace xconfig {
             return oss.str();
         }
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark

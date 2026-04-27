@@ -3,13 +3,13 @@
 #include <shark/toml/syntax.h>
 #include <shark/toml/version.h>
 
-namespace xconfig {
+namespace shark {
     inline  namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         namespace detail {
             // implementation
-             ::xconfig::value literal_internal_impl(location loc) {
-                const auto s = ::xconfig::spec::default_version();
+             ::shark::Value literal_internal_impl(location loc) {
+                const auto s = ::shark::spec::default_version();
                 context<type_config> ctx(s);
 
                 const auto front = loc;
@@ -20,7 +20,7 @@ namespace xconfig {
                 // skip empty lines and comment lines
                 auto sp = skip_multiline_spacer(loc, ctx);
                 if (loc.eof()) {
-                    ::xconfig::value val;
+                    ::shark::Value val;
                     if (sp.has_value()) {
                         for (std::size_t i = 0; i < sp.value().comments.size(); ++i) {
                             val.comments().push_back(std::move(sp.value().comments.at(i)));
@@ -88,29 +88,29 @@ namespace xconfig {
                     for (const auto &err: data.unwrap_err()) {
                         msg += format_error(err);
                     }
-                    throw ::xconfig::syntax_error(std::move(msg), std::move(data.unwrap_err()));
+                    throw ::shark::syntax_error(std::move(msg), std::move(data.unwrap_err()));
                 }
             }
         } // detail
 
          namespace literals {
              namespace toml_literals {
-                 ::xconfig::value
+                 ::shark::Value
                 operator""_toml(const char *str, std::size_t len) {
                     if (len == 0) {
-                        return ::xconfig::value{};
+                        return ::shark::Value{};
                     }
 
-                    ::xconfig::detail::location::container_type c(len);
-                    std::copy(reinterpret_cast<const ::xconfig::detail::location::char_type *>(str),
-                              reinterpret_cast<const ::xconfig::detail::location::char_type *>(str + len),
+                    ::shark::detail::location::container_type c(len);
+                    std::copy(reinterpret_cast<const ::shark::detail::location::char_type *>(str),
+                              reinterpret_cast<const ::shark::detail::location::char_type *>(str + len),
                               c.begin());
                     if (!c.empty() && c.back()) {
                         c.push_back('\n'); // to make it easy to parse comment, we add newline
                     }
 
-                    return literal_internal_impl(::xconfig::detail::location(
-                        std::make_shared<const xconfig::detail::location::container_type>(std::move(c)),
+                    return literal_internal_impl(::shark::detail::location(
+                        std::make_shared<const shark::detail::location::container_type>(std::move(c)),
                         "TOML literal encoded in a C++ code"));
                 }
 
@@ -123,26 +123,26 @@ namespace xconfig {
 #if defined(TOML11_HAS_CHAR8_T)
                 // value of u8"" literal has been changed from char to char8_t and char8_t is
                 // NOT compatible to char
-                 ::xconfig::value
+                 ::shark::Value
                 operator"" _toml(const char8_t *str, std::size_t len) {
                     if (len == 0) {
-                        return ::xconfig::value{};
+                        return ::shark::Value{};
                     }
 
-                    ::xconfig::detail::location::container_type c(len);
-                    std::copy(reinterpret_cast<const ::xconfig::detail::location::char_type *>(str),
-                              reinterpret_cast<const ::xconfig::detail::location::char_type *>(str + len),
+                    ::shark::detail::location::container_type c(len);
+                    std::copy(reinterpret_cast<const ::shark::detail::location::char_type *>(str),
+                              reinterpret_cast<const ::shark::detail::location::char_type *>(str + len),
                               c.begin());
                     if (!c.empty() && c.back()) {
                         c.push_back('\n'); // to make it easy to parse comment, we add newline
                     }
 
-                    return literal_internal_impl(::xconfig::detail::location(
-                        std::make_shared<const xconfig::detail::location::container_type>(std::move(c)),
+                    return literal_internal_impl(::shark::detail::location(
+                        std::make_shared<const shark::detail::location::container_type>(std::move(c)),
                         "TOML literal encoded in a C++ code"));
                 }
 #endif
             } // toml_literals
         } // literals
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark

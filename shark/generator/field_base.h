@@ -54,9 +54,9 @@ namespace shark {
 
         virtual void generate_members_inline_implementations(google::protobuf::io::Printer *printer) const = 0;
 
-        virtual void generate_trans_parse_pb_implementations(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_trans_parse_toml_implementations(google::protobuf::io::Printer *printer) const = 0;
 
-        virtual void generate_trans_to_pb_implementations(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_trans_toml_implementations(google::protobuf::io::Printer *printer) const = 0;
 
         virtual std::string get_default_value() const = 0;
 

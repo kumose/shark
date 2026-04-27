@@ -4,7 +4,7 @@
 #include <ostream>
 #include <sstream>
 
-namespace xconfig {
+namespace shark {
     inline  namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         // toml types with serialization info
@@ -343,4 +343,4 @@ namespace xconfig {
             return !(lhs == rhs);
         }
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark

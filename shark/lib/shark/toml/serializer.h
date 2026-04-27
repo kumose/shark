@@ -19,10 +19,10 @@
 #include <cmath>
 #include <cstdio>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
-        struct serialization_error final : public ::xconfig::exception {
+        struct serialization_error final : public ::shark::exception {
         public:
             explicit serialization_error(std::string what_arg, source_location loc)
                 : what_(std::move(what_arg)), loc_(std::move(loc)) {
@@ -122,7 +122,7 @@ namespace xconfig {
                         }
                     }
                     throw serialization_error(format_error(
-                                                  "[error] xconfig::serializer: xconfig::basic_value "
+                                                  "[error] shark::serializer: shark::basic_value "
                                                   "does not have any valid type.", v.location(), "here"), v.location());
                 }
 
@@ -344,7 +344,7 @@ namespace xconfig {
                         }
                         case string_format::literal: {
                             if (std::find(s.begin(), s.end(), char_type('\n')) != s.end()) {
-                                throw serialization_error(format_error("xconfig::serializer: "
+                                throw serialization_error(format_error("shark::serializer: "
                                                                        "(non-multiline) literal string cannot have a newline",
                                                                        loc, "here"), loc);
                             }
@@ -375,7 +375,7 @@ namespace xconfig {
                         }
                         default: {
                             throw serialization_error(format_error(
-                                                          "[error] xconfig::serializer::operator()(string): "
+                                                          "[error] shark::serializer::operator()(string): "
                                                           "invalid string_format value", loc, "here"), loc);
                         }
                     }
@@ -456,56 +456,42 @@ namespace xconfig {
                 {
                     array_format f = fmt.fmt;
                     if (fmt.fmt == array_format::default_format) {
-                        // [[in.this.form]], you cannot add a comment to the array itself
-                        // (but you can add a comment to each table).
-                        // To keep comments, we need to avoid multiline array-of-tables
-                        // if array itself has a comment.
-                        if (!this->keys_.empty() &&
-                            !a.empty() &&
-                            com.empty() &&
-                            std::all_of(a.begin(), a.end(), [](const value_type &e) { return e.is_table(); })) {
-                            f = array_format::array_of_tables;
-                        } else {
-                            f = array_format::oneline;
-
-                            // check if it becomes long
-                            std::size_t approx_len = 0;
-                            for (const auto &e: a) {
-                                // have a comment. cannot be inlined
-                                if (!e.comments().empty()) {
-                                    f = array_format::multiline;
-                                    break;
-                                }
-                                // possibly long types ...
-                                if (e.is_array() || e.is_table() || e.is_offset_datetime() || e.is_local_datetime()) {
-                                    f = array_format::multiline;
-                                    break;
-                                } else if (e.is_boolean()) {
-                                    approx_len += (*this)(e.as_boolean(), e.as_boolean_fmt(), e.location()).size();
-                                } else if (e.is_integer()) {
-                                    approx_len += (*this)(e.as_integer(), e.as_integer_fmt(), e.location()).size();
-                                } else if (e.is_floating()) {
-                                    approx_len += (*this)(e.as_floating(), e.as_floating_fmt(), e.location()).size();
-                                } else if (e.is_string()) {
-                                    if (e.as_string_fmt().fmt == string_format::multiline_basic ||
-                                        e.as_string_fmt().fmt == string_format::multiline_literal) {
-                                        f = array_format::multiline;
-                                        break;
-                                    }
-                                    approx_len += 2 + (*this)(e.as_string(), e.as_string_fmt(), e.location()).size();
-                                } else if (e.is_local_date()) {
-                                    approx_len += 10; // 1234-56-78
-                                } else if (e.is_local_time()) {
-                                    approx_len += 15; // 12:34:56.789012
-                                }
-
-                                if (approx_len > 60) // key, ` = `, `[...]` < 80
-                                {
-                                    f = array_format::multiline;
-                                    break;
-                                }
-                                approx_len += 2; // `, `
+                        // Never use array_of_tables. Always start with oneline, then possibly multiline.
+                        f = array_format::oneline;
+                        std::size_t approx_len = 0;
+                        for (const auto& e : a) {
+                            if (!e.comments().empty()) {
+                                f = array_format::multiline;
+                                break;
                             }
+                            if (e.is_array() || e.is_table() || e.is_offset_datetime() || e.is_local_datetime()) {
+                                f = array_format::multiline;
+                                break;
+                            }
+                            // approximate length for basic types
+                            if (e.is_boolean()) {
+                                approx_len += (*this)(e.as_boolean(), e.as_boolean_fmt(), e.location()).size();
+                            } else if (e.is_integer()) {
+                                approx_len += (*this)(e.as_integer(), e.as_integer_fmt(), e.location()).size();
+                            } else if (e.is_floating()) {
+                                approx_len += (*this)(e.as_floating(), e.as_floating_fmt(), e.location()).size();
+                            } else if (e.is_string()) {
+                                if (e.as_string_fmt().fmt == string_format::multiline_basic ||
+                                    e.as_string_fmt().fmt == string_format::multiline_literal) {
+                                    f = array_format::multiline;
+                                    break;
+                                    }
+                                approx_len += 2 + (*this)(e.as_string(), e.as_string_fmt(), e.location()).size();
+                            } else if (e.is_local_date()) {
+                                approx_len += 10;
+                            } else if (e.is_local_time()) {
+                                approx_len += 15;
+                            }
+                            if (approx_len > 60) {
+                                f = array_format::multiline;
+                                break;
+                            }
+                            approx_len += 2; // ", "
                         }
                     }
                     if (this->force_inline_ && f == array_format::array_of_tables) {
@@ -614,7 +600,7 @@ namespace xconfig {
                         } else if (fmt.fmt == table_format::dotted) {
                             std::vector<string_type> keys;
                             if (this->keys_.empty()) {
-                                throw serialization_error(format_error("xconfig::serializer: "
+                                throw serialization_error(format_error("shark::serializer: "
                                                                        "dotted table must have its key. use format(key, v)",
                                                                        loc, "here"), loc);
                             }
@@ -632,14 +618,14 @@ namespace xconfig {
                                 const auto &v = kv.second;
 
                                 if (!v.is_table() && !v.is_array_of_tables()) {
-                                    throw serialization_error(format_error("xconfig::serializer: "
+                                    throw serialization_error(format_error("shark::serializer: "
                                                                            "an implicit table cannot have non-table value.",
                                                                            v.location(), "here"), v.location());
                                 }
                                 if (v.is_table()) {
                                     if (v.as_table_fmt().fmt != table_format::multiline &&
                                         v.as_table_fmt().fmt != table_format::implicit) {
-                                        throw serialization_error(format_error("xconfig::serializer: "
+                                        throw serialization_error(format_error("shark::serializer: "
                                                                                "an implicit table cannot have non-multiline table",
                                                                                v.location(), "here"), v.location());
                                     }
@@ -648,7 +634,7 @@ namespace xconfig {
                                     for (const auto &e: v.as_array()) {
                                         if (e.as_table_fmt().fmt != table_format::multiline &&
                                             v.as_table_fmt().fmt != table_format::implicit) {
-                                            throw serialization_error(format_error("xconfig::serializer: "
+                                            throw serialization_error(format_error("shark::serializer: "
                                                                           "an implicit table cannot have non-multiline table",
                                                                           e.location(), "here"), e.location());
                                         }
@@ -826,16 +812,29 @@ namespace xconfig {
                 string_type format_ml_table(const table_type &t, const table_format_info &fmt) // {{{
                 {
                     const auto format_later = [](const value_type &v) -> bool {
+                        // Defer only multiline tables (non-inline, non-dotted) and array_of_tables arrays
+                        if (v.is_table()) {
+                            return (v.as_table_fmt().fmt != table_format::oneline &&
+                                    v.as_table_fmt().fmt != table_format::multiline_oneline &&
+                                    v.as_table_fmt().fmt != table_format::dotted);
+                        }
+                        if (v.is_array()) {
+                            // Only array_of_tables should be deferred; oneline/multiline arrays are output immediately
+                            return v.as_array_fmt().fmt == array_format::array_of_tables;
+                        }
+                        return false;
+                        /*
                         const bool is_ml_table = v.is_table() &&
                                                  v.as_table_fmt().fmt != table_format::oneline &&
                                                  v.as_table_fmt().fmt != table_format::multiline_oneline &&
                                                  v.as_table_fmt().fmt != table_format::dotted;
 
-                        const bool is_ml_array_table = v.is_array_of_tables() &&
+                        const bool is_ml_array_table = v.is_array_of_tables()
+                                                        &&
                                                        v.as_array_fmt().fmt != array_format::oneline &&
                                                        v.as_array_fmt().fmt != array_format::multiline;
 
-                        return is_ml_table || is_ml_array_table;
+                        return is_ml_table || is_ml_array_table;*/
                     };
 
                     string_type retval;
@@ -1139,7 +1138,7 @@ namespace xconfig {
             return os;
         }
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 
 #endif // TOML11_SERIALIZER_HPP

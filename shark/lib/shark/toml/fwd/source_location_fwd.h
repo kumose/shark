@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -148,5 +148,5 @@ std::string format_location(
 }
 
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_SOURCE_LOCATION_FWD_HPP

@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         std::ostream &operator<<(std::ostream &os, value_t t) {
@@ -43,4 +43,4 @@ namespace xconfig {
             return oss.str();
         }
     } //TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark

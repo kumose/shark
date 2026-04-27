@@ -23,7 +23,7 @@
 #include <google/protobuf/io/zero_copy_stream.h>
 
 #include <shark/idl/shark_options.pb.h>
-#include <shark/generator/rt_file.h>
+#include <shark/generator/tml_file.h>
 #include <shark/generator/generator.h>
 #include <shark/utility/helpers.h>
 
@@ -100,7 +100,7 @@ namespace shark {
         GlobalState::instance().registry(file);
         {
             std::string basename = StripProto(file->name());
-            basename.append(".sk");
+            basename.append(".tml");
 
             FileRtGenerator file_generator(file, dllexport_decl);
 

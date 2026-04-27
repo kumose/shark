@@ -3,7 +3,7 @@
 #include <shark/toml/spec.h>
 #include <shark/toml/version.h>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         namespace detail {
@@ -827,4 +827,4 @@ namespace xconfig {
             } // namespace syntax
         } // namespace detail
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark

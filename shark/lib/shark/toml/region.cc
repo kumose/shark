@@ -9,7 +9,7 @@
 #include <vector>
 #include <cassert>
 
-namespace xconfig {
+namespace shark {
     inline  namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         namespace detail {
@@ -97,7 +97,7 @@ namespace xconfig {
                 if (this->is_ok()) {
                     const auto begin = std::next(this->source_->cbegin(), static_cast<difference_type>(this->first_));
                     const auto end = std::next(this->source_->cbegin(), static_cast<difference_type>(this->last_));
-                    return ::xconfig::detail::make_string(begin, end);
+                    return ::shark::detail::make_string(begin, end);
                 } else {
                     return std::string("");
                 }
@@ -215,4 +215,4 @@ namespace xconfig {
             }
         } // namespace detail
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark

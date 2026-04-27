@@ -125,4 +125,6 @@ namespace shark {
 
         return 2;
     }
+
+    void print_toml_comment(google::protobuf::io::Printer *printer, std::string comment);
 } // namespace shark

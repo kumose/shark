@@ -20,13 +20,13 @@
 
 #include <cassert>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         template<typename TypeConfig>
         class basic_value;
 
-        struct type_error final : public ::xconfig::exception {
+        struct type_error final : public ::shark::exception {
         public:
             type_error(std::string what_arg, source_location loc)
                 : what_(std::move(what_arg)), loc_(std::move(loc)) {
@@ -74,10 +74,10 @@ namespace xconfig {
             using integer_type = typename config_type::integer_type;
             using floating_type = typename config_type::floating_type;
             using string_type = typename config_type::string_type;
-            using local_time_type = ::xconfig::local_time;
-            using local_date_type = ::xconfig::local_date;
-            using local_datetime_type = ::xconfig::local_datetime;
-            using offset_datetime_type = ::xconfig::offset_datetime;
+            using local_time_type = ::shark::local_time;
+            using local_date_type = ::shark::local_date;
+            using local_datetime_type = ::shark::local_datetime;
+            using offset_datetime_type = ::shark::offset_datetime;
             using array_type = typename config_type::template array_type<value_type>;
             using table_type = typename config_type::template table_type<key_type, value_type>;
             using comment_type = typename config_type::comment_type;
@@ -1654,7 +1654,7 @@ namespace xconfig {
 
             boolean_type const &as_boolean() const {
                 if (this->type_ != value_t::boolean) {
-                    this->throw_bad_cast("xconfig::value::as_boolean()", value_t::boolean);
+                    this->throw_bad_cast("shark::Value::as_boolean()", value_t::boolean);
                 }
                 this->set_accessed();
                 return this->boolean_.value;
@@ -1662,7 +1662,7 @@ namespace xconfig {
 
             integer_type const &as_integer() const {
                 if (this->type_ != value_t::integer) {
-                    this->throw_bad_cast("xconfig::value::as_integer()", value_t::integer);
+                    this->throw_bad_cast("shark::Value::as_integer()", value_t::integer);
                 }
                 this->set_accessed();
                 return this->integer_.value;
@@ -1670,7 +1670,7 @@ namespace xconfig {
 
             floating_type const &as_floating() const {
                 if (this->type_ != value_t::floating) {
-                    this->throw_bad_cast("xconfig::value::as_floating()", value_t::floating);
+                    this->throw_bad_cast("shark::Value::as_floating()", value_t::floating);
                 }
                 this->set_accessed();
                 return this->floating_.value;
@@ -1678,7 +1678,7 @@ namespace xconfig {
 
             string_type const &as_string() const {
                 if (this->type_ != value_t::string) {
-                    this->throw_bad_cast("xconfig::value::as_string()", value_t::string);
+                    this->throw_bad_cast("shark::Value::as_string()", value_t::string);
                 }
                 this->set_accessed();
                 return this->string_.value;
@@ -1686,7 +1686,7 @@ namespace xconfig {
 
             offset_datetime_type const &as_offset_datetime() const {
                 if (this->type_ != value_t::offset_datetime) {
-                    this->throw_bad_cast("xconfig::value::as_offset_datetime()", value_t::offset_datetime);
+                    this->throw_bad_cast("shark::Value::as_offset_datetime()", value_t::offset_datetime);
                 }
                 this->set_accessed();
                 return this->offset_datetime_.value;
@@ -1694,7 +1694,7 @@ namespace xconfig {
 
             local_datetime_type const &as_local_datetime() const {
                 if (this->type_ != value_t::local_datetime) {
-                    this->throw_bad_cast("xconfig::value::as_local_datetime()", value_t::local_datetime);
+                    this->throw_bad_cast("shark::Value::as_local_datetime()", value_t::local_datetime);
                 }
                 this->set_accessed();
                 return this->local_datetime_.value;
@@ -1702,7 +1702,7 @@ namespace xconfig {
 
             local_date_type const &as_local_date() const {
                 if (this->type_ != value_t::local_date) {
-                    this->throw_bad_cast("xconfig::value::as_local_date()", value_t::local_date);
+                    this->throw_bad_cast("shark::Value::as_local_date()", value_t::local_date);
                 }
                 this->set_accessed();
                 return this->local_date_.value;
@@ -1710,7 +1710,7 @@ namespace xconfig {
 
             local_time_type const &as_local_time() const {
                 if (this->type_ != value_t::local_time) {
-                    this->throw_bad_cast("xconfig::value::as_local_time()", value_t::local_time);
+                    this->throw_bad_cast("shark::Value::as_local_time()", value_t::local_time);
                 }
                 this->set_accessed();
                 return this->local_time_.value;
@@ -1718,7 +1718,7 @@ namespace xconfig {
 
             array_type const &as_array() const {
                 if (this->type_ != value_t::array) {
-                    this->throw_bad_cast("xconfig::value::as_array()", value_t::array);
+                    this->throw_bad_cast("shark::Value::as_array()", value_t::array);
                 }
                 this->set_accessed();
                 return this->array_.value.get();
@@ -1726,7 +1726,7 @@ namespace xconfig {
 
             table_type const &as_table() const {
                 if (this->type_ != value_t::table) {
-                    this->throw_bad_cast("xconfig::value::as_table()", value_t::table);
+                    this->throw_bad_cast("shark::Value::as_table()", value_t::table);
                 }
                 this->set_accessed();
                 return this->table_.value.get();
@@ -1737,7 +1737,7 @@ namespace xconfig {
 
             boolean_type &as_boolean() {
                 if (this->type_ != value_t::boolean) {
-                    this->throw_bad_cast("xconfig::value::as_boolean()", value_t::boolean);
+                    this->throw_bad_cast("shark::Value::as_boolean()", value_t::boolean);
                 }
                 this->set_accessed();
                 return this->boolean_.value;
@@ -1745,7 +1745,7 @@ namespace xconfig {
 
             integer_type &as_integer() {
                 if (this->type_ != value_t::integer) {
-                    this->throw_bad_cast("xconfig::value::as_integer()", value_t::integer);
+                    this->throw_bad_cast("shark::Value::as_integer()", value_t::integer);
                 }
                 this->set_accessed();
                 return this->integer_.value;
@@ -1753,7 +1753,7 @@ namespace xconfig {
 
             floating_type &as_floating() {
                 if (this->type_ != value_t::floating) {
-                    this->throw_bad_cast("xconfig::value::as_floating()", value_t::floating);
+                    this->throw_bad_cast("shark::Value::as_floating()", value_t::floating);
                 }
                 this->set_accessed();
                 return this->floating_.value;
@@ -1761,7 +1761,7 @@ namespace xconfig {
 
             string_type &as_string() {
                 if (this->type_ != value_t::string) {
-                    this->throw_bad_cast("xconfig::value::as_string()", value_t::string);
+                    this->throw_bad_cast("shark::Value::as_string()", value_t::string);
                 }
                 this->set_accessed();
                 return this->string_.value;
@@ -1769,7 +1769,7 @@ namespace xconfig {
 
             offset_datetime_type &as_offset_datetime() {
                 if (this->type_ != value_t::offset_datetime) {
-                    this->throw_bad_cast("xconfig::value::as_offset_datetime()", value_t::offset_datetime);
+                    this->throw_bad_cast("shark::Value::as_offset_datetime()", value_t::offset_datetime);
                 }
                 this->set_accessed();
                 return this->offset_datetime_.value;
@@ -1777,7 +1777,7 @@ namespace xconfig {
 
             local_datetime_type &as_local_datetime() {
                 if (this->type_ != value_t::local_datetime) {
-                    this->throw_bad_cast("xconfig::value::as_local_datetime()", value_t::local_datetime);
+                    this->throw_bad_cast("shark::Value::as_local_datetime()", value_t::local_datetime);
                 }
                 this->set_accessed();
                 return this->local_datetime_.value;
@@ -1785,7 +1785,7 @@ namespace xconfig {
 
             local_date_type &as_local_date() {
                 if (this->type_ != value_t::local_date) {
-                    this->throw_bad_cast("xconfig::value::as_local_date()", value_t::local_date);
+                    this->throw_bad_cast("shark::Value::as_local_date()", value_t::local_date);
                 }
                 this->set_accessed();
                 return this->local_date_.value;
@@ -1793,7 +1793,7 @@ namespace xconfig {
 
             local_time_type &as_local_time() {
                 if (this->type_ != value_t::local_time) {
-                    this->throw_bad_cast("xconfig::value::as_local_time()", value_t::local_time);
+                    this->throw_bad_cast("shark::Value::as_local_time()", value_t::local_time);
                 }
                 this->set_accessed();
                 return this->local_time_.value;
@@ -1801,7 +1801,7 @@ namespace xconfig {
 
             array_type &as_array() {
                 if (this->type_ != value_t::array) {
-                    this->throw_bad_cast("xconfig::value::as_array()", value_t::array);
+                    this->throw_bad_cast("shark::Value::as_array()", value_t::array);
                 }
                 this->set_accessed();
                 return this->array_.value.get();
@@ -1809,7 +1809,7 @@ namespace xconfig {
 
             table_type &as_table() {
                 if (this->type_ != value_t::table) {
-                    this->throw_bad_cast("xconfig::value::as_table()", value_t::table);
+                    this->throw_bad_cast("shark::Value::as_table()", value_t::table);
                 }
                 this->set_accessed();
                 return this->table_.value.get();
@@ -1906,70 +1906,70 @@ namespace xconfig {
 
             boolean_format_info const &as_boolean_fmt() const {
                 if (this->type_ != value_t::boolean) {
-                    this->throw_bad_cast("xconfig::value::as_boolean_fmt()", value_t::boolean);
+                    this->throw_bad_cast("shark::Value::as_boolean_fmt()", value_t::boolean);
                 }
                 return this->boolean_.format;
             }
 
             integer_format_info const &as_integer_fmt() const {
                 if (this->type_ != value_t::integer) {
-                    this->throw_bad_cast("xconfig::value::as_integer_fmt()", value_t::integer);
+                    this->throw_bad_cast("shark::Value::as_integer_fmt()", value_t::integer);
                 }
                 return this->integer_.format;
             }
 
             floating_format_info const &as_floating_fmt() const {
                 if (this->type_ != value_t::floating) {
-                    this->throw_bad_cast("xconfig::value::as_floating_fmt()", value_t::floating);
+                    this->throw_bad_cast("shark::Value::as_floating_fmt()", value_t::floating);
                 }
                 return this->floating_.format;
             }
 
             string_format_info const &as_string_fmt() const {
                 if (this->type_ != value_t::string) {
-                    this->throw_bad_cast("xconfig::value::as_string_fmt()", value_t::string);
+                    this->throw_bad_cast("shark::Value::as_string_fmt()", value_t::string);
                 }
                 return this->string_.format;
             }
 
             offset_datetime_format_info const &as_offset_datetime_fmt() const {
                 if (this->type_ != value_t::offset_datetime) {
-                    this->throw_bad_cast("xconfig::value::as_offset_datetime_fmt()", value_t::offset_datetime);
+                    this->throw_bad_cast("shark::Value::as_offset_datetime_fmt()", value_t::offset_datetime);
                 }
                 return this->offset_datetime_.format;
             }
 
             local_datetime_format_info const &as_local_datetime_fmt() const {
                 if (this->type_ != value_t::local_datetime) {
-                    this->throw_bad_cast("xconfig::value::as_local_datetime_fmt()", value_t::local_datetime);
+                    this->throw_bad_cast("shark::Value::as_local_datetime_fmt()", value_t::local_datetime);
                 }
                 return this->local_datetime_.format;
             }
 
             local_date_format_info const &as_local_date_fmt() const {
                 if (this->type_ != value_t::local_date) {
-                    this->throw_bad_cast("xconfig::value::as_local_date_fmt()", value_t::local_date);
+                    this->throw_bad_cast("shark::Value::as_local_date_fmt()", value_t::local_date);
                 }
                 return this->local_date_.format;
             }
 
             local_time_format_info const &as_local_time_fmt() const {
                 if (this->type_ != value_t::local_time) {
-                    this->throw_bad_cast("xconfig::value::as_local_time_fmt()", value_t::local_time);
+                    this->throw_bad_cast("shark::Value::as_local_time_fmt()", value_t::local_time);
                 }
                 return this->local_time_.format;
             }
 
             array_format_info const &as_array_fmt() const {
                 if (this->type_ != value_t::array) {
-                    this->throw_bad_cast("xconfig::value::as_array_fmt()", value_t::array);
+                    this->throw_bad_cast("shark::Value::as_array_fmt()", value_t::array);
                 }
                 return this->array_.format;
             }
 
             table_format_info const &as_table_fmt() const {
                 if (this->type_ != value_t::table) {
-                    this->throw_bad_cast("xconfig::value::as_table_fmt()", value_t::table);
+                    this->throw_bad_cast("shark::Value::as_table_fmt()", value_t::table);
                 }
                 return this->table_.format;
             }
@@ -1979,70 +1979,70 @@ namespace xconfig {
 
             boolean_format_info &as_boolean_fmt() {
                 if (this->type_ != value_t::boolean) {
-                    this->throw_bad_cast("xconfig::value::as_boolean_fmt()", value_t::boolean);
+                    this->throw_bad_cast("shark::Value::as_boolean_fmt()", value_t::boolean);
                 }
                 return this->boolean_.format;
             }
 
             integer_format_info &as_integer_fmt() {
                 if (this->type_ != value_t::integer) {
-                    this->throw_bad_cast("xconfig::value::as_integer_fmt()", value_t::integer);
+                    this->throw_bad_cast("shark::Value::as_integer_fmt()", value_t::integer);
                 }
                 return this->integer_.format;
             }
 
             floating_format_info &as_floating_fmt() {
                 if (this->type_ != value_t::floating) {
-                    this->throw_bad_cast("xconfig::value::as_floating_fmt()", value_t::floating);
+                    this->throw_bad_cast("shark::Value::as_floating_fmt()", value_t::floating);
                 }
                 return this->floating_.format;
             }
 
             string_format_info &as_string_fmt() {
                 if (this->type_ != value_t::string) {
-                    this->throw_bad_cast("xconfig::value::as_string_fmt()", value_t::string);
+                    this->throw_bad_cast("shark::Value::as_string_fmt()", value_t::string);
                 }
                 return this->string_.format;
             }
 
             offset_datetime_format_info &as_offset_datetime_fmt() {
                 if (this->type_ != value_t::offset_datetime) {
-                    this->throw_bad_cast("xconfig::value::as_offset_datetime_fmt()", value_t::offset_datetime);
+                    this->throw_bad_cast("shark::Value::as_offset_datetime_fmt()", value_t::offset_datetime);
                 }
                 return this->offset_datetime_.format;
             }
 
             local_datetime_format_info &as_local_datetime_fmt() {
                 if (this->type_ != value_t::local_datetime) {
-                    this->throw_bad_cast("xconfig::value::as_local_datetime_fmt()", value_t::local_datetime);
+                    this->throw_bad_cast("shark::Value::as_local_datetime_fmt()", value_t::local_datetime);
                 }
                 return this->local_datetime_.format;
             }
 
             local_date_format_info &as_local_date_fmt() {
                 if (this->type_ != value_t::local_date) {
-                    this->throw_bad_cast("xconfig::value::as_local_date_fmt()", value_t::local_date);
+                    this->throw_bad_cast("shark::Value::as_local_date_fmt()", value_t::local_date);
                 }
                 return this->local_date_.format;
             }
 
             local_time_format_info &as_local_time_fmt() {
                 if (this->type_ != value_t::local_time) {
-                    this->throw_bad_cast("xconfig::value::as_local_time_fmt()", value_t::local_time);
+                    this->throw_bad_cast("shark::Value::as_local_time_fmt()", value_t::local_time);
                 }
                 return this->local_time_.format;
             }
 
             array_format_info &as_array_fmt() {
                 if (this->type_ != value_t::array) {
-                    this->throw_bad_cast("xconfig::value::as_array_fmt()", value_t::array);
+                    this->throw_bad_cast("shark::Value::as_array_fmt()", value_t::array);
                 }
                 return this->array_.format;
             }
 
             table_format_info &as_table_fmt() {
                 if (this->type_ != value_t::table) {
-                    this->throw_bad_cast("xconfig::value::as_table_fmt()", value_t::table);
+                    this->throw_bad_cast("shark::Value::as_table_fmt()", value_t::table);
                 }
                 return this->table_.format;
             }
@@ -2053,12 +2053,12 @@ namespace xconfig {
 
             value_type &at(const key_type &k) {
                 if (!this->is_table()) {
-                    this->throw_bad_cast("xconfig::value::at(key_type)", value_t::table);
+                    this->throw_bad_cast("shark::Value::at(key_type)", value_t::table);
                 }
                 auto &table = this->as_table(std::nothrow);
                 const auto found = table.find(k);
                 if (found == table.end()) {
-                    this->throw_key_not_found_error("xconfig::value::at", k);
+                    this->throw_key_not_found_error("shark::Value::at", k);
                 }
                 assert(found->first == k);
                 return found->second;
@@ -2066,12 +2066,12 @@ namespace xconfig {
 
             value_type const &at(const key_type &k) const {
                 if (!this->is_table()) {
-                    this->throw_bad_cast("xconfig::value::at(key_type)", value_t::table);
+                    this->throw_bad_cast("shark::Value::at(key_type)", value_t::table);
                 }
                 const auto &table = this->as_table(std::nothrow);
                 const auto found = table.find(k);
                 if (found == table.end()) {
-                    this->throw_key_not_found_error("xconfig::value::at", k);
+                    this->throw_key_not_found_error("shark::Value::at", k);
                 }
                 assert(found->first == k);
                 return found->second;
@@ -2082,21 +2082,21 @@ namespace xconfig {
                     (*this) = table_type{};
                 } else if (!this->is_table()) // initialized, but not a table
                 {
-                    this->throw_bad_cast("xconfig::value::operator[](key_type)", value_t::table);
+                    this->throw_bad_cast("shark::Value::operator[](key_type)", value_t::table);
                 }
                 return (this->as_table(std::nothrow))[k];
             }
 
             std::size_t count(const key_type &k) const {
                 if (!this->is_table()) {
-                    this->throw_bad_cast("xconfig::value::count(key_type)", value_t::table);
+                    this->throw_bad_cast("shark::Value::count(key_type)", value_t::table);
                 }
                 return this->as_table(std::nothrow).count(k);
             }
 
             bool contains(const key_type &k) const {
                 if (!this->is_table()) {
-                    this->throw_bad_cast("xconfig::value::contains(key_type)", value_t::table);
+                    this->throw_bad_cast("shark::Value::contains(key_type)", value_t::table);
                 }
                 const auto &table = this->as_table(std::nothrow);
                 return table.find(k) != table.end();
@@ -2108,7 +2108,7 @@ namespace xconfig {
 
             value_type &at(const std::size_t idx) {
                 if (!this->is_array()) {
-                    this->throw_bad_cast("xconfig::value::at(idx)", value_t::array);
+                    this->throw_bad_cast("shark::Value::at(idx)", value_t::array);
                 }
                 auto &ar = this->as_array(std::nothrow);
 
@@ -2117,7 +2117,7 @@ namespace xconfig {
                     oss << "actual length (" << ar.size()
                             << ") is shorter than the specified index (" << idx << ").";
                     throw std::out_of_range(format_error(
-                        "xconfig::value::at(idx): no element corresponding to the index",
+                        "shark::Value::at(idx): no element corresponding to the index",
                         this->location(), oss.str()
                     ));
                 }
@@ -2126,7 +2126,7 @@ namespace xconfig {
 
             value_type const &at(const std::size_t idx) const {
                 if (!this->is_array()) {
-                    this->throw_bad_cast("xconfig::value::at(idx)", value_t::array);
+                    this->throw_bad_cast("shark::Value::at(idx)", value_t::array);
                 }
                 const auto &ar = this->as_array(std::nothrow);
 
@@ -2136,7 +2136,7 @@ namespace xconfig {
                             << ") is shorter than the specified index (" << idx << ").";
 
                     throw std::out_of_range(format_error(
-                        "xconfig::value::at(idx): no element corresponding to the index",
+                        "shark::Value::at(idx): no element corresponding to the index",
                         this->location(), oss.str()
                     ));
                 }
@@ -2155,7 +2155,7 @@ namespace xconfig {
 
             void push_back(const value_type &x) {
                 if (!this->is_array()) {
-                    this->throw_bad_cast("xconfig::value::push_back(idx)", value_t::array);
+                    this->throw_bad_cast("shark::Value::push_back(idx)", value_t::array);
                 }
                 this->as_array(std::nothrow).push_back(x);
                 return;
@@ -2163,7 +2163,7 @@ namespace xconfig {
 
             void push_back(value_type &&x) {
                 if (!this->is_array()) {
-                    this->throw_bad_cast("xconfig::value::push_back(idx)", value_t::array);
+                    this->throw_bad_cast("shark::Value::push_back(idx)", value_t::array);
                 }
                 this->as_array(std::nothrow).push_back(std::move(x));
                 return;
@@ -2172,7 +2172,7 @@ namespace xconfig {
             template<typename... Ts>
             value_type &emplace_back(Ts &&... args) {
                 if (!this->is_array()) {
-                    this->throw_bad_cast("xconfig::value::emplace_back(idx)", value_t::array);
+                    this->throw_bad_cast("shark::Value::emplace_back(idx)", value_t::array);
                 }
                 auto &ar = this->as_array(std::nothrow);
                 ar.emplace_back(std::forward<Ts>(args)...);
@@ -2192,7 +2192,7 @@ namespace xconfig {
                     }
                     default: {
                         throw type_error(format_error(
-                                             "xconfig::value::size(): bad_cast to container types",
+                                             "shark::Value::size(): bad_cast to container types",
                                              this->location(),
                                              "the actual type is " + to_string(this->type_)
                                          ), this->location());
@@ -2659,5 +2659,5 @@ namespace xconfig {
 #endif
         } // namespace detail
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark
 #endif // TOML11_VALUE_HPP

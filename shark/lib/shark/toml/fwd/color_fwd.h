@@ -17,7 +17,7 @@
 #define TOML11_THREAD_LOCAL_COLORIZATION
 #endif
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         namespace color {
@@ -85,5 +85,5 @@ namespace xconfig {
             }
         } // color
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_COLOR_FWD_HPP

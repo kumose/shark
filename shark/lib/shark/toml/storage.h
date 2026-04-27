@@ -4,7 +4,7 @@
 #include <shark/toml/compat.h>
 #include <shark/toml/version.h>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -14,12 +14,12 @@ namespace detail
 // It owns a pointer to T. It does deep-copy when copied.
 // This struct is introduced to implement a recursive type.
 //
-// `xconfig::value` contains `std::vector<xconfig::value>` to represent a toml array.
-// But, in the definition of `xconfig::value`, `xconfig::value` is still incomplete.
+// `shark::Value` contains `std::vector<shark::Value>` to represent a toml array.
+// But, in the definition of `shark::Value`, `shark::Value` is still incomplete.
 // `std::vector` of an incomplete type is not allowed in C++11 (it is allowed
-// after C++17). To avoid this, we need to use a pointer to `xconfig::value`, like
-// `std::vector<std::unique_ptr<xconfig::value>>`. Although `std::unique_ptr` is
-// noncopyable, we want to make `xconfig::value` copyable. `storage` is introduced
+// after C++17). To avoid this, we need to use a pointer to `shark::Value`, like
+// `std::vector<std::unique_ptr<shark::Value>>`. Although `std::unique_ptr` is
+// noncopyable, we want to make `shark::Value` copyable. `storage` is introduced
 // to resolve those problems.
 template<typename T>
 struct storage
@@ -49,5 +49,5 @@ struct storage
 
 } // detail
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_STORAGE_HPP

@@ -8,7 +8,7 @@
 
 #include <optional>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         namespace detail {
@@ -22,12 +22,12 @@ namespace xconfig {
             void find_member_variable_from_value(T &obj, const basic_value<TC> &v, const char *var_name) {
                 if constexpr (is_optional_v<T>) {
                     if (v.contains(var_name)) {
-                        obj = xconfig::find<typename T::value_type>(v, var_name);
+                        obj = shark::find<typename T::value_type>(v, var_name);
                     } else {
                         obj = std::nullopt;
                     }
                 } else {
-                    obj = xconfig::find<T>(v, var_name);
+                    obj = shark::find<T>(v, var_name);
                 }
             }
 
@@ -43,7 +43,7 @@ namespace xconfig {
             }
         } // detail
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 
 // use it in the following way.
@@ -61,7 +61,7 @@ namespace xconfig {
 // TOML11_DEFINE_CONVERSION_NON_INTRUSIVE(foo::Foo, s, d, i)
 // ```
 //
-// And then you can use `xconfig::get<foo::Foo>(v)` and `xconfig::find<foo::Foo>(file, "foo");`
+// And then you can use `shark::get<foo::Foo>(v)` and `shark::find<foo::Foo>(file, "foo");`
 //
 
 #define TOML11_STRINGIZE_AUX(x) #x
@@ -130,13 +130,13 @@ namespace xconfig {
 
 
 #define TOML11_FIND_MEMBER_VARIABLE_FROM_VALUE(VAR_NAME)\
-    xconfig::detail::find_member_variable_from_value(obj.VAR_NAME, v, TOML11_STRINGIZE(VAR_NAME));
+    shark::detail::find_member_variable_from_value(obj.VAR_NAME, v, TOML11_STRINGIZE(VAR_NAME));
 
 #define TOML11_ASSIGN_MEMBER_VARIABLE_TO_VALUE(VAR_NAME)\
-    xconfig::detail::assign_member_variable_to_value(obj.VAR_NAME, v, TOML11_STRINGIZE(VAR_NAME));
+    shark::detail::assign_member_variable_to_value(obj.VAR_NAME, v, TOML11_STRINGIZE(VAR_NAME));
 
 #define TOML11_DEFINE_CONVERSION_NON_INTRUSIVE(NAME, ...)\
-    namespace xconfig {                                                                     \
+    namespace shark {                                                                     \
     inline namespace TOML11_INLINE_VERSION_NAMESPACE {                                          \
     template<>                                                                           \
     struct from<NAME>                                                                    \
@@ -155,7 +155,7 @@ namespace xconfig {
         template<typename TC>                                                            \
         static basic_value<TC> into_toml(const NAME& obj)                                \
         {                                                                                \
-            ::xconfig::basic_value<TC> v = typename ::xconfig::basic_value<TC>::table_type{};  \
+            ::shark::basic_value<TC> v = typename ::shark::basic_value<TC>::table_type{};  \
             TOML11_FOR_EACH_VA_ARGS(TOML11_ASSIGN_MEMBER_VARIABLE_TO_VALUE, __VA_ARGS__) \
             return v;                                                                    \
         }                                                                                \

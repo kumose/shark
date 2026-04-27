@@ -2,7 +2,7 @@
 #include <shark/toml/types.h>
 #include <shark/toml/version.h>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         template result<basic_value<type_config>, std::vector<error_info> > try_parse<type_config>(
@@ -73,4 +73,4 @@ namespace xconfig {
             const std::filesystem::path &, spec);
 #endif // filesystem
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark

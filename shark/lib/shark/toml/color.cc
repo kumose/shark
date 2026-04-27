@@ -4,7 +4,7 @@
 
 #include <ostream>
 
-namespace xconfig {
+namespace shark {
     inline  namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         namespace color {
@@ -67,4 +67,4 @@ namespace xconfig {
             } // ansi
         } // color
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark

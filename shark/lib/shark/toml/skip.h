@@ -10,7 +10,7 @@
 
 #include <cassert>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         namespace detail {
@@ -273,6 +273,6 @@ namespace xconfig {
             }
         } // namespace detail
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark
 
 #endif // TOML11_SKIP_HPP

@@ -2,7 +2,7 @@
 #include <shark/toml/types.h>
 #include <shark/toml/version.h>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         struct type_config;
@@ -31,8 +31,8 @@ namespace xconfig {
                                     const basic_value<ordered_type_config> &v, const spec s);
 
         namespace detail {
-            template class serializer<::xconfig::type_config>;
-            template class serializer<::xconfig::ordered_type_config>;
+            template class serializer<::shark::type_config>;
+            template class serializer<::shark::ordered_type_config>;
         } // detail
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark

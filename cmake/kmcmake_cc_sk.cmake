@@ -99,10 +99,10 @@ function(kmcmake_cc_sk)
         list(APPEND HDRS ${HDR})
         list(APPEND SRCS ${SRC})
 
-        message(STATUS "${PROTOBUF_PROTOC_EXECUTABLE} ${PROTOC_FLAGS} ${INCLUDE_FLAGS} --plugin=protoc-gen-sk=${SHARK_EXEC_FILE} --sk_out=${KMCMAKE_CC_PROTO_OUTDIR} ${PROTO_ABS}")
+        message(STATUS "${PROTOBUF_PROTOC_EXECUTABLE} ${PROTOC_FLAGS} ${INCLUDE_FLAGS} --plugin=protoc-gen-sk=${SHARK_SK_EXEC_FILE} --sk_out=${KMCMAKE_CC_PROTO_OUTDIR} ${PROTO_ABS}")
         add_custom_command(
                 OUTPUT ${HDR} ${SRC}
-                COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} ${PROTOC_FLAGS} ${INCLUDE_FLAGS} --plugin=protoc-gen-sk=${SHARK_EXEC_FILE} --sk_out=${KMCMAKE_CC_PROTO_OUTDIR} ${PROTO_ABS}
+                COMMAND ${PROTOBUF_PROTOC_EXECUTABLE} ${PROTOC_FLAGS} ${INCLUDE_FLAGS} --plugin=protoc-gen-sk=${SHARK_SK_EXEC_FILE} --sk_out=${KMCMAKE_CC_PROTO_OUTDIR} ${PROTO_ABS}
                 DEPENDS ${PROTO_ABS} ${KMCMAKE_CC_PROTO_DEPS}
         )
     endforeach ()

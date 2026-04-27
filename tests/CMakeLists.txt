@@ -102,25 +102,17 @@ kmcmake_cc_test(
 
 find_package(GTest REQUIRED)
 
-set(SHARK_EXEC_FILE ${PROJECT_BINARY_DIR}/shark/protoc-gen-sk)
-#set(SHAR_EXEC_FILE ${SK_EXE_DIR}/protoc-gen-sk)
-message(STATUS ${SHARK_EXEC_FILE})
-include(kmcmake_cc_sk)
-#[[
+include_directories(${PROJECT_SOURCE_DIR}/shark/lib)
 set(SHARK_IDL_TEST_FILES
         test.proto
-        config.proto
 )
 
-kmcmake_cc_proto(
-        NAME test_proto_gen
-        PROTOS
-        ${SHARK_IDL_TEST_FILES}
-        OUTDIR
-        ${PROJECT_SOURCE_DIR}
-)
 
-kmcmake_cc_sk(
+set(SHARK_TML_EXEC_FILE ${PROJECT_BINARY_DIR}/shark/protoc-gen-tml)
+#set(SHAR_EXEC_FILE ${SK_EXE_DIR}/protoc-gen-sk)
+message(STATUS ${SHARK_TML_EXEC_FILE})
+include(kmcmake_cc_tml)
+kmcmake_cc_tml(
         NAME test_sk_gen
         PROTOS
         ${SHARK_IDL_TEST_FILES}
@@ -135,7 +127,6 @@ kmcmake_cc_library(
         NAME sk_test
         SOURCES
         ${test_sk_gen_SRCS}
-        ${test_proto_gen_SRCS}
         PINCLUDES
         ${PROTOBUF_INCLUDE_DIRS}
         CXXOPTS
@@ -145,18 +136,34 @@ kmcmake_cc_library(
 
 )
 
-kmcmake_cc_test(
-        NAME test_proto_test
-        MODULE runtime
+kmcmake_cc_binary(
+        NAMESPACE ${PROJECT_NAME}
+        NAME cmm
         SOURCES
-        test_proto_test.cc
+        comment.cc
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
+        -fsanitize=address
         LINKS
         shark::sk_test_static
-        ${PROJECT_NAME}::inner_lib_static
-        GTest::gtest_main
-        GTest::gtest
+        shark::shark_static
         ${KMCMAKE_DEPS_LINK}
+        LINKOPTS
+        -fsanitize=address
+        ${KMCMAKE_STATIC_BIN_OPTION}
 )
-]]
+kmcmake_cc_binary(
+        NAMESPACE ${PROJECT_NAME}
+        NAME format
+        SOURCES
+        format.cc
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        -fsanitize=address
+        LINKS
+        shark::shark_static
+        ${KMCMAKE_DEPS_LINK}
+        LINKOPTS
+        -fsanitize=address
+        ${KMCMAKE_STATIC_BIN_OPTION}
+)

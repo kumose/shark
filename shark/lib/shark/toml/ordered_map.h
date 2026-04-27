@@ -8,7 +8,7 @@
 
 #include <shark/toml/version.h>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -292,5 +292,5 @@ void swap(ordered_map<K,V,C,A>& lhs, ordered_map<K,V,C,A>& rhs)
 
 
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_ORDERED_MAP_HPP

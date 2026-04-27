@@ -1,7 +1,6 @@
 syntax = "proto2";
 
 import "shark/idl/shark_options.proto";
-import "google/protobuf/any.proto";
 
 option (shark.idl.shark_file) = {
   runtime_namespace: "my::custom::ns"
@@ -48,13 +47,16 @@ message Person {
     DGREEN = 1;
     DBLUE = 2;
   }
-  optional google.protobuf.Any any_one = 100;
-  repeated google.protobuf.Any any_two = 101;
-  optional string name = 1 [default = "Lothar", deprecated = true];
+
+  /// this is my ssdsf
+  required string name = 1 [default = "Lothar", deprecated = true];
   optional int32 age = 2 [(shark.idl.shark_field) = {is_atomic : true, ctype : "int8_t"}];
+  /// my comment
+
+  /// leading comment 1
+  /// leading comment 2
   repeated string emails = 3;
   repeated int32  ages = 8;
-  map<string, int32> scores = 4;
   optional Color favorite_color = 5  [default = GREEN];
   message Address {
     optional string street = 1;
@@ -65,12 +67,10 @@ message Person {
       optional string prcode = 2;
     }
   }
-  oneof kind {
-    string aaa = 10;
-    uint32  bbb = 12;
-    Address ddd  = 13;
-  }
+
   optional Address address = 6;
+
+  /// leading comment 2
   repeated Address address2 = 17;
   optional string long_name = 18;
 }

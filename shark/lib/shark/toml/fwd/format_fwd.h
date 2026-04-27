@@ -10,7 +10,7 @@
 
 #include <shark/toml/version.h>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -251,5 +251,5 @@ struct value_with_format
 } // detail
 
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark
 #endif // TOML11_FORMAT_FWD_HPP

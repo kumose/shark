@@ -22,10 +22,10 @@
 #include <filesystem>
 #endif
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
-        struct syntax_error final : public ::xconfig::exception {
+        struct syntax_error final : public ::shark::exception {
         public:
             syntax_error(std::string what_arg, std::vector<error_info> err)
                 : what_(std::move(what_arg)), err_(std::move(err)) {
@@ -44,7 +44,7 @@ namespace xconfig {
             std::vector<error_info> err_;
         };
 
-        struct file_io_error final : public ::xconfig::exception {
+        struct file_io_error final : public ::shark::exception {
         public:
             file_io_error(const std::string &msg, const std::string &fname)
                 : errno_(cxx::make_nullopt()),
@@ -113,7 +113,7 @@ namespace xconfig {
                                 break;
                             }
                         }
-                        return err(make_error_info("xconfig::parse_comment_line: "
+                        return err(make_error_info("shark::parse_comment_line: "
                                                    "newline (LF / CRLF) or EOF is expected",
                                                    source_location(region(loc)), "but got this",
                                                    "Hint: most of the control characters are not allowed in comments"));
@@ -141,7 +141,7 @@ namespace xconfig {
                 // check syntax
                 auto reg = syntax::boolean(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_boolean: "
+                    return err(make_syntax_error("shark::parse_boolean: "
                                                  "invalid boolean: boolean must be `true` or `false`, in lowercase. "
                                                  "string must be surrounded by `\"`", syntax::boolean(spec), loc));
                 }
@@ -180,7 +180,7 @@ namespace xconfig {
                 const auto &spec = ctx.toml_spec();
                 auto reg = syntax::bin_int(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_bin_integer: "
+                    return err(make_syntax_error("shark::parse_bin_integer: "
                                                  "invalid integer: bin_int must be like: 0b0101, 0b1111_0000",
                                                  syntax::bin_int(spec), loc));
                 }
@@ -223,7 +223,7 @@ namespace xconfig {
                 const auto &spec = ctx.toml_spec();
                 auto reg = syntax::oct_int(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_oct_integer: "
+                    return err(make_syntax_error("shark::parse_oct_integer: "
                                                  "invalid integer: oct_int must be like: 0o775, 0o04_44",
                                                  syntax::oct_int(spec), loc));
                 }
@@ -267,7 +267,7 @@ namespace xconfig {
                 const auto &spec = ctx.toml_spec();
                 auto reg = syntax::hex_int(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_hex_integer: "
+                    return err(make_syntax_error("shark::parse_hex_integer: "
                                                  "invalid integer: hex_int must be like: 0xC0FFEE, 0xdead_beef",
                                                  syntax::hex_int(spec), loc));
                 }
@@ -326,7 +326,7 @@ namespace xconfig {
                 // check syntax
                 auto reg = syntax::dec_int(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_dec_integer: "
+                    return err(make_syntax_error("shark::parse_dec_integer: "
                                                  "invalid integer: dec_int must be like: 42, 123_456_789",
                                                  syntax::dec_int(spec), loc));
                 }
@@ -361,7 +361,7 @@ namespace xconfig {
                     const auto sfx_reg = syntax::num_suffix(spec).scan(loc);
                     if (!sfx_reg.is_ok()) {
                         loc = first;
-                        return err(make_error_info("xconfig::parse_dec_integer: "
+                        return err(make_error_info("shark::parse_dec_integer: "
                                                    "invalid suffix: should be `_ non-digit-graph (graph | _graph)`",
                                                    source_location(region(loc)), "here"));
                     }
@@ -406,7 +406,7 @@ namespace xconfig {
 
                     if (std::isdigit(prefix)) {
                         auto src = source_location(region(loc));
-                        return err(make_error_info("xconfig::parse_integer: "
+                        return err(make_error_info("shark::parse_integer: "
                                                    "leading zero in an decimal integer is not allowed",
                                                    std::move(src), "leading zero"));
                     }
@@ -443,7 +443,7 @@ namespace xconfig {
 
                     reg = syntax::hex_floating(spec).scan(loc);
                     if (!reg.is_ok()) {
-                        return err(make_syntax_error("xconfig::parse_floating: "
+                        return err(make_syntax_error("shark::parse_floating: "
                                                      "invalid hex floating: float must be like: 0xABCp-3f",
                                                      syntax::floating(spec), loc));
                     }
@@ -451,7 +451,7 @@ namespace xconfig {
                 } else {
                     reg = syntax::floating(spec).scan(loc);
                     if (!reg.is_ok()) {
-                        return err(make_syntax_error("xconfig::parse_floating: "
+                        return err(make_syntax_error("shark::parse_floating: "
                                                      "invalid floating: float must be like: -3.14159_26535, 6.022e+23, "
                                                      "inf, or nan (lowercase).", syntax::floating(spec), loc));
                     }
@@ -483,7 +483,7 @@ namespace xconfig {
                     TOML11_CONSTEXPR_IF (std::numeric_limits<floating_type>::has_infinity) {
                         val = std::numeric_limits<floating_type>::infinity();
                     } else {
-                        return err(make_error_info("xconfig::parse_floating: inf value found"
+                        return err(make_error_info("shark::parse_floating: inf value found"
                                                    " but the current environment does not support inf. Please"
                                                    " make sure that the floating-point implementation conforms"
                                                    " IEEE 754/ISO 60559 international standard.",
@@ -494,7 +494,7 @@ namespace xconfig {
                     TOML11_CONSTEXPR_IF (std::numeric_limits<floating_type>::has_infinity) {
                         val = -std::numeric_limits<floating_type>::infinity();
                     } else {
-                        return err(make_error_info("xconfig::parse_floating: inf value found"
+                        return err(make_error_info("shark::parse_floating: inf value found"
                                                    " but the current environment does not support inf. Please"
                                                    " make sure that the floating-point implementation conforms"
                                                    " IEEE 754/ISO 60559 international standard.",
@@ -508,7 +508,7 @@ namespace xconfig {
                         TOML11_CONSTEXPR_IF (std::numeric_limits<floating_type>::has_signaling_NaN) {
                             val = std::numeric_limits<floating_type>::signaling_NaN();
                         } else {
-                            return err(make_error_info("xconfig::parse_floating: NaN value found"
+                            return err(make_error_info("shark::parse_floating: NaN value found"
                                                        " but the current environment does not support NaN. Please"
                                                        " make sure that the floating-point implementation conforms"
                                                        " IEEE 754/ISO 60559 international standard.",
@@ -523,7 +523,7 @@ namespace xconfig {
                         TOML11_CONSTEXPR_IF (std::numeric_limits<floating_type>::has_signaling_NaN) {
                             val = copysign(std::numeric_limits<floating_type>::signaling_NaN(), floating_type(-1));
                         } else {
-                            return err(make_error_info("xconfig::parse_floating: NaN value found"
+                            return err(make_error_info("shark::parse_floating: NaN value found"
                                                        " but the current environment does not support NaN. Please"
                                                        " make sure that the floating-point implementation conforms"
                                                        " IEEE 754/ISO 60559 international standard.",
@@ -573,7 +573,7 @@ namespace xconfig {
                     if (!sfx_reg.is_ok()) {
                         auto src = source_location(region(loc));
                         loc = first;
-                        return err(make_error_info("xconfig::parse_floating: "
+                        return err(make_error_info("shark::parse_floating: "
                                                    "invalid suffix: should be `_ non-digit-graph (graph | _graph)`",
                                                    std::move(src), "here"));
                     }
@@ -607,7 +607,7 @@ namespace xconfig {
                 // check syntax
                 auto reg = syntax::local_date(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_local_date: "
+                    return err(make_syntax_error("shark::parse_local_date: "
                                                  "invalid date: date must be like: 1234-05-06, yyyy-mm-dd.",
                                                  syntax::local_date(spec), loc));
                 }
@@ -624,19 +624,19 @@ namespace xconfig {
 
                 if (year_r.is_err()) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_date: "
+                    return err(make_error_info("shark::parse_local_date: "
                                                "failed to read year `" + str.substr(0, 4) + "`",
                                                std::move(src), "here"));
                 }
                 if (month_r.is_err()) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_date: "
+                    return err(make_error_info("shark::parse_local_date: "
                                                "failed to read month `" + str.substr(5, 2) + "`",
                                                std::move(src), "here"));
                 }
                 if (day_r.is_err()) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_date: "
+                    return err(make_error_info("shark::parse_local_date: "
                                                "failed to read day `" + str.substr(8, 2) + "`",
                                                std::move(src), "here"));
                 }
@@ -668,7 +668,7 @@ namespace xconfig {
 
                     if ((month < 1 || 12 < month) || (day < 1 || max_day < day)) {
                         auto src = source_location(region(first));
-                        return err(make_error_info("xconfig::parse_local_date: invalid date.",
+                        return err(make_error_info("shark::parse_local_date: invalid date.",
                                                    std::move(src), "month must be 01-12, day must be any of "
                                                    "01-28,29,30,31 depending on the month/year."));
                     }
@@ -709,11 +709,11 @@ namespace xconfig {
                 auto reg = syntax::local_time(spec).scan(loc);
                 if (!reg.is_ok()) {
                     if (spec.v1_1_0_make_seconds_optional) {
-                        return err(make_syntax_error("xconfig::parse_local_time: "
+                        return err(make_syntax_error("shark::parse_local_time: "
                                                      "invalid time: time must be HH:MM(:SS.sss) (seconds are optional)",
                                                      syntax::local_time(spec), loc));
                     } else {
-                        return err(make_syntax_error("xconfig::parse_local_time: "
+                        return err(make_syntax_error("shark::parse_local_time: "
                                                      "invalid time: time must be HH:MM:SS(.sss) (subseconds are optional)",
                                                      syntax::local_time(spec), loc));
                     }
@@ -731,13 +731,13 @@ namespace xconfig {
 
                 if (hour_r.is_err()) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_time: "
+                    return err(make_error_info("shark::parse_local_time: "
                                                "failed to read hour `" + str.substr(0, 2) + "`",
                                                std::move(src), "here"));
                 }
                 if (minute_r.is_err()) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_time: "
+                    return err(make_error_info("shark::parse_local_time: "
                                                "failed to read minute `" + str.substr(3, 2) + "`",
                                                std::move(src), "here"));
                 }
@@ -747,7 +747,7 @@ namespace xconfig {
 
                 if ((hour < 0 || 24 <= hour) || (minute < 0 || 60 <= minute)) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_time: invalid time.",
+                    return err(make_error_info("shark::parse_local_time: invalid time.",
                                                std::move(src), "hour must be 00-23, minute must be 00-59."));
                 }
 
@@ -771,7 +771,7 @@ namespace xconfig {
                 const auto sec_r = from_string<int>(str.substr(6, 2));
                 if (sec_r.is_err()) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_time: "
+                    return err(make_error_info("shark::parse_local_time: "
                                                "failed to read second `" + str.substr(6, 2) + "`",
                                                std::move(src), "here"));
                 }
@@ -780,7 +780,7 @@ namespace xconfig {
                 if (sec < 0 || 60 < sec) // :60 is allowed
                 {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_time: invalid time.",
+                    return err(make_error_info("shark::parse_local_time: invalid time.",
                                                std::move(src), "second must be 00-60."));
                 }
 
@@ -807,19 +807,19 @@ namespace xconfig {
 
                 if (ms_r.is_err()) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_time: "
+                    return err(make_error_info("shark::parse_local_time: "
                                                "failed to read milliseconds `" + secfrac.substr(0, 3) + "`",
                                                std::move(src), "here"));
                 }
                 if (us_r.is_err()) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_time: "
+                    return err(make_error_info("shark::parse_local_time: "
                                                "failed to read microseconds`" + str.substr(3, 3) + "`",
                                                std::move(src), "here"));
                 }
                 if (ns_r.is_err()) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_local_time: "
+                    return err(make_error_info("shark::parse_local_time: "
                                                "failed to read nanoseconds`" + str.substr(6, 3) + "`",
                                                std::move(src), "here"));
                 }
@@ -874,7 +874,7 @@ namespace xconfig {
                     fmt.delimiter = datetime_delimiter_kind::space;
                 } else {
                     auto src = source_location(region(loc));
-                    return err(make_error_info("xconfig::parse_local_datetime: "
+                    return err(make_error_info("shark::parse_local_datetime: "
                                                "expect date-time delimiter `T`, `t` or ` `(space).",
                                                std::move(src), "here"));
                 }
@@ -928,7 +928,7 @@ namespace xconfig {
                     fmt.delimiter = datetime_delimiter_kind::space;
                 } else {
                     auto src = source_location(region(loc));
-                    return err(make_error_info("xconfig::parse_offset_datetime: "
+                    return err(make_error_info("shark::parse_offset_datetime: "
                                                "expect date-time delimiter `T` or ` `(space).", std::move(src), "here"
                     ));
                 }
@@ -949,7 +949,7 @@ namespace xconfig {
 
                 const auto ofs_reg = syntax::time_offset(spec).scan(loc);
                 if (!ofs_reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_offset_datetime: "
+                    return err(make_syntax_error("shark::parse_offset_datetime: "
                                                  "invalid offset: offset must be like: Z, +01:00, or -10:00.",
                                                  syntax::time_offset(spec), loc));
                 }
@@ -965,12 +965,12 @@ namespace xconfig {
                     const auto minute_r = from_string<int>(ofs_str.substr(4, 2));
                     if (hour_r.is_err()) {
                         auto src = source_location(region(loc));
-                        return err(make_error_info("xconfig::parse_offset_datetime: "
+                        return err(make_error_info("shark::parse_offset_datetime: "
                                                    "Failed to read offset hour part", std::move(src), "here"));
                     }
                     if (minute_r.is_err()) {
                         auto src = source_location(region(loc));
-                        return err(make_error_info("xconfig::parse_offset_datetime: "
+                        return err(make_error_info("shark::parse_offset_datetime: "
                                                    "Failed to read offset minute part", std::move(src), "here"));
                     }
                     const auto hour = hour_r.unwrap();
@@ -987,7 +987,7 @@ namespace xconfig {
 
                 if (offset.hour < -24 || 24 < offset.hour ||
                     offset.minute < -60 || 60 < offset.minute) {
-                    return err(make_error_info("xconfig::parse_offset_datetime: "
+                    return err(make_error_info("shark::parse_offset_datetime: "
                                                "too large offset: |hour| <= 24, |minute| <= 60",
                                                source_location(region(first, loc)), "here"));
                 }
@@ -1045,7 +1045,7 @@ namespace xconfig {
                 {
                     if (0xD800 <= codepoint && codepoint <= 0xDFFF) {
                         auto src = source_location(reg);
-                        return err(make_error_info("xconfig::parse_utf8_codepoint: "
+                        return err(make_error_info("shark::parse_utf8_codepoint: "
                                                    "[0xD800, 0xDFFF] is not a valid UTF-8",
                                                    std::move(src), "here"));
                     }
@@ -1064,7 +1064,7 @@ namespace xconfig {
                 } else // out of UTF-8 region
                 {
                     auto src = source_location(reg);
-                    return err(make_error_info("xconfig::parse_utf8_codepoint: "
+                    return err(make_error_info("shark::parse_utf8_codepoint: "
                                                "input codepoint is too large.",
                                                std::move(src), "must be in range [0x00, 0x10FFFF]"));
                 }
@@ -1113,7 +1113,7 @@ namespace xconfig {
                     const auto reg = syntax::escaped_x2(spec).scan(loc);
                     if (!reg.is_ok()) {
                         auto src = source_location(region(loc));
-                        return err(make_error_info("xconfig::parse_escape_sequence: "
+                        return err(make_error_info("shark::parse_escape_sequence: "
                                                    "invalid token found in UTF-8 codepoint \\xhh",
                                                    std::move(src), "here"));
                     }
@@ -1126,7 +1126,7 @@ namespace xconfig {
                     const auto reg = syntax::escaped_u4(spec).scan(loc);
                     if (!reg.is_ok()) {
                         auto src = source_location(region(loc));
-                        return err(make_error_info("xconfig::parse_escape_sequence: "
+                        return err(make_error_info("shark::parse_escape_sequence: "
                                                    "invalid token found in UTF-8 codepoint \\uhhhh",
                                                    std::move(src), "here"));
                     }
@@ -1139,7 +1139,7 @@ namespace xconfig {
                     const auto reg = syntax::escaped_U8(spec).scan(loc);
                     if (!reg.is_ok()) {
                         auto src = source_location(region(loc));
-                        return err(make_error_info("xconfig::parse_escape_sequence: "
+                        return err(make_error_info("shark::parse_escape_sequence: "
                                                    "invalid token found in UTF-8 codepoint \\Uhhhhhhhh",
                                                    std::move(src), "here"));
                     }
@@ -1159,7 +1159,7 @@ namespace xconfig {
                     }
                     escape_seqs += ", \\uhhhh, or \\Uhhhhhhhh";
 
-                    return err(make_error_info("xconfig::parse_escape_sequence: "
+                    return err(make_error_info("shark::parse_escape_sequence: "
                                                "unknown escape sequence.", std::move(src), escape_seqs));
                 }
                 return ok(retval);
@@ -1176,7 +1176,7 @@ namespace xconfig {
 
                 auto reg = syntax::ml_basic_string(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_ml_basic_string: "
+                    return err(make_syntax_error("shark::parse_ml_basic_string: "
                                                  "invalid string format",
                                                  syntax::ml_basic_string(spec), loc));
                 }
@@ -1250,7 +1250,7 @@ namespace xconfig {
 
                 auto reg = syntax::basic_string(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_basic_string: "
+                    return err(make_syntax_error("shark::parse_basic_string: "
                                                  "invalid string format",
                                                  syntax::basic_string(spec), loc));
                 }
@@ -1323,7 +1323,7 @@ namespace xconfig {
 
                 auto reg = syntax::ml_literal_string(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_ml_literal_string: "
+                    return err(make_syntax_error("shark::parse_ml_literal_string: "
                                                  "invalid string format",
                                                  syntax::ml_literal_string(spec), loc));
                 }
@@ -1363,7 +1363,7 @@ namespace xconfig {
 
                 auto reg = syntax::literal_string(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_literal_string: "
+                    return err(make_syntax_error("shark::parse_literal_string: "
                                                  "invalid string format",
                                                  syntax::literal_string(spec), loc));
                 }
@@ -1427,7 +1427,7 @@ namespace xconfig {
                     }
                 } else {
                     auto src = source_location(region(loc));
-                    return err(make_error_info("xconfig::parse_string: "
+                    return err(make_error_info("shark::parse_string: "
                                                "not a string", std::move(src), "here"));
                 }
             }
@@ -1437,7 +1437,7 @@ namespace xconfig {
             parse_null(location &loc, const context<TC> &ctx) {
                 const auto &spec = ctx.toml_spec();
                 if (!spec.ext_null_value) {
-                    return err(make_error_info("xconfig::parse_null: "
+                    return err(make_error_info("shark::parse_null: "
                                                "invalid spec: spec.ext_null_value must be true.",
                                                source_location(region(loc)), "here"));
                 }
@@ -1446,7 +1446,7 @@ namespace xconfig {
                 // check syntax
                 auto reg = syntax::null_value(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_null: "
+                    return err(make_syntax_error("shark::parse_null: "
                                                  "invalid null: null must be lowercase. ",
                                                  syntax::null_value(spec), loc));
                 }
@@ -1502,7 +1502,7 @@ namespace xconfig {
                     } else {
                         postfix = "Hint: non-ASCII scripts are allowed in toml v1.1.0, but not in v1.0.0.\n";
                     }
-                    return err(make_syntax_error("xconfig::parse_simple_key: "
+                    return err(make_syntax_error("shark::parse_simple_key: "
                                                  "invalid key: key must be \"quoted\", 'quoted-literal', or bare key.",
                                                  syntax::unquoted_key(spec), loc, postfix));
                 }
@@ -1531,7 +1531,7 @@ namespace xconfig {
                 }
                 if (keys.empty()) {
                     auto src = source_location(region(first));
-                    return err(make_error_info("xconfig::parse_key: expected a new key, "
+                    return err(make_error_info("shark::parse_key: expected a new key, "
                                                "but got nothing", std::move(src), "reached EOF"));
                 }
 
@@ -1561,7 +1561,7 @@ namespace xconfig {
                 }
 
                 if (!syntax::keyval_sep(spec).scan(loc).is_ok()) {
-                    auto e = make_syntax_error("xconfig::parse_key_value_pair: "
+                    auto e = make_syntax_error("shark::parse_key_value_pair: "
                                                "invalid key value separator `=`", syntax::keyval_sep(spec), loc);
                     loc = first;
                     return err(std::move(e));
@@ -1671,7 +1671,7 @@ namespace xconfig {
 
                 if (loc.eof() || loc.current() != '[') {
                     auto src = source_location(region(loc));
-                    return err(make_error_info("xconfig::parse_array: "
+                    return err(make_error_info("shark::parse_array: "
                                                "The next token is not an array", std::move(src), "here"));
                 }
                 loc.advance();
@@ -1700,7 +1700,7 @@ namespace xconfig {
 
                     if (!comma_found) {
                         auto src = source_location(region(loc));
-                        return err(make_error_info("xconfig::parse_array: "
+                        return err(make_error_info("shark::parse_array: "
                                                    "expected value-separator `,` or closing `]`",
                                                    std::move(src), "here"));
                     }
@@ -1781,7 +1781,7 @@ namespace xconfig {
 
                 if (loc.current() != ']') {
                     auto src = source_location(region(loc));
-                    return err(make_error_info("xconfig::parse_array: missing closing bracket `]`",
+                    return err(make_error_info("shark::parse_array: missing closing bracket `]`",
                                                std::move(src), "expected `]`, reached EOF"));
                 } else {
                     loc.advance();
@@ -1953,14 +1953,14 @@ namespace xconfig {
                             const auto fmt = found->second.as_table_fmt().fmt;
                             if (fmt == table_format::oneline || fmt == table_format::multiline_oneline) {
                                 // foo = {bar = "baz"} or foo = { \n bar = "baz" \n }
-                                return err(make_error_info("xconfig::insert_value: "
+                                return err(make_error_info("shark::insert_value: "
                                                            "failed to insert a value: inline table is immutable",
                                                            key_loc, "inserting this",
                                                            found->second.location(), "to this table"));
                             }
                             // dotted key cannot reopen a table.
                             if (kind == inserting_value_kind::dotted_keys && fmt != table_format::dotted) {
-                                return err(make_error_info("xconfig::insert_value: "
+                                return err(make_error_info("shark::insert_value: "
                                                            "reopening a table using dotted keys",
                                                            key_loc, "dotted key cannot reopen a table",
                                                            found->second.location(), "this table is already closed"));
@@ -1970,7 +1970,7 @@ namespace xconfig {
                         } else if (found->second.is_array_of_tables()) {
                             // aot = [{this = "type", of = "aot"}] # cannot be reopened
                             if (found->second.as_array_fmt().fmt != array_format::array_of_tables) {
-                                return err(make_error_info("xconfig::insert_value:"
+                                return err(make_error_info("shark::insert_value:"
                                                            "inline array of tables are immutable",
                                                            key_loc, "inserting this",
                                                            found->second.location(), "inline array of tables"));
@@ -1981,7 +1981,7 @@ namespace xconfig {
                                 // [[array.of.tables]]
                                 // [array.of]          # reopening supertable is okay
                                 // tables.x = "foo"    # appending `x` to the first table
-                                return err(make_error_info("xconfig::insert_value:"
+                                return err(make_error_info("shark::insert_value:"
                                                            "dotted key cannot reopen an array-of-tables",
                                                            key_loc, "inserting this",
                                                            found->second.location(), "to this array-of-tables."));
@@ -1999,7 +1999,7 @@ namespace xconfig {
                             assert(current_array_table.is_table());
                             current_table_ptr = std::addressof(current_array_table.as_table());
                         } else {
-                            return err(make_error_info("xconfig::insert_value: "
+                            return err(make_error_info("shark::insert_value: "
                                                        "failed to insert a value, value already exists",
                                                        key_loc, "while inserting this",
                                                        found->second.location(), "non-table value already exists"));
@@ -2009,7 +2009,7 @@ namespace xconfig {
                         switch (kind) {
                             case inserting_value_kind::dotted_keys: {
                                 if (current_table.find(key) != current_table.end()) {
-                                    return err(make_error_info("xconfig::insert_value: "
+                                    return err(make_error_info("shark::insert_value: "
                                                                "failed to insert a value, value already exists",
                                                                key_loc, "inserting this",
                                                                current_table.at(key).location(),
@@ -2031,7 +2031,7 @@ namespace xconfig {
                                     auto &target = found->second;
                                     if (!target.is_table() || // could be an array-of-tables
                                         target.as_table_fmt().fmt != table_format::implicit) {
-                                        return err(make_error_info("xconfig::insert_value: "
+                                        return err(make_error_info("shark::insert_value: "
                                                                    "failed to insert a table, table already defined",
                                                                    key_loc, "inserting this",
                                                                    target.location(),
@@ -2045,7 +2045,7 @@ namespace xconfig {
                                             // w = "foo"
                                             // [x]
                                             // y = "bar"
-                                            return err(make_error_info("xconfig::insert_value: "
+                                            return err(make_error_info("shark::insert_value: "
                                                                        "failed to insert a table, table keys conflict to each other",
                                                                        key_loc, "inserting this table",
                                                                        kv.second.location(), "having this value",
@@ -2081,14 +2081,14 @@ namespace xconfig {
                                 } else // the array is already defined, append to it
                                 {
                                     if (!found->second.is_array_of_tables()) {
-                                        return err(make_error_info("xconfig::insert_value: "
+                                        return err(make_error_info("shark::insert_value: "
                                                                    "failed to insert an array of tables, value already exists",
                                                                    key_loc, "while inserting this",
                                                                    found->second.location(),
                                                                    "non-table value already exists"));
                                     }
                                     if (found->second.as_array_fmt().fmt != array_format::array_of_tables) {
-                                        return err(make_error_info("xconfig::insert_value: "
+                                        return err(make_error_info("shark::insert_value: "
                                                                    "failed to insert a table, inline array of tables is immutable",
                                                                    key_loc, "while inserting this",
                                                                    found->second.location(),
@@ -2103,7 +2103,7 @@ namespace xconfig {
                         }
                     }
                 }
-                return err(make_error_info("xconfig::insert_key: no keys found",
+                return err(make_error_info("shark::insert_key: no keys found",
                                            std::move(key_loc), "here"));
             }
 
@@ -2121,7 +2121,7 @@ namespace xconfig {
 
                 if (loc.eof() || loc.current() != '{') {
                     auto src = source_location(region(loc));
-                    return err(make_error_info("xconfig::parse_inline_table: "
+                    return err(make_error_info("shark::parse_inline_table: "
                                                "The next token is not an inline table", std::move(src), "here"));
                 }
                 loc.advance();
@@ -2149,7 +2149,7 @@ namespace xconfig {
                     if (loc.current() == '}') {
                         if (comma_found && !spec.v1_1_0_allow_trailing_comma_in_inline_tables) {
                             auto src = source_location(region(loc));
-                            return err(make_error_info("xconfig::parse_inline_table: trailing "
+                            return err(make_error_info("shark::parse_inline_table: trailing "
                                                        "comma is not allowed in TOML-v1.0.0)", std::move(src), "here"));
                         }
 
@@ -2166,7 +2166,7 @@ namespace xconfig {
                     // if we already found a value and didn't found `,` nor `}`, error.
                     if (!comma_found && !still_empty) {
                         auto src = source_location(region(loc));
-                        return err(make_error_info("xconfig::parse_inline_table: "
+                        return err(make_error_info("shark::parse_inline_table: "
                                                    "expected value-separator `,` or closing `}`",
                                                    std::move(src), "here"));
                     }
@@ -2268,7 +2268,7 @@ namespace xconfig {
 
                 if (loc.current() != '}') {
                     auto src = source_location(region(loc));
-                    return err(make_error_info("xconfig::parse_inline_table: "
+                    return err(make_error_info("shark::parse_inline_table: "
                                                "missing closing bracket `}`",
                                                std::move(src), "expected `}`, reached line end"));
                 } else {
@@ -2499,13 +2499,13 @@ namespace xconfig {
                     }
                     case 'T': // invalid boolean.
                     {
-                        return err(make_syntax_error("xconfig::parse_value: "
+                        return err(make_syntax_error("shark::parse_value: "
                                                      "`true` must be in lowercase. "
                                                      "A string must be surrounded by quotes.",
                                                      syntax::boolean(sp), inner));
                     }
                     case 'F': {
-                        return err(make_syntax_error("xconfig::parse_value: "
+                        return err(make_syntax_error("shark::parse_value: "
                                                      "`false` must be in lowercase. "
                                                      "A string must be surrounded by quotes.",
                                                      syntax::boolean(sp), inner));
@@ -2515,7 +2515,7 @@ namespace xconfig {
                         if (literal("inf").scan(inner).is_ok()) {
                             return ok(value_t::floating);
                         } else {
-                            return err(make_syntax_error("xconfig::parse_value: "
+                            return err(make_syntax_error("shark::parse_value: "
                                                          "`inf` must be in lowercase. "
                                                          "A string must be surrounded by quotes.",
                                                          syntax::floating(sp), inner));
@@ -2523,7 +2523,7 @@ namespace xconfig {
                     }
                     case 'I': // Inf or string without quotes(syntax error).
                     {
-                        return err(make_syntax_error("xconfig::parse_value: "
+                        return err(make_syntax_error("shark::parse_value: "
                                                      "`inf` must be in lowercase. "
                                                      "A string must be surrounded by quotes.",
                                                      syntax::floating(sp), inner));
@@ -2536,7 +2536,7 @@ namespace xconfig {
                             } else if (literal("null").scan(inner).is_ok()) {
                                 return ok(value_t::empty);
                             } else {
-                                return err(make_syntax_error("xconfig::parse_value: "
+                                return err(make_syntax_error("shark::parse_value: "
                                                              "Both `nan` and `null` must be in lowercase. "
                                                              "A string must be surrounded by quotes.",
                                                              syntax::floating(sp), inner));
@@ -2546,7 +2546,7 @@ namespace xconfig {
                             if (literal("nan").scan(inner).is_ok()) {
                                 return ok(value_t::floating);
                             } else {
-                                return err(make_syntax_error("xconfig::parse_value: "
+                                return err(make_syntax_error("shark::parse_value: "
                                                              "`nan` must be in lowercase. "
                                                              "A string must be surrounded by quotes.",
                                                              syntax::floating(sp), inner));
@@ -2556,12 +2556,12 @@ namespace xconfig {
                     case 'N': // nan or null-extension
                     {
                         if (sp.ext_null_value) {
-                            return err(make_syntax_error("xconfig::parse_value: "
+                            return err(make_syntax_error("shark::parse_value: "
                                                          "Both `nan` and `null` must be in lowercase. "
                                                          "A string must be surrounded by quotes.",
                                                          syntax::floating(sp), inner));
                         } else {
-                            return err(make_syntax_error("xconfig::parse_value: "
+                            return err(make_syntax_error("shark::parse_value: "
                                                          "`nan` must be in lowercase. "
                                                          "A string must be surrounded by quotes.",
                                                          syntax::floating(sp), inner));
@@ -2587,7 +2587,7 @@ namespace xconfig {
                             return parse_null(loc, ctx);
                         } else {
                             auto src = source_location(region(loc));
-                            return err(make_error_info("xconfig::parse_value: unknown value appeared",
+                            return err(make_error_info("shark::parse_value: unknown value appeared",
                                                        std::move(src), "here"));
                         }
                     }
@@ -2603,7 +2603,7 @@ namespace xconfig {
                     case value_t::table: { return parse_inline_table(loc, ctx); }
                     default: {
                         auto src = source_location(region(loc));
-                        return err(make_error_info("xconfig::parse_value: unknown value appeared",
+                        return err(make_error_info("shark::parse_value: unknown value appeared",
                                                    std::move(src), "here"));
                     }
                 }
@@ -2624,7 +2624,7 @@ namespace xconfig {
 
                 auto reg = syntax::std_table(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_table_key: invalid table key",
+                    return err(make_syntax_error("shark::parse_table_key: invalid table key",
                                                  syntax::std_table(spec), loc));
                 }
 
@@ -2651,7 +2651,7 @@ namespace xconfig {
 
                 auto reg = syntax::array_table(spec).scan(loc);
                 if (!reg.is_ok()) {
-                    return err(make_syntax_error("xconfig::parse_array_table_key: invalid array-of-tables key",
+                    return err(make_syntax_error("shark::parse_array_table_key: invalid array-of-tables key",
                                                  syntax::array_table(spec), loc));
                 }
 
@@ -2704,7 +2704,7 @@ namespace xconfig {
                     // otherwise, it should be a key-value pair.
                     newline_found = newline_found || (sp.has_value() && sp.value().newline_found);
                     if (!newline_found) {
-                        return err(make_error_info("xconfig::parse_table: "
+                        return err(make_error_info("shark::parse_table: "
                                                    "newline (LF / CRLF) or EOF is expected",
                                                    source_location(region(loc)), "here"));
                     }
@@ -2837,7 +2837,7 @@ namespace xconfig {
                             {
                                 skip_whitespace(loc, ctx);
                                 if (!loc.eof() && !syntax::newline(ctx.toml_spec()).scan(loc).is_ok()) {
-                                    ctx.report_error(make_syntax_error("xconfig::parse_file: "
+                                    ctx.report_error(make_syntax_error("shark::parse_file: "
                                                                        "newline (or EOF) expected",
                                                                        syntax::newline(ctx.toml_spec()), loc));
                                     skip_until_next_table(loc, ctx);
@@ -2912,7 +2912,7 @@ namespace xconfig {
                             {
                                 skip_whitespace(loc, ctx);
                                 if (!loc.eof() && !syntax::newline(ctx.toml_spec()).scan(loc).is_ok()) {
-                                    ctx.report_error(make_syntax_error("xconfig::parse_file: "
+                                    ctx.report_error(make_syntax_error("shark::parse_file: "
                                                                        "newline (or EOF) expected",
                                                                        syntax::newline(ctx.toml_spec()), loc));
                                     skip_until_next_table(loc, ctx);
@@ -2969,10 +2969,10 @@ namespace xconfig {
                     loc = keytop;
 
                     if (maybe_array_of_tables) {
-                        ctx.report_error(make_syntax_error("xconfig::parse_file: invalid array-table key",
+                        ctx.report_error(make_syntax_error("shark::parse_file: invalid array-table key",
                                                            syntax::array_table(spec), loc));
                     } else {
-                        ctx.report_error(make_syntax_error("xconfig::parse_file: invalid table key",
+                        ctx.report_error(make_syntax_error("shark::parse_file: invalid table key",
                                                            syntax::std_table(spec), loc));
                     }
                     skip_until_next_table(loc, ctx);
@@ -3105,7 +3105,7 @@ namespace xconfig {
             std::ifstream ifs(fname, std::ios_base::binary);
             if (!ifs.good()) {
                 std::vector<error_info> e;
-                e.push_back(error_info("xconfig::parse: Error opening file \"" + fname + "\"", {}));
+                e.push_back(error_info("shark::parse: Error opening file \"" + fname + "\"", {}));
                 return err(std::move(e));
             }
             ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -3117,7 +3117,7 @@ namespace xconfig {
         basic_value<TC> parse(std::string fname, spec s = spec::default_version()) {
             std::ifstream ifs(fname, std::ios_base::binary);
             if (!ifs.good()) {
-                throw file_io_error("xconfig::parse: error opening file", fname);
+                throw file_io_error("shark::parse: error opening file", fname);
             }
             ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
@@ -3174,7 +3174,7 @@ namespace xconfig {
             std::ifstream ifs(fpath, std::ios_base::binary);
             if (!ifs.good()) {
                 std::vector<error_info> e;
-                e.push_back(error_info("xconfig::parse: Error opening file \"" + fpath.string() + "\"", {}));
+                e.push_back(error_info("shark::parse: Error opening file \"" + fpath.string() + "\"", {}));
                 return err(std::move(e));
             }
             ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -3188,7 +3188,7 @@ namespace xconfig {
         parse(const FSPATH &fpath, spec s = spec::default_version()) {
             std::ifstream ifs(fpath, std::ios_base::binary);
             if (!ifs.good()) {
-                throw file_io_error("xconfig::parse: error opening file", fpath.string());
+                throw file_io_error("shark::parse: error opening file", fpath.string());
             }
             ifs.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
@@ -3307,5 +3307,5 @@ namespace xconfig {
             }
         }
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark
 #endif // TOML11_PARSER_HPP

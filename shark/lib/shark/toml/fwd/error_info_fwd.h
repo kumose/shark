@@ -5,7 +5,7 @@
 #include <shark/toml/utility.h>
 #include <shark/toml/version.h>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -97,5 +97,5 @@ std::string format_error(std::string title,
 std::ostream& operator<<(std::ostream& os, const error_info& e);
 
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_ERROR_INFO_FWD_HPP

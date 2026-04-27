@@ -5,7 +5,7 @@
 
 #include <shark/toml/version.h>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -18,5 +18,5 @@ struct exception : public std::exception
 };
 
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOMl11_EXCEPTION_HPP

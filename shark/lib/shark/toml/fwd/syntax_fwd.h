@@ -5,7 +5,7 @@
 #include <shark/toml/spec.h>
 #include <shark/toml/version.h>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -415,5 +415,5 @@ literal const& null_value(const spec&);
 } // namespace syntax
 } // namespace detail
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark
 #endif // TOML11_SYNTAX_FWD_HPP

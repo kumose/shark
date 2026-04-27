@@ -11,7 +11,7 @@
 
 #include <shark/toml/version.h>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -262,5 +262,5 @@ std::ostream& operator<<(std::ostream& os, const offset_datetime& dt);
 std::string to_string(const offset_datetime& dt);
 
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_DATETIME_FWD_HPP

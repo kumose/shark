@@ -4,7 +4,7 @@
 
 #include <sstream>
 
-namespace xconfig {
+namespace shark {
    inline  namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         std::string format_error(const std::string &errkind, const error_info &err) {
@@ -62,4 +62,4 @@ namespace xconfig {
             return os;
         }
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark

@@ -9,11 +9,11 @@
 #include <shark/toml/version.h>
 #include <string_view>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         // ============================================================================
-        // T is xconfig::value; identity transformation.
+        // T is shark::Value; identity transformation.
 
         template<typename T, typename TC>
         cxx::enable_if_t<std::is_same<T, basic_value<TC> >::value, T> &
@@ -34,7 +34,7 @@ namespace xconfig {
         }
 
         // ============================================================================
-        // exact xconfig::* type
+        // exact shark::* type
 
         template<typename T, typename TC>
         cxx::enable_if_t<detail::is_exact_toml_type<T, basic_value<TC> >::value, T> &
@@ -58,7 +58,7 @@ namespace xconfig {
         }
 
         // ============================================================================
-        // T is xconfig::basic_value<U>
+        // T is shark::basic_value<U>
 
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
@@ -70,7 +70,7 @@ namespace xconfig {
         }
 
         // ============================================================================
-        // integer convertible from xconfig::value::integer_type
+        // integer convertible from shark::Value::integer_type
 
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
@@ -85,7 +85,7 @@ namespace xconfig {
         }
 
         // ============================================================================
-        // floating point convertible from xconfig::value::floating_type
+        // floating point convertible from shark::Value::floating_type
 
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
@@ -122,7 +122,7 @@ namespace xconfig {
 
 
         // ============================================================================
-        // std::chrono::duration from xconfig::local_time
+        // std::chrono::duration from shark::local_time
 
         template<typename T, typename TC>
         cxx::enable_if_t<detail::is_chrono_duration<T>::value, T>
@@ -132,7 +132,7 @@ namespace xconfig {
         }
 
         // ============================================================================
-        // std::chrono::system_clock::time_point from xconfig::datetime variants
+        // std::chrono::system_clock::time_point from shark::datetime variants
 
         template<typename T, typename TC>
         cxx::enable_if_t<
@@ -150,7 +150,7 @@ namespace xconfig {
                 }
                 default: {
                     const auto loc = v.location();
-                    throw type_error(format_error("xconfig::get: "
+                    throw type_error(format_error("shark::get: "
                                                   "bad_cast to std::chrono::system_clock::time_point", loc,
                                                   "the actual type is " + to_string(v.type())), loc);
                 }
@@ -165,11 +165,11 @@ namespace xconfig {
         cxx::enable_if_t<cxx::conjunction<
             detail::is_container<T>, // T is a container
             detail::has_push_back_method<T>, // .push_back() works
-            detail::is_not_toml_type<T, basic_value<TC> >, // but not xconfig::array
+            detail::is_not_toml_type<T, basic_value<TC> >, // but not shark::Array
             cxx::negation<detail::is_std_basic_string<T> >, // but not std::basic_string<CharT>
             cxx::negation<detail::is_std_basic_string_view<T> >, // but not std::basic_string_view<CharT>
             cxx::negation<detail::has_from_toml_method<T, TC> >, // no T.from_toml()
-            cxx::negation<detail::has_specialized_from<T> >, // no xconfig::from<T>
+            cxx::negation<detail::has_specialized_from<T> >, // no shark::from<T>
             cxx::negation<std::is_constructible<T, const basic_value<TC> &> >
         >::value, T>
         get(const basic_value<TC> &);
@@ -194,35 +194,35 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_std_tuple<T>::value, T>
         get(const basic_value<TC> &);
 
-        // std::map<key, value> (key is convertible from xconfig::value::key_type)
+        // std::map<key, value> (key is convertible from shark::Value::key_type)
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
             detail::is_map<T>, // T is map
-            detail::is_not_toml_type<T, basic_value<TC> >, // but not xconfig::table
+            detail::is_not_toml_type<T, basic_value<TC> >, // but not shark::Table
             std::is_convertible<typename basic_value<TC>::key_type,
                 typename T::key_type>, // keys are convertible
             cxx::negation<detail::has_from_toml_method<T, TC> >, // no T.from_toml()
-            cxx::negation<detail::has_specialized_from<T> >, // no xconfig::from<T>
+            cxx::negation<detail::has_specialized_from<T> >, // no shark::from<T>
             cxx::negation<std::is_constructible<T, const basic_value<TC> &> >
         >::value, T>
         get(const basic_value<TC> &v);
 
-        // std::map<key, value> (key is not convertible from xconfig::value::key_type, but
+        // std::map<key, value> (key is not convertible from shark::Value::key_type, but
         // is a std::basic_string)
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
             detail::is_map<T>, // T is map
-            detail::is_not_toml_type<T, basic_value<TC> >, // but not xconfig::table
+            detail::is_not_toml_type<T, basic_value<TC> >, // but not shark::Table
             cxx::negation<std::is_convertible<typename basic_value<TC>::key_type,
                 typename T::key_type> >, // keys are NOT convertible
             detail::is_1byte_std_basic_string<typename T::key_type>, // is std::basic_string
             cxx::negation<detail::has_from_toml_method<T, TC> >, // no T.from_toml()
-            cxx::negation<detail::has_specialized_from<T> >, // no xconfig::from<T>
+            cxx::negation<detail::has_specialized_from<T> >, // no shark::from<T>
             cxx::negation<std::is_constructible<T, const basic_value<TC> &> >
         >::value, T>
         get(const basic_value<TC> &v);
 
-        // xconfig::from<T>::from_toml(v)
+        // shark::from<T>::from_toml(v)
         template<typename T, typename TC>
         cxx::enable_if_t<detail::has_specialized_from<T>::value, T>
         get(const basic_value<TC> &);
@@ -231,19 +231,19 @@ namespace xconfig {
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
             detail::has_from_toml_method<T, TC>, // has T.from_toml()
-            cxx::negation<detail::has_specialized_from<T> >, // no xconfig::from<T>
+            cxx::negation<detail::has_specialized_from<T> >, // no shark::from<T>
             std::is_default_constructible<T> // T{} works
         >::value, T>
         get(const basic_value<TC> &);
 
-        // T(const xconfig::value&) and T is not xconfig::basic_value,
+        // T(const shark::Value&) and T is not shark::basic_value,
         // and it does not have `from<T>` nor `from_toml`.
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
             std::is_constructible<T, const basic_value<TC> &>, // has T(const basic_value&)
             cxx::negation<detail::is_basic_value<T> >, // but not basic_value itself
             cxx::negation<detail::has_from_toml_method<T, TC> >, // no .from_toml()
-            cxx::negation<detail::has_specialized_from<T> > // no xconfig::from<T>
+            cxx::negation<detail::has_specialized_from<T> > // no shark::from<T>
         >::value, T>
         get(const basic_value<TC> &);
 
@@ -254,11 +254,11 @@ namespace xconfig {
         cxx::enable_if_t<cxx::conjunction<
             detail::is_container<T>, // T is a container
             detail::has_push_back_method<T>, // .push_back() works
-            detail::is_not_toml_type<T, basic_value<TC> >, // but not xconfig::array
+            detail::is_not_toml_type<T, basic_value<TC> >, // but not shark::Array
             cxx::negation<detail::is_std_basic_string<T> >, // but not std::basic_string<CharT>
             cxx::negation<detail::is_std_basic_string_view<T> >, // but not std::basic_string_view<CharT>
             cxx::negation<detail::has_from_toml_method<T, TC> >, // no T.from_toml()
-            cxx::negation<detail::has_specialized_from<T> >, // no xconfig::from<T>
+            cxx::negation<detail::has_specialized_from<T> >, // no shark::from<T>
             cxx::negation<std::is_constructible<T, const basic_value<TC> &> >
         >::value, T>
         get(const basic_value<TC> &v) {
@@ -286,14 +286,14 @@ namespace xconfig {
             T container;
             if (a.size() != container.size()) {
                 const auto loc = v.location();
-                throw std::out_of_range(format_error("xconfig::get: while converting to an array: "
+                throw std::out_of_range(format_error("shark::get: while converting to an array: "
                                                      " array size is " + std::to_string(container.size()) +
                                                      " but there are " + std::to_string(a.size()) +
                                                      " elements in toml array.",
                                                      loc, "here"));
             }
             for (std::size_t i = 0; i < a.size(); ++i) {
-                container.at(i) = ::xconfig::get<value_type>(a.at(i));
+                container.at(i) = ::shark::get<value_type>(a.at(i));
             }
             return container;
         }
@@ -326,13 +326,13 @@ namespace xconfig {
             const auto &ar = v.as_array();
             if (ar.size() != 2) {
                 const auto loc = v.location();
-                throw std::out_of_range(format_error("xconfig::get: while converting std::pair: "
+                throw std::out_of_range(format_error("shark::get: while converting std::pair: "
                                                      " but there are " + std::to_string(ar.size()) +
                                                      " > 2 elements in toml array.",
                                                      loc, "here"));
             }
-            return std::make_pair(::xconfig::get<first_type>(ar.at(0)),
-                                  ::xconfig::get<second_type>(ar.at(1)));
+            return std::make_pair(::shark::get<first_type>(ar.at(0)),
+                                  ::shark::get<second_type>(ar.at(1)));
         }
 
         // ============================================================================
@@ -342,7 +342,7 @@ namespace xconfig {
             template<typename T, typename Array, std::size_t ... I>
             T get_tuple_impl(const Array &a, cxx::index_sequence<I...>) {
                 return std::make_tuple(
-                    ::xconfig::get<typename std::tuple_element<I, T>::type>(a.at(I))...);
+                    ::shark::get<typename std::tuple_element<I, T>::type>(a.at(I))...);
             }
         } // detail
 
@@ -352,7 +352,7 @@ namespace xconfig {
             const auto &ar = v.as_array();
             if (ar.size() != std::tuple_size<T>::value) {
                 const auto loc = v.location();
-                throw std::out_of_range(format_error("xconfig::get: while converting std::tuple: "
+                throw std::out_of_range(format_error("shark::get: while converting std::tuple: "
                                                      " there are " + std::to_string(ar.size()) + " > " +
                                                      std::to_string(std::tuple_size<T>::value) +
                                                      " elements in toml array.",
@@ -366,7 +366,7 @@ namespace xconfig {
         // std::unordered_set
 
         template<typename T, typename TC>
-        cxx::enable_if_t<xconfig::detail::is_unordered_set<T>::value, T>
+        cxx::enable_if_t<shark::detail::is_unordered_set<T>::value, T>
         get(const basic_value<TC> &v) {
             using value_type = typename T::value_type;
             const auto &a = v.as_array();
@@ -382,15 +382,15 @@ namespace xconfig {
         // ============================================================================
         // map-like types; most likely STL map, like std::map or std::unordered_map.
 
-        // key is convertible from xconfig::value::key_type
+        // key is convertible from shark::Value::key_type
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
             detail::is_map<T>, // T is map
-            detail::is_not_toml_type<T, basic_value<TC> >, // but not xconfig::table
+            detail::is_not_toml_type<T, basic_value<TC> >, // but not shark::Table
             std::is_convertible<typename basic_value<TC>::key_type,
                 typename T::key_type>, // keys are convertible
             cxx::negation<detail::has_from_toml_method<T, TC> >, // no T.from_toml()
-            cxx::negation<detail::has_specialized_from<T> >, // no xconfig::from<T>
+            cxx::negation<detail::has_specialized_from<T> >, // no shark::from<T>
             cxx::negation<std::is_constructible<T, const basic_value<TC> &> >
         >::value, T>
         get(const basic_value<TC> &v) {
@@ -398,8 +398,8 @@ namespace xconfig {
             using mapped_type = typename T::mapped_type;
             static_assert(
                 std::is_convertible<typename basic_value<TC>::key_type, key_type>::value,
-                "xconfig::get only supports map type of which key_type is "
-                "convertible from xconfig::basic_value::key_type.");
+                "shark::get only supports map type of which key_type is "
+                "convertible from shark::basic_value::key_type.");
 
             T m;
             for (const auto &kv: v.as_table()) {
@@ -408,16 +408,16 @@ namespace xconfig {
             return m;
         }
 
-        // key is NOT convertible from xconfig::value::key_type but std::basic_string
+        // key is NOT convertible from shark::Value::key_type but std::basic_string
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
             detail::is_map<T>, // T is map
-            detail::is_not_toml_type<T, basic_value<TC> >, // but not xconfig::table
+            detail::is_not_toml_type<T, basic_value<TC> >, // but not shark::Table
             cxx::negation<std::is_convertible<typename basic_value<TC>::key_type,
                 typename T::key_type> >, // keys are NOT convertible
             detail::is_1byte_std_basic_string<typename T::key_type>, // is std::basic_string
             cxx::negation<detail::has_from_toml_method<T, TC> >, // no T.from_toml()
-            cxx::negation<detail::has_specialized_from<T> >, // no xconfig::from<T>
+            cxx::negation<detail::has_specialized_from<T> >, // no shark::from<T>
             cxx::negation<std::is_constructible<T, const basic_value<TC> &> >
         >::value, T>
         get(const basic_value<TC> &v) {
@@ -434,18 +434,18 @@ namespace xconfig {
         // ============================================================================
         // user-defined, but convertible types.
 
-        // xconfig::from<T>
+        // shark::from<T>
         template<typename T, typename TC>
         cxx::enable_if_t<detail::has_specialized_from<T>::value, T>
         get(const basic_value<TC> &v) {
-            return ::xconfig::from<T>::from_toml(v);
+            return ::shark::from<T>::from_toml(v);
         }
 
         // has T.from_toml(v) but no from<T>
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
             detail::has_from_toml_method<T, TC>, // has T.from_toml()
-            cxx::negation<detail::has_specialized_from<T> >, // no xconfig::from<T>
+            cxx::negation<detail::has_specialized_from<T> >, // no shark::from<T>
             std::is_default_constructible<T> // T{} works
         >::value, T>
         get(const basic_value<TC> &v) {
@@ -454,14 +454,14 @@ namespace xconfig {
             return ud;
         }
 
-        // T(const xconfig::value&) and T is not xconfig::basic_value,
+        // T(const shark::Value&) and T is not shark::basic_value,
         // and it does not have `from<T>` nor `from_toml`.
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::conjunction<
             std::is_constructible<T, const basic_value<TC> &>, // has T(const basic_value&)
             cxx::negation<detail::is_basic_value<T> >, // but not basic_value itself
             cxx::negation<detail::has_from_toml_method<T, TC> >, // no .from_toml()
-            cxx::negation<detail::has_specialized_from<T> > // no xconfig::from<T>
+            cxx::negation<detail::has_specialized_from<T> > // no shark::from<T>
         >::value, T>
         get(const basic_value<TC> &v) {
             return T(v);
@@ -582,5 +582,5 @@ namespace xconfig {
             }
         }
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_GET_HPP

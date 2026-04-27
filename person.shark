@@ -1,0 +1,32 @@
+#############################################
+# leading comment 2
+### end
+address2 = [
+    {detail = {prcode = "67890", region = "South"}, number = 200, street = "456 Oak Ave"},
+    {detail = {prcode = "11223", region = "East"}, number = 300, street = "789 Pine Rd"},
+]
+favorite_color = "GREEN"
+ages = [25, 30, 35]
+long_name = "This is a long string"
+#############################################
+# leading comment 1
+# leading comment 2
+### end
+emails = ["alice@example.com", "bob@example.com"]
+#############################################
+# my comment
+### end
+age = 42
+#############################################
+# this is my ssdsf
+### end
+name = "Lothar"
+
+[address]
+number = 100
+street = "123 Main St"
+
+[address.detail]
+prcode = "12345"
+region = "North"
+

@@ -8,7 +8,7 @@
 #include <shark/toml/version.h>
 #include <string_view>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         // ----------------------------------------------------------------------------
@@ -16,23 +16,23 @@ namespace xconfig {
 
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::negation<detail::is_std_optional<T> >::value,
-            decltype(::xconfig::get<T>(std::declval<basic_value<TC> const &>()))>
+            decltype(::shark::get<T>(std::declval<basic_value<TC> const &>()))>
         find(const basic_value<TC> &v, const typename basic_value<TC>::key_type &ky) {
-            return ::xconfig::get<T>(v.at(ky));
+            return ::shark::get<T>(v.at(ky));
         }
 
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::negation<detail::is_std_optional<T> >::value,
-            decltype(::xconfig::get<T>(std::declval<basic_value<TC> &>()))>
+            decltype(::shark::get<T>(std::declval<basic_value<TC> &>()))>
         find(basic_value<TC> &v, const typename basic_value<TC>::key_type &ky) {
-            return ::xconfig::get<T>(v.at(ky));
+            return ::shark::get<T>(v.at(ky));
         }
 
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::negation<detail::is_std_optional<T> >::value,
-            decltype(::xconfig::get<T>(std::declval<basic_value<TC> &&>()))>
+            decltype(::shark::get<T>(std::declval<basic_value<TC> &&>()))>
         find(basic_value<TC> &&v, const typename basic_value<TC>::key_type &ky) {
-            return ::xconfig::get<T>(std::move(v.at(ky)));
+            return ::shark::get<T>(std::move(v.at(ky)));
         }
 
         // ----------------------------------------------------------------------------
@@ -40,23 +40,23 @@ namespace xconfig {
 
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::negation<detail::is_std_optional<T> >::value,
-            decltype(::xconfig::get<T>(std::declval<basic_value<TC> const &>()))>
+            decltype(::shark::get<T>(std::declval<basic_value<TC> const &>()))>
         find(const basic_value<TC> &v, const std::size_t idx) {
-            return ::xconfig::get<T>(v.at(idx));
+            return ::shark::get<T>(v.at(idx));
         }
 
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::negation<detail::is_std_optional<T> >::value,
-            decltype(::xconfig::get<T>(std::declval<basic_value<TC> &>()))>
+            decltype(::shark::get<T>(std::declval<basic_value<TC> &>()))>
         find(basic_value<TC> &v, const std::size_t idx) {
-            return ::xconfig::get<T>(v.at(idx));
+            return ::shark::get<T>(v.at(idx));
         }
 
         template<typename T, typename TC>
         cxx::enable_if_t<cxx::negation<detail::is_std_optional<T> >::value,
-            decltype(::xconfig::get<T>(std::declval<basic_value<TC> &&>()))>
+            decltype(::shark::get<T>(std::declval<basic_value<TC> &&>()))>
         find(basic_value<TC> &&v, const std::size_t idx) {
-            return ::xconfig::get<T>(std::move(v.at(idx)));
+            return ::shark::get<T>(std::move(v.at(idx)));
         }
 
         // ----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_std_optional<T>::value, T>
         find(const basic_value<TC> &v, const typename basic_value<TC>::key_type &ky) {
             if (v.contains(ky)) {
-                return ::xconfig::get<typename T::value_type>(v.at(ky));
+                return ::shark::get<typename T::value_type>(v.at(ky));
             } else {
                 return std::nullopt;
             }
@@ -115,7 +115,7 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_std_optional<T>::value, T>
         find(basic_value<TC> &v, const typename basic_value<TC>::key_type &ky) {
             if (v.contains(ky)) {
-                return ::xconfig::get<typename T::value_type>(v.at(ky));
+                return ::shark::get<typename T::value_type>(v.at(ky));
             } else {
                 return std::nullopt;
             }
@@ -125,7 +125,7 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_std_optional<T>::value, T>
         find(basic_value<TC> &&v, const typename basic_value<TC>::key_type &ky) {
             if (v.contains(ky)) {
-                return ::xconfig::get<typename T::value_type>(std::move(v.at(ky)));
+                return ::shark::get<typename T::value_type>(std::move(v.at(ky)));
             } else {
                 return std::nullopt;
             }
@@ -135,7 +135,7 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_std_optional<T>::value && std::is_integral<K>::value, T>
         find(const basic_value<TC> &v, const K &k) {
             if (static_cast<std::size_t>(k) < v.size()) {
-                return ::xconfig::get<typename T::value_type>(v.at(static_cast<std::size_t>(k)));
+                return ::shark::get<typename T::value_type>(v.at(static_cast<std::size_t>(k)));
             } else {
                 return std::nullopt;
             }
@@ -145,7 +145,7 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_std_optional<T>::value && std::is_integral<K>::value, T>
         find(basic_value<TC> &v, const K &k) {
             if (static_cast<std::size_t>(k) < v.size()) {
-                return ::xconfig::get<typename T::value_type>(v.at(static_cast<std::size_t>(k)));
+                return ::shark::get<typename T::value_type>(v.at(static_cast<std::size_t>(k)));
             } else {
                 return std::nullopt;
             }
@@ -155,18 +155,18 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_std_optional<T>::value && std::is_integral<K>::value, T>
         find(basic_value<TC> &&v, const K &k) {
             if (static_cast<std::size_t>(k) < v.size()) {
-                return ::xconfig::get<typename T::value_type>(std::move(v.at(static_cast<std::size_t>(k))));
+                return ::shark::get<typename T::value_type>(std::move(v.at(static_cast<std::size_t>(k))));
             } else {
                 return std::nullopt;
             }
         }
 
         // --------------------------------------------------------------------------
-        // xconfig::find(xconfig::value, xconfig::key, Ts&& ... keys)
+        // shark::find(shark::Value, shark::key, Ts&& ... keys)
 
         namespace detail {
             // It suppresses warnings by -Wsign-conversion when we pass integer literal
-            // to xconfig::find. integer literal `0` is deduced as an int, and will be
+            // to shark::find. integer literal `0` is deduced as an int, and will be
             // converted to std::size_t. This causes sign-conversion.
 
             template<typename TC>
@@ -227,21 +227,21 @@ namespace xconfig {
 
         template<typename T, typename TC, typename K1, typename K2, typename... Ks>
         cxx::enable_if_t<cxx::negation<detail::is_std_optional<T> >::value,
-            decltype(::xconfig::get<T>(std::declval<const basic_value<TC> &>()))>
+            decltype(::shark::get<T>(std::declval<const basic_value<TC> &>()))>
         find(const basic_value<TC> &v, const K1 &k1, const K2 &k2, const Ks &... ks) {
             return find<T>(v.at(detail::key_cast<TC>(k1)), detail::key_cast<TC>(k2), ks...);
         }
 
         template<typename T, typename TC, typename K1, typename K2, typename... Ks>
         cxx::enable_if_t<cxx::negation<detail::is_std_optional<T> >::value,
-            decltype(::xconfig::get<T>(std::declval<basic_value<TC> &>()))>
+            decltype(::shark::get<T>(std::declval<basic_value<TC> &>()))>
         find(basic_value<TC> &v, const K1 &k1, const K2 &k2, const Ks &... ks) {
             return find<T>(v.at(detail::key_cast<TC>(k1)), detail::key_cast<TC>(k2), ks...);
         }
 
         template<typename T, typename TC, typename K1, typename K2, typename... Ks>
         cxx::enable_if_t<cxx::negation<detail::is_std_optional<T> >::value,
-            decltype(::xconfig::get<T>(std::declval<basic_value<TC> &&>()))>
+            decltype(::shark::get<T>(std::declval<basic_value<TC> &&>()))>
         find(basic_value<TC> &&v, const K1 &k1, const K2 &k2, const Ks &... ks) {
             return find<T>(std::move(v.at(detail::key_cast<TC>(k1))), detail::key_cast<TC>(k2), ks...);
         }
@@ -316,7 +316,7 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_type_config<TC>::value, basic_value<TC> > &
         find_or(basic_value<TC> &v, const K &k, basic_value<TC> &opt) noexcept {
             try {
-                return ::xconfig::find(v, detail::key_cast<TC>(k));
+                return ::shark::find(v, detail::key_cast<TC>(k));
             } catch (...) {
                 return opt;
             }
@@ -326,7 +326,7 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_type_config<TC>::value, basic_value<TC> > const &
         find_or(const basic_value<TC> &v, const K &k, const basic_value<TC> &opt) noexcept {
             try {
-                return ::xconfig::find(v, detail::key_cast<TC>(k));
+                return ::shark::find(v, detail::key_cast<TC>(k));
             } catch (...) {
                 return opt;
             }
@@ -336,21 +336,21 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_type_config<TC>::value, basic_value<TC> >
         find_or(basic_value<TC> &&v, const K &k, basic_value<TC> &&opt) noexcept {
             try {
-                return ::xconfig::find(v, detail::key_cast<TC>(k));
+                return ::shark::find(v, detail::key_cast<TC>(k));
             } catch (...) {
                 return opt;
             }
         }
 
         // ---------------------------------------------------------------------------
-        // xconfig types (return type can be a reference)
+        // shark types (return type can be a reference)
 
         template<typename T, typename TC, typename K>
         cxx::enable_if_t<detail::is_exact_toml_type<T, basic_value<TC> >::value,
             cxx::remove_cvref_t<T> const &>
         find_or(const basic_value<TC> &v, const K &k, const T &opt) {
             try {
-                return ::xconfig::get<T>(v.at(detail::key_cast<TC>(k)));
+                return ::shark::get<T>(v.at(detail::key_cast<TC>(k)));
             } catch (...) {
                 return opt;
             }
@@ -363,7 +363,7 @@ namespace xconfig {
         >::value, cxx::remove_cvref_t<T> &>
         find_or(basic_value<TC> &v, const K &k, T &opt) {
             try {
-                return ::xconfig::get<T>(v.at(detail::key_cast<TC>(k)));
+                return ::shark::get<T>(v.at(detail::key_cast<TC>(k)));
             } catch (...) {
                 return opt;
             }
@@ -374,7 +374,7 @@ namespace xconfig {
             cxx::remove_cvref_t<T> >
         find_or(basic_value<TC> &&v, const K &k, T opt) {
             try {
-                return ::xconfig::get<T>(std::move(v.at(detail::key_cast<TC>(k))));
+                return ::shark::get<T>(std::move(v.at(detail::key_cast<TC>(k))));
             } catch (...) {
                 return T(std::move(opt));
             }
@@ -389,7 +389,7 @@ namespace xconfig {
         cxx::enable_if_t<detail::is_type_config<TC>::value, std::string>
         find_or(const basic_value<TC> &v, const K &k, const char *opt) {
             try {
-                return ::xconfig::get<std::string>(v.at(detail::key_cast<TC>(k)));
+                return ::shark::get<std::string>(v.at(detail::key_cast<TC>(k)));
             } catch (...) {
                 return std::string(opt);
             }
@@ -407,7 +407,7 @@ namespace xconfig {
         >::value, cxx::remove_cvref_t<T> >
         find_or(const basic_value<TC> &v, const K &ky, T opt) {
             try {
-                return ::xconfig::get<cxx::remove_cvref_t<T> >(v.at(detail::key_cast<TC>(ky)));
+                return ::shark::get<cxx::remove_cvref_t<T> >(v.at(detail::key_cast<TC>(ky)));
             } catch (...) {
                 return cxx::remove_cvref_t<T>(std::move(opt));
             }
@@ -453,7 +453,7 @@ namespace xconfig {
         cxx::enable_if_t<std::is_default_constructible<T>::value, T>
         find_or_default(const basic_value<TC> &v, K &&k) noexcept(std::is_nothrow_default_constructible<T>::value) {
             try {
-                return ::xconfig::get<T>(v.at(detail::key_cast<TC>(std::forward<K>(k))));
+                return ::shark::get<T>(v.at(detail::key_cast<TC>(std::forward<K>(k))));
             } catch (...) {
                 return T();
             }
@@ -470,5 +470,5 @@ namespace xconfig {
             }
         }
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_FIND_HPP

@@ -2,7 +2,7 @@
 #define TOML11_FROM_HPP
 #include <shark/toml/version.h>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -10,12 +10,12 @@ inline namespace TOML11_INLINE_VERSION_NAMESPACE
 template<typename T>
 struct from;
 // {
-//     static T from_toml(const xconfig::value& v)
+//     static T from_toml(const shark::Value& v)
 //     {
 //         // User-defined conversions ...
 //     }
 // };
 
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_FROM_HPP

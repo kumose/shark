@@ -1,7 +1,7 @@
 #include <shark/toml/fwd/comments_fwd.h> // IWYU pragma: keep
 #include <shark/toml/version.h>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         bool operator==(const preserve_comments &lhs, const preserve_comments &rhs) {

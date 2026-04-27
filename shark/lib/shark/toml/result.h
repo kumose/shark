@@ -12,10 +12,10 @@
 
 #include <cassert>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
-        struct bad_result_access final : public ::xconfig::exception {
+        struct bad_result_access final : public ::shark::exception {
         public:
             explicit bad_result_access(std::string what_arg)
                 : what_(std::move(what_arg)) {
@@ -353,14 +353,14 @@ namespace xconfig {
 
             value_type &unwrap(cxx::source_location loc = cxx::source_location::current()) {
                 if (this->is_err()) {
-                    throw bad_result_access("xconfig::result: bad unwrap" + cxx::to_string(loc));
+                    throw bad_result_access("shark::result: bad unwrap" + cxx::to_string(loc));
                 }
                 return this->succ_.get();
             }
 
             value_type const &unwrap(cxx::source_location loc = cxx::source_location::current()) const {
                 if (this->is_err()) {
-                    throw bad_result_access("xconfig::result: bad unwrap" + cxx::to_string(loc));
+                    throw bad_result_access("shark::result: bad unwrap" + cxx::to_string(loc));
                 }
                 return this->succ_.get();
             }
@@ -377,14 +377,14 @@ namespace xconfig {
 
             error_type &unwrap_err(cxx::source_location loc = cxx::source_location::current()) {
                 if (this->is_ok()) {
-                    throw bad_result_access("xconfig::result: bad unwrap_err" + cxx::to_string(loc));
+                    throw bad_result_access("shark::result: bad unwrap_err" + cxx::to_string(loc));
                 }
                 return this->fail_.get();
             }
 
             error_type const &unwrap_err(cxx::source_location loc = cxx::source_location::current()) const {
                 if (this->is_ok()) {
-                    throw bad_result_access("xconfig::result: bad unwrap_err" + cxx::to_string(loc));
+                    throw bad_result_access("shark::result: bad unwrap_err" + cxx::to_string(loc));
                 }
                 return this->fail_.get();
             }
@@ -460,5 +460,5 @@ namespace xconfig {
             return failure<detail::none_t>(detail::none_t{});
         }
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_RESULT_HPP

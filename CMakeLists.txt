@@ -91,7 +91,7 @@ if(NOT PYTHON_EXTENSION)
     ##############################################
     # header installing
     #############################################
-    install(DIRECTORY ${PROJECT_NAME}/include
+    install(DIRECTORY ${PROJECT_NAME}/lib/shark
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
             FILES_MATCHING
             PATTERN "*.inc"
@@ -114,7 +114,7 @@ if(NOT PYTHON_EXTENSION)
     #   * <prefix>/include/
     set(config_install_dir "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
-    install(FILES cmake/kmcmake_cc_sk.cmake
+    install(FILES cmake/kmcmake_cc_sk.cmake cmake/kmcmake_cc_tml.cmake
             DESTINATION ${config_install_dir}
     )
 

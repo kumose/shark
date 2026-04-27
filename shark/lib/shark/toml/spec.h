@@ -11,7 +11,7 @@
 
 #include <shark/toml/version.h>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -107,7 +107,7 @@ struct spec
           ext_null_value{false}
     {}
 
-    semantic_version version; // xconfig version
+    semantic_version version; // shark version
 
     // diff from v1.0.0 -> v1.1.0
     bool v1_1_0_allow_newlines_in_inline_tables;
@@ -172,5 +172,5 @@ inline bool operator>=(const spec& lhs, const spec& rhs) noexcept
 }
 
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark
 #endif // TOML11_SPEC_HPP

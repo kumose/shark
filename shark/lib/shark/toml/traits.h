@@ -18,7 +18,7 @@
 #include <string_view>
 #include <optional>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         template<typename TypeConcig>
@@ -90,7 +90,7 @@ namespace xconfig {
             struct has_from_toml_method_impl {
                 template<typename T, typename TC>
                 static std::true_type check(
-                    decltype(std::declval<T>().from_toml(std::declval<::xconfig::basic_value<TC> >())) *);
+                    decltype(std::declval<T>().from_toml(std::declval<::shark::basic_value<TC> >())) *);
 
                 template<typename T, typename TC>
                 static std::false_type check(...);
@@ -116,16 +116,16 @@ namespace xconfig {
                 template<typename T>
                 static std::false_type check(...);
 
-                template<typename T, std::size_t S = sizeof(::xconfig::from<T>)>
-                static std::true_type check(::xconfig::from<T> *);
+                template<typename T, std::size_t S = sizeof(::shark::from<T>)>
+                static std::true_type check(::shark::from<T> *);
             };
 
             struct has_specialized_into_impl {
                 template<typename T>
                 static std::false_type check(...);
 
-                template<typename T, std::size_t S = sizeof(::xconfig::into<T>)>
-                static std::true_type check(::xconfig::into<T> *);
+                template<typename T, std::size_t S = sizeof(::shark::into<T>)>
+                static std::true_type check(::shark::into<T> *);
             };
 
 
@@ -342,12 +342,12 @@ namespace xconfig {
             };
 
             template<typename TC>
-            struct is_basic_value_impl<::xconfig::basic_value<TC> > : std::true_type {
+            struct is_basic_value_impl<::shark::basic_value<TC> > : std::true_type {
             };
 
             template<typename T>
             using is_basic_value = is_basic_value_impl<cxx::remove_cvref_t<T> >;
         } // detail
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_TRAITS_HPP

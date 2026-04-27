@@ -77,7 +77,7 @@
 #  endif
 #endif
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -100,7 +100,7 @@ std::unique_ptr<T> make_unique(Ts&& ... args)
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 // ---------------------------------------------------------------------------
 
@@ -112,7 +112,7 @@ std::unique_ptr<T> make_unique(Ts&& ... args)
 #  endif
 #endif
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -134,7 +134,7 @@ std::reverse_iterator<Iterator> make_reverse_iterator(Iterator iter)
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 // ---------------------------------------------------------------------------
 
@@ -146,7 +146,7 @@ std::reverse_iterator<Iterator> make_reverse_iterator(Iterator iter)
 #  endif
 #endif
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -169,7 +169,7 @@ T clamp(const T& x, const T& low, const T& high) noexcept
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 // ---------------------------------------------------------------------------
 
@@ -181,7 +181,7 @@ T clamp(const T& x, const T& low, const T& high) noexcept
 #  endif
 #endif
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -211,7 +211,7 @@ U bit_cast(const T& x) noexcept
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 // ---------------------------------------------------------------------------
 // C++20 remove_cvref_t
@@ -224,7 +224,7 @@ U bit_cast(const T& x) noexcept
 #  endif
 #endif
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -251,7 +251,7 @@ using remove_cvref_t = typename remove_cvref<T>::type;
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 // ---------------------------------------------------------------------------
 // C++17 and/or/not
@@ -264,7 +264,7 @@ using remove_cvref_t = typename remove_cvref<T>::type;
 #  endif
 #endif
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -299,7 +299,7 @@ struct negation : std::integral_constant<bool, !static_cast<bool>(T::value)>{};
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 // ---------------------------------------------------------------------------
 // C++14 index_sequence
@@ -312,7 +312,7 @@ struct negation : std::integral_constant<bool, !static_cast<bool>(T::value)>{};
 #  endif
 #endif
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -361,7 +361,7 @@ using make_index_sequence = typename index_sequence_maker<N>::type;
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 // ---------------------------------------------------------------------------
 // C++14 enable_if_t
@@ -374,7 +374,7 @@ using make_index_sequence = typename index_sequence_maker<N>::type;
 #  endif
 #endif
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -393,7 +393,7 @@ using enable_if_t = typename std::enable_if<B, T>::type;
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 // ---------------------------------------------------------------------------
 // return_type_of_t
@@ -406,7 +406,7 @@ using enable_if_t = typename std::enable_if<B, T>::type;
 #  endif
 #endif
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -427,7 +427,7 @@ using return_type_of_t = typename std::result_of<F(Args...)>::type;
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 // ---------------------------------------------------------------------------
 // C++17 void_t
@@ -440,7 +440,7 @@ using return_type_of_t = typename std::result_of<F(Args...)>::type;
 #  endif
 #endif
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -459,7 +459,7 @@ using void_t = void;
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 // ----------------------------------------------------------------------------
 // (subset of) source_location
@@ -501,7 +501,7 @@ using void_t = void;
 
 #if defined(TOML11_HAS_STD_SOURCE_LOCATION)
 #include <source_location>
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -526,10 +526,10 @@ inline std::string to_string(const source_location& loc)
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #elif defined(TOML11_HAS_EXPERIMENTAL_SOURCE_LOCATION)
 #include <experimental/source_location>
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -554,9 +554,9 @@ inline std::string to_string(const source_location& loc)
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #elif defined(TOML11_HAS_BUILTIN_FILE_LINE)
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -601,9 +601,9 @@ inline std::string to_string(const source_location& loc)
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #else // no builtin
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -620,7 +620,7 @@ inline std::string to_string(const source_location&)
 }
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_HAS_STD_SOURCE_LOCATION
 
 // ----------------------------------------------------------------------------
@@ -642,7 +642,7 @@ inline std::string to_string(const source_location&)
 
 #if defined(TOML11_HAS_STD_OPTIONAL)
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -662,11 +662,11 @@ operator<<(std::basic_ostream<charT, traitsT>& os, const std::nullopt_t&)
 
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 
 #else // TOML11_HAS_STD_OPTIONAL
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -868,7 +868,7 @@ class optional
 };
 } // cxx
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_HAS_STD_OPTIONAL
 
 #endif // TOML11_COMPAT_HPP

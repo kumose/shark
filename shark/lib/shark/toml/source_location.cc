@@ -11,7 +11,7 @@
 
 #include <cctype>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         source_location::source_location(const detail::region &r)
@@ -47,14 +47,14 @@ namespace xconfig {
 
         std::string const &source_location::first_line() const {
             if (this->line_str_.size() == 0) {
-                throw std::out_of_range("xconfig::source_location::first_line: `lines` is empty");
+                throw std::out_of_range("shark::source_location::first_line: `lines` is empty");
             }
             return this->line_str_.front();
         }
 
         std::string const &source_location::last_line() const {
             if (this->line_str_.size() == 0) {
-                throw std::out_of_range("xconfig::source_location::first_line: `lines` is empty");
+                throw std::out_of_range("shark::source_location::first_line: `lines` is empty");
             }
             return this->line_str_.back();
         }
@@ -174,4 +174,4 @@ namespace xconfig {
             }
         } // namespace detail
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark

@@ -11,7 +11,7 @@
 
 #include <cstdint>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -117,5 +117,5 @@ template<typename T, typename V> struct is_not_toml_type : cxx::negation<is_exac
 
 } // namespace detail
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark
 #endif // TOML11_VALUE_T_FWD_HPP

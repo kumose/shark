@@ -19,14 +19,14 @@
 #include <cstdint>
 #include <cstdio>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         // forward decl
         template<typename TypeConfig>
         class basic_value;
 
-        // when you use a special integer type as xconfig::value::integer_type, parse must
+        // when you use a special integer type as shark::Value::integer_type, parse must
         // be able to read it. So, type_config has static member functions that read the
         // integer_type as {dec, hex, oct, bin}-integer. But, in most cases, operator<<
         // is enough. To make config easy, we provide the default read functions.
@@ -44,7 +44,7 @@ namespace xconfig {
             std::istringstream iss(str);
             iss >> val;
             if (iss.fail()) {
-                return err(make_error_info("xconfig::parse_dec_integer: "
+                return err(make_error_info("shark::parse_dec_integer: "
                                            "too large integer: current max digits = 2^" + std::to_string(max_digits),
                                            std::move(src), "must be < 2^" + std::to_string(max_digits)));
             }
@@ -61,7 +61,7 @@ namespace xconfig {
             std::istringstream iss(str);
             iss >> std::hex >> val;
             if (iss.fail()) {
-                return err(make_error_info("xconfig::parse_hex_integer: "
+                return err(make_error_info("shark::parse_hex_integer: "
                                            "too large integer: current max value = 2^" + std::to_string(max_digits),
                                            std::move(src), "must be < 2^" + std::to_string(max_digits)));
             }
@@ -78,7 +78,7 @@ namespace xconfig {
             std::istringstream iss(str);
             iss >> std::oct >> val;
             if (iss.fail()) {
-                return err(make_error_info("xconfig::parse_oct_integer: "
+                return err(make_error_info("shark::parse_oct_integer: "
                                            "too large integer: current max value = 2^" + std::to_string(max_digits),
                                            std::move(src), "must be < 2^" + std::to_string(max_digits)));
             }
@@ -115,7 +115,7 @@ namespace xconfig {
                 }
             }
             if (base == 0) {
-                return err(make_error_info("xconfig::parse_bin_integer: "
+                return err(make_error_info("shark::parse_bin_integer: "
                                            "too large integer: current max value = 2^" + std::to_string(max_digits),
                                            std::move(src), "must be < 2^" + std::to_string(max_digits)));
             }
@@ -145,7 +145,7 @@ namespace xconfig {
             const auto res = std::sscanf(str.c_str(), "%a", std::addressof(val));
 #endif
             if (res != 1) {
-                return err(make_error_info("xconfig::parse_floating: "
+                return err(make_error_info("shark::parse_floating: "
                                            "failed to read hexadecimal floating point value ",
                                            std::move(src), "here"));
             }
@@ -160,7 +160,7 @@ namespace xconfig {
             const auto res = std::sscanf(str.c_str(), "%la", std::addressof(val));
 #endif
             if (res != 1) {
-                return err(make_error_info("xconfig::parse_floating: "
+                return err(make_error_info("shark::parse_floating: "
                                            "failed to read hexadecimal floating point value ",
                                            std::move(src), "here"));
             }
@@ -173,7 +173,7 @@ namespace xconfig {
             cxx::negation<std::is_same<cxx::remove_cvref_t<T>, float> >
         >::value, result<T, error_info> >
         read_hex_float(const std::string &, const source_location src, T) {
-            return err(make_error_info("xconfig::parse_floating: failed to read "
+            return err(make_error_info("shark::parse_floating: failed to read "
                                        "floating point value because of unknown type in type_config",
                                        std::move(src), "here"));
         }
@@ -185,7 +185,7 @@ namespace xconfig {
             std::istringstream iss(str);
             iss >> val;
             if (iss.fail()) {
-                return err(make_error_info("xconfig::parse_floating: "
+                return err(make_error_info("shark::parse_floating: "
                                            "failed to read floating point value from stream",
                                            std::move(src), "here"));
             }
@@ -226,9 +226,9 @@ namespace xconfig {
             }
         };
 
-        using value = basic_value<type_config>;
-        using table = typename value::table_type;
-        using array = typename value::array_type;
+        using Value = basic_value<type_config>;
+        using Table = typename Value::table_type;
+        using Array = typename Value::array_type;
 
         struct ordered_type_config {
             using comment_type = preserve_comments;
@@ -320,7 +320,7 @@ namespace xconfig {
             template<typename T>
             struct has_parse_int<T, cxx::void_t<decltype(std::declval<T>().parse_int(
                         std::declval<std::string const &>(),
-                        std::declval<::xconfig::source_location const &>(),
+                        std::declval<::shark::source_location const &>(),
                         std::declval<std::uint8_t>()
                     ))> > : std::true_type {
             };
@@ -332,7 +332,7 @@ namespace xconfig {
             template<typename T>
             struct has_parse_float<T, cxx::void_t<decltype(std::declval<T>().parse_float(
                         std::declval<std::string const &>(),
-                        std::declval<::xconfig::source_location const &>(),
+                        std::declval<::shark::source_location const &>(),
                         std::declval<bool>()
                     ))> > : std::true_type {
             };
@@ -350,6 +350,6 @@ namespace xconfig {
             >;
         } // namespace detail
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark
 
 #endif // TOML11_TYPES_HPP

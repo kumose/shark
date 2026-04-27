@@ -9,7 +9,7 @@
 
 #include <cassert>
 
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -17,8 +17,8 @@ namespace detail
 {
 
 //
-// To represent where is a xconfig::value defined, or where does an error occur.
-// Stored in xconfig::value. source_location will be constructed based on this.
+// To represent where is a shark::Value defined, or where does an error occur.
+// Stored in shark::Value. source_location will be constructed based on this.
 //
 class region
 {
@@ -110,5 +110,5 @@ class region
 
 } // namespace detail
 } // TOML11_INLINE_VERSION_NAMESPACE
-} // namespace xconfig
+} // namespace shark
 #endif // TOML11_REGION_FWD_HPP

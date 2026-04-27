@@ -21,7 +21,7 @@
 // Conversely, `discard_comments` discards all the strings and ignores everything
 // assigned in it. `discard_comments` is always empty and you will encounter an
 // error whenever you access to the element.
-namespace xconfig
+namespace shark
 {
 inline namespace TOML11_INLINE_VERSION_NAMESPACE
 {
@@ -401,14 +401,14 @@ class discard_comments
     // empty, so accessing through operator[], front/back, data causes address
     // error.
 
-    reference       operator[](const size_type)       noexcept {never_call("xconfig::discard_comment::operator[]");}
-    const_reference operator[](const size_type) const noexcept {never_call("xconfig::discard_comment::operator[]");}
-    reference       at(const size_type)       {throw std::out_of_range("xconfig::discard_comment is always empty.");}
-    const_reference at(const size_type) const {throw std::out_of_range("xconfig::discard_comment is always empty.");}
-    reference       front()       noexcept {never_call("xconfig::discard_comment::front");}
-    const_reference front() const noexcept {never_call("xconfig::discard_comment::front");}
-    reference       back()        noexcept {never_call("xconfig::discard_comment::back");}
-    const_reference back()  const noexcept {never_call("xconfig::discard_comment::back");}
+    reference       operator[](const size_type)       noexcept {never_call("shark::discard_comment::operator[]");}
+    const_reference operator[](const size_type) const noexcept {never_call("shark::discard_comment::operator[]");}
+    reference       at(const size_type)       {throw std::out_of_range("shark::discard_comment is always empty.");}
+    const_reference at(const size_type) const {throw std::out_of_range("shark::discard_comment is always empty.");}
+    reference       front()       noexcept {never_call("shark::discard_comment::front");}
+    const_reference front() const noexcept {never_call("shark::discard_comment::front");}
+    reference       back()        noexcept {never_call("shark::discard_comment::back");}
+    const_reference back()  const noexcept {never_call("shark::discard_comment::back");}
 
     pointer         data()        noexcept {return nullptr;}
     const_pointer   data()  const noexcept {return nullptr;}

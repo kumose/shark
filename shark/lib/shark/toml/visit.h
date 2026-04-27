@@ -6,7 +6,7 @@
 #include <shark/toml/value.h>
 #include <shark/toml/version.h>
 
-namespace xconfig {
+namespace shark {
     inline namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         namespace detail {
@@ -92,7 +92,7 @@ namespace xconfig {
                     case value_t::empty: break;
                     default: break;
                 }
-                throw type_error(format_error("[error] xconfig::visit: xconfig::basic_value "
+                throw type_error(format_error("[error] shark::visit: shark::basic_value "
                                               "does not have any valid type.", v.location(), "here"), v.location());
             }
 
@@ -137,7 +137,7 @@ namespace xconfig {
                     case value_t::empty: break;
                     default: break;
                 }
-                throw type_error(format_error("[error] xconfig::visit: xconfig::basic_value "
+                throw type_error(format_error("[error] shark::visit: shark::basic_value "
                                               "does not have any valid type.", v.location(), "here"), v.location());
             }
 
@@ -182,7 +182,7 @@ namespace xconfig {
                     case value_t::empty: break;
                     default: break;
                 }
-                throw type_error(format_error("[error] xconfig::visit: xconfig::basic_value "
+                throw type_error(format_error("[error] shark::visit: shark::basic_value "
                                               "does not have any valid type.", v.location(), "here"), v.location());
             }
         } // detail
@@ -193,5 +193,5 @@ namespace xconfig {
             return detail::visit_impl(std::forward<Visitor>(visitor), std::forward<Args>(args)...);
         }
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
 #endif // TOML11_VISIT_HPP

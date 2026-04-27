@@ -2,7 +2,7 @@
 #include <shark/toml/utility.h>
 #include <shark/toml/version.h>
 
-namespace xconfig {
+namespace shark {
     inline  namespace
     TOML11_INLINE_VERSION_NAMESPACE {
         namespace detail {
@@ -380,4 +380,4 @@ namespace xconfig {
             }
         } // detail
     } // TOML11_INLINE_VERSION_NAMESPACE
-} // xconfig
+} // shark
