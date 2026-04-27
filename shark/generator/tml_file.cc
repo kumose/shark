@@ -64,6 +64,7 @@ namespace shark {
             "#include <string>\n"
             "#include <optional>\n"
             "#include <turbo/utility/status.h>\n\n"
+            "#include <turbo/container/flat_hash_map.h>\n\n"
             "#include <shark/toml.h>\n"
             "$INC$"
             "\n"

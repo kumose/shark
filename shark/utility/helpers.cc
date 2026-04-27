@@ -29,6 +29,7 @@
 #include <shark/utility/compat.h>
 #include <turbo/strings/str_split.h>
 #include <turbo/strings/str_replace.h>
+#include <turbo/strings/escaping.h>
 
 namespace shark {
 #if defined(_MSC_VER)
@@ -212,7 +213,8 @@ namespace shark {
             while ((delim_i = comment_lines[i].find("*/")) != std::string::npos)
                 comment_lines[i][delim_i + 1] = ' ';
             auto trimd = turbo::trim_all(comment_lines[i]);
-            printer->Print("\"# $comment$\\n\"\n", "comment", trimd);
+            auto coded = turbo::c_encode(trimd);
+            printer->Print("\"# $comment$\\n\"\n", "comment", coded);
         }
     }
 
