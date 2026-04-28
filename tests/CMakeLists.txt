@@ -105,6 +105,7 @@ find_package(GTest REQUIRED)
 include_directories(${PROJECT_SOURCE_DIR}/shark/lib)
 set(SHARK_IDL_TEST_FILES
         test.proto
+        config.proto
 )
 
 
@@ -166,4 +167,20 @@ kmcmake_cc_binary(
         LINKOPTS
         -fsanitize=address
         ${KMCMAKE_STATIC_BIN_OPTION}
+)
+kmcmake_cc_test(
+        NAME case_test
+        MODULE runtime
+        SOURCES
+        case_test.cc
+        INCLUDES
+        ${SHARK_ENUM_GEN_DIR}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        LINKS
+        shark::sk_test_static
+        shark::shark_static
+        GTest::gtest_main
+        GTest::gtest
+        ${KMCMAKE_DEPS_LINK}
 )

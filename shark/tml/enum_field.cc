@@ -90,41 +90,11 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
                 printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(
-                    _variables, "std::optional<shark::Value> val = shark::find<shark::Value>(config, \"$name$\");\n");
-                printer->Print(_variables, "if (val) {\n");
+                printer->Print(_variables, "std::string str;\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_find_primitive(config, \"$name$\", str));\n");
+                printer->Print(_variables, "if (!str.empty()) {\n");
                 printer->Indent();
-                printer->Print(_variables, "if (val->is_string()) {\n");
-                printer->Indent();
-                printer->Print(_variables, "$name$ = val->as_string();\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(
-                    _variables, "return turbo::invalid_argument_error(\"field $name$ is not string type\");\n");
-                printer->Outdent();
-                printer->Print(_variables, "}\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(
-                    _variables,
-                    "return turbo::invalid_argument_error(\"field $name$ is require as string type, but not exists\");\n");
-                printer->Outdent();
-                printer->Print("}\n");
-                printer->Outdent();
-                break;
-
-            case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "uri.push_back(\"$name$\");\n");
-                printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(
-                    _variables, "std::optional<shark::Value> val = shark::find<shark::Value>(config, \"$name$\");\n");
-                printer->Print(_variables, "if (val) {\n");
-                printer->Indent();
-                printer->Print(_variables, "if (val->is_string()) {\n");
-                printer->Indent();
-                printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(val->as_string());\n");
+                printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
                 printer->Print(_variables, "if (tmp) {\n");
                 printer->Indent();
                 printer->Print(_variables, "$name$ = *tmp;\n");
@@ -137,56 +107,55 @@ namespace shark {
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
                 printer->Outdent();
+                printer->Print("}\n");
+                break;
+
+            case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
+                printer->Print(_variables, "uri.push_back(\"$name$\");\n");
+                printer->Print(_variables, "uri.pop_back();\n");
+                printer->Print(_variables, "std::string str;\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, \"$name$\", str));\n");
+                printer->Print(_variables, "if (!str.empty()) {\n");
+                printer->Indent();
+                printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
+                printer->Print(_variables, "if (tmp) {\n");
+                printer->Indent();
+                printer->Print(_variables, "$name$ = *tmp;\n");
+                printer->Outdent();
                 printer->Print(_variables, "} else {\n");
                 printer->Indent();
                 printer->Print(
-                    _variables, "return turbo::invalid_argument_error(\"field $name$ is not enum type\");\n");
+                    _variables,
+                    "return turbo::invalid_argument_error(\"field $name$ is not enum type, got\", str);\n");
                 printer->Outdent();
-                printer->Print("}\n");
+                printer->Print(_variables, "}\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
                 printer->Print(
-                    _variables, "std::optional<shark::Value> val = shark::find<shark::Value>(config, \"$name$\");\n");
-                printer->Print(_variables, "if (val) {\n");
+                    _variables, "std::vector<std::string> arrs;\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_try_find_array(config, \"$name$\", arrs));\n");
+                printer->Print(_variables, "if (!arrs.empty()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "$name$.clear();\n");
-                printer->Print(_variables, "if (val->is_array()) {\n");
-                printer->Indent();
                 printer->Print(_variables, "int i = 0;\n");
-                printer->Print(_variables, "for (auto& elem : val->as_array()) {\n");
+                printer->Print(_variables, "for (auto& elem : arrs) {\n");
                 printer->Indent();
                 printer->Print(_variables, "uri.push_back(turbo::str_format(\"$name$[%d]\", i++));\n");
                 printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(_variables, "if (elem.is_string()) {\n");
+                printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
+                printer->Print(_variables, "if (tmp) {\n");
                 printer->Indent();
-                printer->Print(_variables, "$name$.push_back(elem.as_string());\n");
+                printer->Print(_variables, "$name$ = *tmp;\n");
                 printer->Outdent();
                 printer->Print(_variables, "} else {\n");
                 printer->Indent();
                 printer->Print(
                     _variables,
-                    "return turbo::invalid_argument_error(\"element of field $name$ is not string type\");\n");
+                    "return turbo::invalid_argument_error(\"field $name$ is not enum type, got\", val->as_string());\n");
                 printer->Outdent();
-                printer->Print("}\n");
-                printer->Outdent();
-                printer->Print("}\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(_variables, "if (val->is_string()) {\n");
-                printer->Indent();
-                printer->Print(_variables, "$name$.clear();\n");
-                printer->Print(_variables, "$name$.push_back(val->as_string());\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(
-                    _variables,
-                    "return turbo::invalid_argument_error(\"field $name$ is not string or array of string\");\n");
-                printer->Outdent();
-                printer->Print("}\n");
+                printer->Print(_variables, "}\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 printer->Outdent();

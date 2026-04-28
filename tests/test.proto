@@ -69,7 +69,7 @@ message Person {
   }
 
   optional Address address = 6;
-
+  optional Address ad = 7;
   /// leading comment 2
   repeated Address address2 = 17;
   optional string long_name = 18;

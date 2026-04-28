@@ -98,96 +98,16 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
                 printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(
-                    _variables, "std::optional<shark::Value> val = shark::find<shark::Value>(config, \"$name$\");\n");
-                printer->Print(_variables, "if (val) {\n");
-                printer->Indent();
-                printer->Print(_variables, "if (val->is_$toml_type$()) {\n");
-                printer->Indent();
-                printer->Print(_variables, "$name$ = val->as_$toml_type$();\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(
-                    _variables, "return turbo::invalid_argument_error(\"field $name$ is not $toml_type$ type\");\n");
-                printer->Outdent();
-                printer->Print(_variables, "}\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(
-                    _variables,
-                    "return turbo::invalid_argument_error(\"field $name$ is require as $toml_type$ type, but not exists\");\n");
-                printer->Outdent();
-                printer->Print("}\n");
-                printer->Outdent();
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_find_primitive(config, \"$name$\", $name$));\n");
                 break;
 
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
                 printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(
-                    _variables, "std::optional<shark::Value> val = shark::find<shark::Value>(config, \"$name$\");\n");
-                printer->Print(_variables, "if (val) {\n");
-                printer->Indent();
-                printer->Print(_variables, "if (val->is_$toml_type$()) {\n");
-                printer->Indent();
-                printer->Print(_variables, "$name$ = val->as_$toml_type$();\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(
-                    _variables, "return turbo::invalid_argument_error(\"field $name$ is not $toml_type$ type\");\n");
-                printer->Outdent();
-                printer->Print("}\n");
-                printer->Outdent();
-                printer->Print("}\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, \"$name$\", $name$));\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(
-                    _variables, "std::optional<shark::Value> val = shark::find<shark::Value>(config, \"$name$\");\n");
-                printer->Print(_variables, "if (val) {\n");
-                printer->Indent();
-                printer->Print(_variables, "$name$.clear();\n");
-                printer->Print(_variables, "if (val->is_array()) {\n");
-                printer->Indent();
-                printer->Print(_variables, "int i = 0;\n");
-                printer->Print(_variables, "for (auto& elem : val->as_array()) {\n");
-                printer->Indent();
-                printer->Print(_variables, "uri.push_back(turbo::str_format(\"$name$[%d]\", i++));\n");
-                printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(_variables, "if (elem.is_$toml_type$()) {\n");
-                printer->Indent();
-                printer->Print(_variables, "$name$.push_back(elem.as_$toml_type$());\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(
-                    _variables,
-                    "return turbo::invalid_argument_error(\"element of field $name$ is not $toml_type$ type\");\n");
-                printer->Outdent();
-                printer->Print("}\n");
-                printer->Outdent();
-                printer->Print("}\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(_variables, "if (val->is_$toml_type$()) {\n");
-                printer->Indent();
-                printer->Print(_variables, "$name$.clear();\n");
-                printer->Print(_variables, "$name$.push_back(val->as_$toml_type$());\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(
-                    _variables,
-                    "return turbo::invalid_argument_error(\"field $name$ is not $toml_type$ or array of string\");\n");
-                printer->Outdent();
-                printer->Print("}\n");
-                printer->Outdent();
-                printer->Print("}\n");
-                printer->Outdent();
-                printer->Print("}\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_try_find_array(config, \"$name$\", $name$));\n");
                 break;
         }
     }

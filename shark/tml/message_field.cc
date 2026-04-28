@@ -65,56 +65,35 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
-                printer->Print(_variables, "std::optional<shark::Value> val = shark::find<shark::Value>(config, \"$name$\");\n");
-                printer->Print(_variables, "if (val) {\n");
-                printer->Indent();
-                printer->Print(_variables, "if (val->is_table()) {\n");
-                printer->Indent();
-                printer->Print(_variables, "$name$.parse_toml(*val, uri);\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(_variables, "return turbo::invalid_argument_error(\"field $name$ is not table type\");\n");
-                printer->Outdent();
-                printer->Print(_variables, "}\n");
-                printer->Outdent();
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(_variables, "return turbo::invalid_argument_error(\"field $name$ is require as table type, but not exists\");\n");
-                printer->Outdent();
-                printer->Print("}\n");
-                printer->Outdent();
-
-                printer->Print(_variables, "std::optional<shark::Value> val = shark::find<shark::Value>(config, \"$name$\");\n");
-                printer->Print(_variables, "if (val) {\n");
-                printer->Indent();
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK($name$.parse_toml(*val, uri));\n");
-                printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(_variables, "} else {\n");
-                printer->Indent();
-                printer->Print(_variables, "return turbo::invalid_argument_error(\"field $name$ is require as table type, but not exists\");\n");
-                printer->Outdent();
-                printer->Print("}\n");
+                printer->Print(_variables, "shark::Value val;\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_find_table(config, \"$name$\", val));\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK($name$.parse_toml(val, uri));\n");
                 break;
 
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
-                printer->Print(_variables, "std::optional<shark::Value> val = shark::find<shark::Value>(config, \"$name$\");\n");
-                printer->Print(_variables, "if (val) {\n");
+                printer->Print(_variables, "shark::Value val;\n");
+                printer->Print(_variables, "auto rs = safe_find_table(config, \"$name$\", val);\n");
+                printer->Print(_variables, "if (rs.ok()) {\n");
                 printer->Indent();
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK($name$.parse_toml(*val, uri));\n");
-                printer->Print(_variables, "uri.pop_back();\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK($name$.parse_toml(val, uri));\n");
+                printer->Outdent();
+                printer->Print(_variables, "} else if (!turbo::is_not_found(rs)) {\n");
+                printer->Indent();
+                printer->Print(_variables, "return rs;\n");
+                printer->Outdent();
                 printer->Print(_variables, "}\n");
+
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "std::optional<shark::Value> val = shark::find<shark::Value>(config, \"$name$\");\n");
-                printer->Print(_variables, "if (val) {\n");
+                printer->Print(_variables, "shark::Array arrs;\n");
+                printer->Print(_variables, "auto rs = safe_find_array(config, \"$name$\", arrs);\n");
+
+                printer->Print(_variables, "if (rs.ok()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "$name$.clear();\n");
-                printer->Print(_variables, "if (val->is_array()) {\n");
-                printer->Indent();
                 printer->Print(_variables, "int i = 0;\n");
-                printer->Print(_variables, "for (auto& elem : val->as_array()) {\n");
+                printer->Print(_variables, "for (auto& elem : arrs) {\n");
                 printer->Indent();
                 printer->Print(_variables, "uri.push_back(turbo::str_format(\"$name$[%d]\", i++));\n");
                 printer->Print(_variables, "$type$ tmp;\n");
@@ -124,7 +103,10 @@ namespace shark {
                 printer->Outdent();
                 printer->Print("}\n");
                 printer->Outdent();
-                printer->Print(_variables, "}\n");
+
+                printer->Print(_variables, "} else if (!turbo::is_not_found(rs)) {\n");
+                printer->Indent();
+                printer->Print(_variables, "return rs;\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
                 break;

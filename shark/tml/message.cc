@@ -151,6 +151,7 @@ namespace shark {
         printer->Print(_vars, "turbo::Status parse_toml_file(const std::string& str);\n\n");
         printer->Print(_vars, "turbo::Status parse_toml(const shark::Value& v, const std::vector<std::string> &prefix);\n\n");
         printer->Print(_vars, "shark::Value serialize_toml() const;\n\n");
+        printer->Print(_vars, "std::string serialize_to_string() const;\n\n");
         printer->Outdent();
         printer->Print("\n//////////////////////////////////////////////////////////////////////\n");
         printer->Print("/// members\n");
@@ -196,16 +197,34 @@ namespace shark {
 
         printer->Print(_vars, "turbo::Status $domain$::parse_toml_str(const std::string& str) {\n\n");
         printer->Indent();
+        printer->Print(_vars, "try {\n");
+        printer->Indent();
         printer->Print(_vars, "auto val = shark::parse_str(str);\n");
         printer->Print(_vars, "return  parse_toml(val, {});\n");
         printer->Outdent();
+        printer->Print(_vars, "} catch(const std::exception &e) {\n");
+        printer->Indent();
+        printer->Print(_vars, "return turbo::unknown_error(e.what());\n");
+        printer->Outdent();
         printer->Print(_vars, "}\n\n");
+        printer->Outdent();
+        printer->Print(_vars, "}\n\n");
+
         printer->Print(_vars, "turbo::Status $domain$::parse_toml_file(const std::string& path) {\n");
+        printer->Indent();
+        printer->Print(_vars, "try {\n");
         printer->Indent();
         printer->Print(_vars, "auto val = shark::parse(path);\n");
         printer->Print(_vars, "return  parse_toml(val, {});\n");
         printer->Outdent();
+        printer->Print(_vars, "} catch(const std::exception &e) {\n");
+        printer->Indent();
+        printer->Print(_vars, "return turbo::unknown_error(e.what());\n");
+        printer->Outdent();
         printer->Print(_vars, "}\n\n");
+        printer->Outdent();
+        printer->Print(_vars, "}\n\n");
+
         printer->Print("///////////////////////////////////////////////////////////////////////// \n");
         printer->Print("/// transfers \n");
         printer->Print(_vars, "turbo::Status $domain$::parse_toml(const shark::Value& config, const std::vector<std::string> &prefix) {\n");
@@ -243,6 +262,12 @@ namespace shark {
         printer->Outdent();
         printer->Print("}\n\n");
 
+        printer->Print(_vars, "std::string $domain$::serialize_to_string() const {\n\n");
+        printer->Indent();
+        printer->Print(_vars, "auto v = serialize_toml();\n\n");
+        printer->Print(_vars, "return shark::format(v);\n\n");
+        printer->Outdent();
+        printer->Print("}\n\n");
     }
 
     void MessageGenerator::generate_implement(google::protobuf::io::Printer *printer) {

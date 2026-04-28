@@ -8,6 +8,8 @@
 #include <optional>
 #include <turbo/utility/status.h>
 
+#include <turbo/container/flat_hash_map.h>
+
 #include <shark/toml.h>
 #include <turbo/container/flat_hash_map.h>
 
@@ -80,6 +82,8 @@ namespace my::custom::ns {
 
         shark::Value serialize_toml() const;
 
+        std::string serialize_to_string() const;
+
 
       //////////////////////////////////////////////////////////////////////
       /// members
@@ -99,6 +103,8 @@ namespace my::custom::ns {
       turbo::Status parse_toml(const shark::Value& v, const std::vector<std::string> &prefix);
 
       shark::Value serialize_toml() const;
+
+      std::string serialize_to_string() const;
 
 
     //////////////////////////////////////////////////////////////////////
@@ -129,6 +135,8 @@ namespace my::custom::ns {
 
     shark::Value serialize_toml() const;
 
+    std::string serialize_to_string() const;
+
 
   //////////////////////////////////////////////////////////////////////
   /// members
@@ -144,6 +152,7 @@ namespace my::custom::ns {
     std::vector<int32_t> ages;
     Color favorite_color{Color::GREEN};
     Address address;
+    Address ad;
     /// leading comment 2
     std::vector<Address> address2;
     std::string long_name{""};

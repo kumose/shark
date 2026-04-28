@@ -64,13 +64,23 @@ namespace my::custom::ns {
   }
   turbo::Status Person::Address::Detail::parse_toml_str(const std::string& str) {
 
-    auto val = shark::parse_str(str);
-    return  parse_toml(val, {});
+    try {
+      auto val = shark::parse_str(str);
+      return  parse_toml(val, {});
+    } catch(const std::exception &e) {
+      return turbo::unknown_error(e.what());
+    }
+
   }
 
   turbo::Status Person::Address::Detail::parse_toml_file(const std::string& path) {
-    auto val = shark::parse(path);
-    return  parse_toml(val, {});
+    try {
+      auto val = shark::parse(path);
+      return  parse_toml(val, {});
+    } catch(const std::exception &e) {
+      return turbo::unknown_error(e.what());
+    }
+
   }
 
   ///////////////////////////////////////////////////////////////////////// 
@@ -80,26 +90,12 @@ namespace my::custom::ns {
     {
       uri.push_back("region");
       uri.pop_back();
-      std::optional<shark::Value> val = shark::find<shark::Value>(config, "region");
-      if (val) {
-        if (val->is_string()) {
-          region = val->as_string();
-        } else {
-          return turbo::invalid_argument_error("field region is not string type");
-        }
-      }
+      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "region", region));
     }
     {
       uri.push_back("prcode");
       uri.pop_back();
-      std::optional<shark::Value> val = shark::find<shark::Value>(config, "prcode");
-      if (val) {
-        if (val->is_string()) {
-          prcode = val->as_string();
-        } else {
-          return turbo::invalid_argument_error("field prcode is not string type");
-        }
-      }
+      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "prcode", prcode));
     }
   return turbo::OkStatus();
   }
@@ -117,15 +113,33 @@ namespace my::custom::ns {
     return result;
   }
 
+  std::string Person::Address::Detail::serialize_to_string() const {
+
+    auto v = serialize_toml();
+
+    return shark::format(v);
+
+  }
+
   turbo::Status Person::Address::parse_toml_str(const std::string& str) {
 
-    auto val = shark::parse_str(str);
-    return  parse_toml(val, {});
+    try {
+      auto val = shark::parse_str(str);
+      return  parse_toml(val, {});
+    } catch(const std::exception &e) {
+      return turbo::unknown_error(e.what());
+    }
+
   }
 
   turbo::Status Person::Address::parse_toml_file(const std::string& path) {
-    auto val = shark::parse(path);
-    return  parse_toml(val, {});
+    try {
+      auto val = shark::parse(path);
+      return  parse_toml(val, {});
+    } catch(const std::exception &e) {
+      return turbo::unknown_error(e.what());
+    }
+
   }
 
   ///////////////////////////////////////////////////////////////////////// 
@@ -135,262 +149,221 @@ namespace my::custom::ns {
     {
       uri.push_back("street");
       uri.pop_back();
-      std::optional<shark::Value> val = shark::find<shark::Value>(config, "street");
-      if (val) {
-        if (val->is_string()) {
-          street = val->as_string();
-        } else {
-          return turbo::invalid_argument_error("field street is not string type");
-        }
-      }
+      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "street", street));
     }
     {
       uri.push_back("number");
       uri.pop_back();
-      std::optional<shark::Value> val = shark::find<shark::Value>(config, "number");
-      if (val) {
-        if (val->is_integer()) {
-          number = val->as_integer();
-        } else {
-          return turbo::invalid_argument_error("field number is not integer type");
-        }
-      }
+      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "number", number));
     }
     {
       uri.push_back("detail");
-      std::optional<shark::Value> val = shark::find<shark::Value>(config, "detail");
-      if (val) {
-        TURBO_RETURN_NOT_OK(detail.parse_toml(*val, uri));
-        uri.pop_back();
-        }
+      shark::Value val;
+      auto rs = safe_find_table(config, "detail", val);
+      if (rs.ok()) {
+        TURBO_RETURN_NOT_OK(detail.parse_toml(val, uri));
+      } else if (!turbo::is_not_found(rs)) {
+        return rs;
       }
-    return turbo::OkStatus();
     }
+  return turbo::OkStatus();
+  }
 
-    shark::Value Person::Address::serialize_toml() const {
-      shark::Value result;
-      {
-        shark::Value val = street;
-        result["street"] = val;
-      }
-      {
-        shark::Value val = number;
-        result["number"] = val;
-      }
-      {
-        auto var = detail.serialize_toml();
-        result["detail"] = var;
-      }
-      return result;
+  shark::Value Person::Address::serialize_toml() const {
+    shark::Value result;
+    {
+      shark::Value val = street;
+      result["street"] = val;
     }
+    {
+      shark::Value val = number;
+      result["number"] = val;
+    }
+    {
+      auto var = detail.serialize_toml();
+      result["detail"] = var;
+    }
+    return result;
+  }
 
-    turbo::Status Person::parse_toml_str(const std::string& str) {
+  std::string Person::Address::serialize_to_string() const {
 
+    auto v = serialize_toml();
+
+    return shark::format(v);
+
+  }
+
+  turbo::Status Person::parse_toml_str(const std::string& str) {
+
+    try {
       auto val = shark::parse_str(str);
       return  parse_toml(val, {});
+    } catch(const std::exception &e) {
+      return turbo::unknown_error(e.what());
     }
 
-    turbo::Status Person::parse_toml_file(const std::string& path) {
+  }
+
+  turbo::Status Person::parse_toml_file(const std::string& path) {
+    try {
       auto val = shark::parse(path);
       return  parse_toml(val, {});
+    } catch(const std::exception &e) {
+      return turbo::unknown_error(e.what());
     }
 
-    ///////////////////////////////////////////////////////////////////////// 
-    /// transfers 
-    turbo::Status Person::parse_toml(const shark::Value& config, const std::vector<std::string> &prefix) {
-      std::vector<std::string> uri = prefix;
-      {
-        uri.push_back("name");
-        uri.pop_back();
-        std::optional<shark::Value> val = shark::find<shark::Value>(config, "name");
-        if (val) {
-          if (val->is_string()) {
-            name = val->as_string();
-          } else {
-            return turbo::invalid_argument_error("field name is not string type");
-          }
-        } else {
-          return turbo::invalid_argument_error("field name is require as string type, but not exists");
-        }
+  }
+
+  ///////////////////////////////////////////////////////////////////////// 
+  /// transfers 
+  turbo::Status Person::parse_toml(const shark::Value& config, const std::vector<std::string> &prefix) {
+    std::vector<std::string> uri = prefix;
+    {
+      uri.push_back("name");
+      uri.pop_back();
+      TURBO_RETURN_NOT_OK(safe_find_primitive(config, "name", name));
     }
     {
       uri.push_back("age");
       uri.pop_back();
-      std::optional<shark::Value> val = shark::find<shark::Value>(config, "age");
-      if (val) {
-        if (val->is_integer()) {
-          age = val->as_integer();
-        } else {
-          return turbo::invalid_argument_error("field age is not integer type");
-        }
-      }
+      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "age", age));
     }
     {
-      std::optional<shark::Value> val = shark::find<shark::Value>(config, "emails");
-      if (val) {
-        emails.clear();
-        if (val->is_array()) {
-          int i = 0;
-          for (auto& elem : val->as_array()) {
-            uri.push_back(turbo::str_format("emails[%d]", i++));
-            uri.pop_back();
-            if (elem.is_string()) {
-              emails.push_back(elem.as_string());
-            } else {
-              return turbo::invalid_argument_error("element of field emails is not string type");
-            }
-          }
-        } else {
-          uri.push_back("emails[0]");
-          uri.pop_back();
-          if (val->is_string()) {
-            emails.clear();
-            emails.push_back(val->as_string());
-          } else {
-            return turbo::invalid_argument_error("field emails is not string or array of string");
-          }
-        }
-      }
+      TURBO_RETURN_NOT_OK(safe_try_find_array(config, "emails", emails));
     }
     {
-      std::optional<shark::Value> val = shark::find<shark::Value>(config, "ages");
-      if (val) {
-        ages.clear();
-        if (val->is_array()) {
-          int i = 0;
-          for (auto& elem : val->as_array()) {
-            uri.push_back(turbo::str_format("ages[%d]", i++));
-            uri.pop_back();
-            if (elem.is_integer()) {
-              ages.push_back(elem.as_integer());
-            } else {
-              return turbo::invalid_argument_error("element of field ages is not integer type");
-            }
-          }
-        } else {
-          if (val->is_integer()) {
-            ages.clear();
-            ages.push_back(val->as_integer());
-          } else {
-            return turbo::invalid_argument_error("field ages is not integer or array of string");
-          }
-        }
-      }
+      TURBO_RETURN_NOT_OK(safe_try_find_array(config, "ages", ages));
     }
     {
       uri.push_back("favorite_color");
       uri.pop_back();
-      std::optional<shark::Value> val = shark::find<shark::Value>(config, "favorite_color");
-      if (val) {
-        if (val->is_string()) {
-          auto tmp = parse_Color(val->as_string());
-          if (tmp) {
-            favorite_color = *tmp;
-          } else {
-            return turbo::invalid_argument_error("field favorite_color is not enum type, got", val->as_string());
-          }
+      std::string str;
+      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "favorite_color", str));
+      if (!str.empty()) {
+        auto tmp = parse_Color(str);
+        if (tmp) {
+          favorite_color = *tmp;
         } else {
-          return turbo::invalid_argument_error("field favorite_color is not enum type");
+          return turbo::invalid_argument_error("field favorite_color is not enum type, got", str);
         }
       }
     }
     {
       uri.push_back("address");
-      std::optional<shark::Value> val = shark::find<shark::Value>(config, "address");
-      if (val) {
-        TURBO_RETURN_NOT_OK(address.parse_toml(*val, uri));
-        uri.pop_back();
-        }
+      shark::Value val;
+      auto rs = safe_find_table(config, "address", val);
+      if (rs.ok()) {
+        TURBO_RETURN_NOT_OK(address.parse_toml(val, uri));
+      } else if (!turbo::is_not_found(rs)) {
+        return rs;
       }
-      {
-        std::optional<shark::Value> val = shark::find<shark::Value>(config, "address2");
-        if (val) {
-          address2.clear();
-          if (val->is_array()) {
-            int i = 0;
-            for (auto& elem : val->as_array()) {
-              uri.push_back(turbo::str_format("address2[%d]", i++));
-              Address tmp;
-              TURBO_RETURN_NOT_OK(tmp.parse_toml(elem, uri));
-              address2.push_back(tmp);
-              uri.pop_back();
-            }
-          }
-        }
-      }
-      {
-        uri.push_back("long_name");
-        uri.pop_back();
-        std::optional<shark::Value> val = shark::find<shark::Value>(config, "long_name");
-        if (val) {
-          if (val->is_string()) {
-            long_name = val->as_string();
-          } else {
-            return turbo::invalid_argument_error("field long_name is not string type");
-          }
-        }
-      }
-    return turbo::OkStatus();
     }
-
-    shark::Value Person::serialize_toml() const {
-      shark::Value result;
-      {
-        shark::Value val = name;
-        val.comments().push_back("#############################################\n"
-        "# this is my ssdsf\n"
-        "### end\n");
-        result["name"] = val;
+    {
+      uri.push_back("ad");
+      shark::Value val;
+      auto rs = safe_find_table(config, "ad", val);
+      if (rs.ok()) {
+        TURBO_RETURN_NOT_OK(ad.parse_toml(val, uri));
+      } else if (!turbo::is_not_found(rs)) {
+        return rs;
       }
-      {
-        shark::Value val = age;
-        val.comments().push_back("#############################################\n"
-        "# my comment\n"
-        "### end\n");
-        result["age"] = val;
-      }
-      {
-        shark::Value arr = shark::Array{};
-        arr.comments().push_back("#############################################\n"
-        "# leading comment 1\n"
-        "# leading comment 2\n"
-        "### end\n");
-        for(size_t i = 0; i < emails.size(); ++i) {
-          arr.push_back(emails[i]);
-        }
-        result["emails"] = arr;
-      }
-      {
-        shark::Value arr = shark::Array{};
-        for(size_t i = 0; i < ages.size(); ++i) {
-          arr.push_back(ages[i]);
-        }
-        result["ages"] = arr;
-      }
-      {
-        shark::Value var = my::custom::ns::to_string(favorite_color);
-        result["favorite_color"] = var;
-      }
-      {
-        auto var = address.serialize_toml();
-        result["address"] = var;
-      }
-      {
-        shark::Value arr = shark::Array{};
-        arr.comments().push_back("#############################################\n"
-        "# leading comment 2\n"
-        "### end\n");
-        for(size_t i = 0; i < address2.size(); ++i) {
-          arr.push_back(address2[i].serialize_toml());
-        }
-        result["address2"] = arr;
-      }
-      {
-        shark::Value val = long_name;
-        result["long_name"] = val;
-      }
-      return result;
     }
+    {
+      shark::Array arrs;
+      auto rs = safe_find_array(config, "address2", arrs);
+      if (rs.ok()) {
+        address2.clear();
+        int i = 0;
+        for (auto& elem : arrs) {
+          uri.push_back(turbo::str_format("address2[%d]", i++));
+          Address tmp;
+          TURBO_RETURN_NOT_OK(tmp.parse_toml(elem, uri));
+          address2.push_back(tmp);
+          uri.pop_back();
+        }
+      } else if (!turbo::is_not_found(rs)) {
+        return rs;
+      }
+    }
+    {
+      uri.push_back("long_name");
+      uri.pop_back();
+      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "long_name", long_name));
+    }
+  return turbo::OkStatus();
+  }
 
-  }  // my::custom::ns
+  shark::Value Person::serialize_toml() const {
+    shark::Value result;
+    {
+      shark::Value val = name;
+      val.comments().push_back("#############################################\n"
+      "# this is my ssdsf\n"
+      "### end\n");
+      result["name"] = val;
+    }
+    {
+      shark::Value val = age;
+      val.comments().push_back("#############################################\n"
+      "# my comment\n"
+      "### end\n");
+      result["age"] = val;
+    }
+    {
+      shark::Value arr = shark::Array{};
+      arr.comments().push_back("#############################################\n"
+      "# leading comment 1\n"
+      "# leading comment 2\n"
+      "### end\n");
+      for(size_t i = 0; i < emails.size(); ++i) {
+        arr.push_back(emails[i]);
+      }
+      result["emails"] = arr;
+    }
+    {
+      shark::Value arr = shark::Array{};
+      for(size_t i = 0; i < ages.size(); ++i) {
+        arr.push_back(ages[i]);
+      }
+      result["ages"] = arr;
+    }
+    {
+      shark::Value var = my::custom::ns::to_string(favorite_color);
+      result["favorite_color"] = var;
+    }
+    {
+      auto var = address.serialize_toml();
+      result["address"] = var;
+    }
+    {
+      auto var = ad.serialize_toml();
+      result["ad"] = var;
+    }
+    {
+      shark::Value arr = shark::Array{};
+      arr.comments().push_back("#############################################\n"
+      "# leading comment 2\n"
+      "### end\n");
+      for(size_t i = 0; i < address2.size(); ++i) {
+        arr.push_back(address2[i].serialize_toml());
+      }
+      result["address2"] = arr;
+    }
+    {
+      shark::Value val = long_name;
+      result["long_name"] = val;
+    }
+    return result;
+  }
+
+  std::string Person::serialize_to_string() const {
+
+    auto v = serialize_toml();
+
+    return shark::format(v);
+
+  }
+
+}  // my::custom::ns
 

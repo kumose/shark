@@ -57,6 +57,7 @@
 #include <shark/toml/value_t.h>
 #include <shark/toml/version.h>
 #include <shark/toml/visit.h>
+#include <shark/utility.h>
 // IWYU pragma: end_exports
 
 #endif// TOML11_TOML_HPP
