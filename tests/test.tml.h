@@ -10,7 +10,7 @@
 
 #include <turbo/container/flat_hash_map.h>
 
-#include <shark/toml.h>
+#include <xtoml/toml.h>
 #include <turbo/container/flat_hash_map.h>
 
 
@@ -78,11 +78,11 @@ namespace my::custom::ns {
 
         turbo::Status parse_toml_file(const std::string& str);
 
-        turbo::Status parse_toml(const shark::Value& v, const std::vector<std::string> &prefix);
+        turbo::Status parse_toml(const xtoml::Value& v, const std::vector<std::string> &prefix);
 
-        shark::Value serialize_toml() const;
+        xtoml::Value serialize_toml() const;
 
-        std::string serialize_to_string() const;
+        turbo::Result<std::string> serialize_to_string() const;
 
 
       //////////////////////////////////////////////////////////////////////
@@ -100,11 +100,11 @@ namespace my::custom::ns {
 
       turbo::Status parse_toml_file(const std::string& str);
 
-      turbo::Status parse_toml(const shark::Value& v, const std::vector<std::string> &prefix);
+      turbo::Status parse_toml(const xtoml::Value& v, const std::vector<std::string> &prefix);
 
-      shark::Value serialize_toml() const;
+      xtoml::Value serialize_toml() const;
 
-      std::string serialize_to_string() const;
+      turbo::Result<std::string> serialize_to_string() const;
 
 
     //////////////////////////////////////////////////////////////////////
@@ -131,11 +131,11 @@ namespace my::custom::ns {
 
     turbo::Status parse_toml_file(const std::string& str);
 
-    turbo::Status parse_toml(const shark::Value& v, const std::vector<std::string> &prefix);
+    turbo::Status parse_toml(const xtoml::Value& v, const std::vector<std::string> &prefix);
 
-    shark::Value serialize_toml() const;
+    xtoml::Value serialize_toml() const;
 
-    std::string serialize_to_string() const;
+    turbo::Result<std::string> serialize_to_string() const;
 
 
   //////////////////////////////////////////////////////////////////////

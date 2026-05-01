@@ -90,8 +90,7 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
                 printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(_variables, "std::string str;\n");
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_find_primitive(config, \"$name$\", str));\n");
+                printer->Print(_variables, "TURBO_MOVE_OR_RAISE(std::string str, xtoml::find_key(config, \"$name$\"));\n");
                 printer->Print(_variables, "if (!str.empty()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
@@ -113,8 +112,7 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
                 printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(_variables, "std::string str;\n");
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, \"$name$\", str));\n");
+                printer->Print(_variables, "std::string str = xtoml::find_key(config, \"$name$\", \"\");\n");
                 printer->Print(_variables, "if (!str.empty()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
@@ -135,7 +133,7 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
                 printer->Print(
                     _variables, "std::vector<std::string> arrs;\n");
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_try_find_array(config, \"$name$\", arrs));\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(xtoml::find_key_array(config, \"$name$\", arrs).ignore_not_found_error());\n");
                 printer->Print(_variables, "if (!arrs.empty()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "$name$.clear();\n");
@@ -176,7 +174,7 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "shark::Value var = $PREFIX$to_string($name$);\n");
+                printer->Print(_variables, "xtoml::Value var = $PREFIX$to_string($name$);\n");
                 if (n > 0) {
                     printer->Print("var.comments().push_back(\"#############################################\\n\"\n");
                     for (auto &it: fieldSourceLoc.leading_detached_comments) {
@@ -189,7 +187,7 @@ namespace shark {
                 printer->Print(_variables, "result[\"$name$\"] = var;\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "shark::Value arr = shark::Array{};\n");
+                printer->Print(_variables, "xtoml::Value arr = xtoml::Array{};\n");
                 if (n > 0) {
                     printer->Print("arr.comments().push_back(\"#############################################\\n\"\n");
                     for (auto &it: fieldSourceLoc.leading_detached_comments) {

@@ -65,33 +65,33 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
-                printer->Print(_variables, "shark::Value val;\n");
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_find_table(config, \"$name$\", val));\n");
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK($name$.parse_toml(val, uri));\n");
+                printer->Print(_variables, "TURBO_MOVE_OR_RAISE(auto const *val, try_find_key(config, \"$name$\", val));\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK($name$.parse_toml(*val, uri));\n");
                 break;
 
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
-                printer->Print(_variables, "shark::Value val;\n");
-                printer->Print(_variables, "auto rs = safe_find_table(config, \"$name$\", val);\n");
+
+                printer->Print(_variables, "auto rs = xtoml::find_key_table(config, \"$name$\");\n");
                 printer->Print(_variables, "if (rs.ok()) {\n");
                 printer->Indent();
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK($name$.parse_toml(val, uri));\n");
+                printer->Print(_variables, "const xtoml::Value *val = rs.value_or_die();\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK($name$.parse_toml(*val, uri));\n");
                 printer->Outdent();
-                printer->Print(_variables, "} else if (!turbo::is_not_found(rs)) {\n");
+                printer->Print(_variables, "} else if (!turbo::is_not_found(rs.status())) {\n");
                 printer->Indent();
-                printer->Print(_variables, "return rs;\n");
+                printer->Print(_variables, "return rs.status();\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
 
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "shark::Array arrs;\n");
-                printer->Print(_variables, "auto rs = safe_find_array(config, \"$name$\", arrs);\n");
+                printer->Print(_variables, "auto rs = xtoml::find_key_array(config, \"$name$\");\n");
 
                 printer->Print(_variables, "if (rs.ok()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "$name$.clear();\n");
+                printer->Print(_variables, "xtoml::Array arrs = rs.value_or_die()->as_array();\n");
                 printer->Print(_variables, "int i = 0;\n");
                 printer->Print(_variables, "for (auto& elem : arrs) {\n");
                 printer->Indent();
@@ -104,9 +104,9 @@ namespace shark {
                 printer->Print("}\n");
                 printer->Outdent();
 
-                printer->Print(_variables, "} else if (!turbo::is_not_found(rs)) {\n");
+                printer->Print(_variables, "} else if (!turbo::is_not_found(rs.status())) {\n");
                 printer->Indent();
-                printer->Print(_variables, "return rs;\n");
+                printer->Print(_variables, "return rs.status();\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
                 break;
@@ -139,7 +139,7 @@ namespace shark {
                 printer->Print(_variables, "result[\"$name$\"] = var;\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "shark::Value arr = shark::Array{};\n");
+                printer->Print(_variables, "xtoml::Value arr = xtoml::Array{};\n");
                 if (n > 0) {
                     printer->Print("arr.comments().push_back(\"#############################################\\n\"\n");
                     for (auto &it : fieldSourceLoc.leading_detached_comments) {

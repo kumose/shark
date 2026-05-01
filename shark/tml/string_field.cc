@@ -67,16 +67,16 @@ namespace shark {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
                 printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_find_primitive(config, \"$name$\", $name$));\n");
+                printer->Print(_variables, "TURBO_MOVE_OR_RAISE($name$, xtoml::find_key<std::string>(config, \"$name$\"));\n");
                 break;
 
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 printer->Print(_variables, "uri.push_back(\"$name$\");\n");
                 printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, \"$name$\", $name$));\n");
+                printer->Print(_variables, "$name$ = xtoml::find_key(config, \"$name$\", $name$);\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(safe_try_find_array(config, \"$name$\", $name$));\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(xtoml::find_key_array(config, \"$name$\", $name$).ignore_not_found_error());\n");
                 break;
         }
     }
@@ -93,7 +93,7 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "shark::Value val = $name$;\n");
+                printer->Print(_variables, "xtoml::Value val = $name$;\n");
                 if (n > 0) {
                     printer->Print("val.comments().push_back(\"#############################################\\n\"\n");
                     for (auto &it : fieldSourceLoc.leading_detached_comments) {
@@ -106,7 +106,7 @@ namespace shark {
                 printer->Print(_variables, "result[\"$name$\"] = val;\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "shark::Value arr = shark::Array{};\n");
+                printer->Print(_variables, "xtoml::Value arr = xtoml::Array{};\n");
                 if (n > 0) {
                     printer->Print("arr.comments().push_back(\"#############################################\\n\"\n");
                     for (auto &it : fieldSourceLoc.leading_detached_comments) {

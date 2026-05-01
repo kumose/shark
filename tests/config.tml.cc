@@ -13,7 +13,7 @@ namespace my::custom::ns {
   turbo::Status Config::parse_toml_str(const std::string& str) {
 
     try {
-      auto val = shark::parse_str(str);
+      TURBO_MOVE_OR_RAISE(auto val , xtoml::parse_string(str));
       return  parse_toml(val, {});
     } catch(const std::exception &e) {
       return turbo::unknown_error(e.what());
@@ -23,7 +23,7 @@ namespace my::custom::ns {
 
   turbo::Status Config::parse_toml_file(const std::string& path) {
     try {
-      auto val = shark::parse(path);
+      TURBO_MOVE_OR_RAISE(auto val , xtoml::parse_file(path));
       return  parse_toml(val, {});
     } catch(const std::exception &e) {
       return turbo::unknown_error(e.what());
@@ -33,48 +33,48 @@ namespace my::custom::ns {
 
   ///////////////////////////////////////////////////////////////////////// 
   /// transfers 
-  turbo::Status Config::parse_toml(const shark::Value& config, const std::vector<std::string> &prefix) {
+  turbo::Status Config::parse_toml(const xtoml::Value& config, const std::vector<std::string> &prefix) {
     std::vector<std::string> uri = prefix;
     {
       uri.push_back("name");
       uri.pop_back();
-      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "name", name));
+      name = xtoml::find_key(config, "name", name);
     }
     {
       uri.push_back("age");
       uri.pop_back();
-      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "age", age));
+      age = xtoml::find_key(config, "age", age);
     }
     {
       uri.push_back("enabled");
       uri.pop_back();
-      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "enabled", enabled));
+      enabled = xtoml::find_key(config, "enabled", enabled);
     }
   return turbo::OkStatus();
   }
 
-  shark::Value Config::serialize_toml() const {
-    shark::Value result;
+  xtoml::Value Config::serialize_toml() const {
+    xtoml::Value result;
     {
-      shark::Value val = name;
+      xtoml::Value val = name;
       result["name"] = val;
     }
     {
-      shark::Value val = age;
+      xtoml::Value val = age;
       result["age"] = val;
     }
     {
-      shark::Value val = enabled;
+      xtoml::Value val = enabled;
       result["enabled"] = val;
     }
     return result;
   }
 
-  std::string Config::serialize_to_string() const {
+  turbo::Result<std::string> Config::serialize_to_string() const {
 
     auto v = serialize_toml();
 
-    return shark::format(v);
+    return xtoml::serialize(v);
 
   }
 

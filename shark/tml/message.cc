@@ -149,9 +149,9 @@ namespace shark {
         printer->Print("/// transfers \n");
         printer->Print(_vars, "turbo::Status parse_toml_str(const std::string& path);\n\n");
         printer->Print(_vars, "turbo::Status parse_toml_file(const std::string& str);\n\n");
-        printer->Print(_vars, "turbo::Status parse_toml(const shark::Value& v, const std::vector<std::string> &prefix);\n\n");
-        printer->Print(_vars, "shark::Value serialize_toml() const;\n\n");
-        printer->Print(_vars, "std::string serialize_to_string() const;\n\n");
+        printer->Print(_vars, "turbo::Status parse_toml(const xtoml::Value& v, const std::vector<std::string> &prefix);\n\n");
+        printer->Print(_vars, "xtoml::Value serialize_toml() const;\n\n");
+        printer->Print(_vars, "turbo::Result<std::string> serialize_to_string() const;\n\n");
         printer->Outdent();
         printer->Print("\n//////////////////////////////////////////////////////////////////////\n");
         printer->Print("/// members\n");
@@ -199,7 +199,7 @@ namespace shark {
         printer->Indent();
         printer->Print(_vars, "try {\n");
         printer->Indent();
-        printer->Print(_vars, "auto val = shark::parse_str(str);\n");
+        printer->Print(_vars, "TURBO_MOVE_OR_RAISE(auto val , xtoml::parse_string(str));\n");
         printer->Print(_vars, "return  parse_toml(val, {});\n");
         printer->Outdent();
         printer->Print(_vars, "} catch(const std::exception &e) {\n");
@@ -214,7 +214,7 @@ namespace shark {
         printer->Indent();
         printer->Print(_vars, "try {\n");
         printer->Indent();
-        printer->Print(_vars, "auto val = shark::parse(path);\n");
+        printer->Print(_vars, "TURBO_MOVE_OR_RAISE(auto val , xtoml::parse_file(path));\n");
         printer->Print(_vars, "return  parse_toml(val, {});\n");
         printer->Outdent();
         printer->Print(_vars, "} catch(const std::exception &e) {\n");
@@ -227,7 +227,7 @@ namespace shark {
 
         printer->Print("///////////////////////////////////////////////////////////////////////// \n");
         printer->Print("/// transfers \n");
-        printer->Print(_vars, "turbo::Status $domain$::parse_toml(const shark::Value& config, const std::vector<std::string> &prefix) {\n");
+        printer->Print(_vars, "turbo::Status $domain$::parse_toml(const xtoml::Value& config, const std::vector<std::string> &prefix) {\n");
         printer->Indent();
         printer->Print(_vars, "std::vector<std::string> uri = prefix;\n");
         for (int i = 0; i < _descriptor->field_count(); i++) {
@@ -245,9 +245,9 @@ namespace shark {
         printer->Print("return turbo::OkStatus();\n");
         printer->Print("}\n\n");
         ////
-        printer->Print(_vars, "shark::Value $domain$::serialize_toml() const {\n");
+        printer->Print(_vars, "xtoml::Value $domain$::serialize_toml() const {\n");
         printer->Indent();
-        printer->Print(_vars, "shark::Value result;\n");
+        printer->Print(_vars, "xtoml::Value result;\n");
         for (int i = 0; i < _descriptor->field_count(); i++) {
             const google::protobuf::FieldDescriptor *field = _descriptor->field(i);
             if (field->containing_oneof() == NULL) {
@@ -262,10 +262,10 @@ namespace shark {
         printer->Outdent();
         printer->Print("}\n\n");
 
-        printer->Print(_vars, "std::string $domain$::serialize_to_string() const {\n\n");
+        printer->Print(_vars, "turbo::Result<std::string> $domain$::serialize_to_string() const {\n\n");
         printer->Indent();
         printer->Print(_vars, "auto v = serialize_toml();\n\n");
-        printer->Print(_vars, "return shark::format(v);\n\n");
+        printer->Print(_vars, "return xtoml::serialize(v);\n\n");
         printer->Outdent();
         printer->Print("}\n\n");
     }

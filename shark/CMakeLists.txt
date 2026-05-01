@@ -30,20 +30,8 @@ kmcmake_cc_proto(
         OUTDIR
         ${PROJECT_SOURCE_DIR}
 )
-file(GLOB_RECURSE SK_SRC "lib/*.cc")
+
 include_directories(lib)
-kmcmake_cc_library(
-        NAMESPACE ${PROJECT_NAME}
-        NAME shark
-        SOURCES
-        ${SK_SRC}
-        CXXOPTS
-        ${KMCMAKE_CXX_OPTIONS}
-        PLINKS
-        ${KMCMAKE_DEPS_LINK}
-        PUBLIC
-        UNITY
-)
 
 
 set(GENERATOR_SRC

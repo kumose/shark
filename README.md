@@ -339,7 +339,7 @@ kmcmake_cc_library(
         ${test_sk_gen_SRCS}
         ${test_proto_gen_SRCS}
     PLINKS
-        shark::shark_static
+        
 )
 ```
 
@@ -353,7 +353,7 @@ kmcmake_cc_test(
     SOURCES test_proto_test.cc
     LINKS
         shark::sk_test_static
-        shark::shark_static
+        
         GTest::gtest_main
 )
 ```

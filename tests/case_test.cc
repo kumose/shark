@@ -3,6 +3,7 @@
 #include <filesystem>
 #include "tests/test.tml.h"
 #include "tests/config.tml.h"
+#include  <turbo/log/logging.h>
 
 namespace fs = std::filesystem;
 
@@ -30,7 +31,7 @@ protected:
 
 TEST(EmptyFileTest, ParsesSuccessfullyWithDefaults) {
     auto empty_toml = "";
-    auto val = shark::parse_str(empty_toml);
+    auto val = xtoml::parse_str(empty_toml);
     my::custom::ns::Config cfg;
     auto status = cfg.parse_toml(val, {});
     ASSERT_TRUE(status.ok());
@@ -144,8 +145,11 @@ TEST_F(PersonTest, RoundTrip) {
     addr.detail.prcode = "00000";
     original.address2.push_back(addr);
     original.long_name = "Round trip test";
-
-    std::string toml_str = original.serialize_to_string();
+    auto rs = original.serialize_to_string();
+    std::string toml_str = std::move(rs).value_or_die();
+    std::cout << std::string('#', 80) << std::endl;
+    std::cout << toml_str<<std::endl;
+    std::cout << std::string('#', 80) << std::endl;
     auto path = createTempFile(toml_str);
     my::custom::ns::Person parsed;
     auto status = parsed.parse_toml_file(path);

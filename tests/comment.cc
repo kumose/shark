@@ -6,7 +6,7 @@
 #include <string>
 
 #include "tests/test.tml.h"      // Generated header
-#include <shark/toml.h>          // shark::format, shark::parse, etc.
+#include <xtoml/toml.h>          // shark::format, shark::parse, etc.
 
 int main() {
     // 1. Create and populate a Person object
@@ -41,8 +41,8 @@ int main() {
     person.address2.push_back(addr2);
 
     // 2. Serialize to TOML string (using generated serialize_toml + shark::format)
-    shark::Value toml_value = person.serialize_toml();
-    std::string toml_string = shark::format(toml_value);   // Format as TOML text
+    xtoml::Value toml_value = person.serialize_toml();
+    std::string toml_string = xtoml::format(toml_value);   // Format as TOML text
 
     // 3. Print and optionally save to file
     std::cout << "=== Serialized TOML ===\n" << toml_string << "\n";
@@ -53,7 +53,7 @@ int main() {
 
     // 4. Parse back from TOML string
     my::custom::ns::Person parsed_person;
-    auto status = parsed_person.parse_toml_str(toml_string);   // or parse_toml (takes shark::Value)
+    auto status = parsed_person.parse_toml_str(toml_string);   // or parse_toml (takes xtoml::Value)
     if (!status.ok()) {
         std::cerr << "Failed to parse TOML: " << status.message() << "\n";
         return 1;
@@ -72,7 +72,7 @@ int main() {
     ////////////////////
     {
         // Root table
-        shark::Value root = shark::Table{};
+        xtoml::Value root = xtoml::Table{};
 
         // Scalar fields
         root["name"] = "Lothar";
@@ -80,13 +80,13 @@ int main() {
         root["long_name"] = "This is a long string";
 
         // emails array (basic)
-        shark::Array emails_arr;
+        xtoml::Array emails_arr;
         emails_arr.push_back("alice@example.com");
         emails_arr.push_back("bob@example.com");
         root["emails"] = emails_arr;
 
         // ages array (basic)
-        shark::Array ages_arr;
+        xtoml::Array ages_arr;
         ages_arr.push_back(25);
         ages_arr.push_back(30);
         ages_arr.push_back(35);
@@ -96,33 +96,33 @@ int main() {
         root["favorite_color"] = "GREEN";
 
         // Nested table "address"
-        shark::Value address = shark::Table{};
+        xtoml::Value address = xtoml::Table{};
         address["street"] = "123 Main St";
         address["number"] = 100;
-        shark::Value detail = shark::Table{};
+        xtoml::Value detail = xtoml::Table{};
         detail["region"] = "North";
         detail["prcode"] = "12345";
         address["detail"] = detail;
         root["address"] = address;
 
         // Table array "address2"
-        shark::Array address2_arr;
+        xtoml::Array address2_arr;
 
         // First element
-        shark::Value addr1 = shark::Table{};
+        xtoml::Value addr1 = xtoml::Table{};
         addr1["street"] = "456 Oak Ave";
         addr1["number"] = 200;
-        shark::Value detail1 = shark::Table{};
+        xtoml::Value detail1 = xtoml::Table{};
         detail1["region"] = "South";
         detail1["prcode"] = "67890";
         addr1["detail"] = detail1;
         address2_arr.push_back(addr1);
 
         // Second element
-        shark::Value addr2 = shark::Table{};
+        xtoml::Value addr2 = xtoml::Table{};
         addr2["street"] = "789 Pine Rd";
         addr2["number"] = 300;
-        shark::Value detail2 = shark::Table{};
+        xtoml::Value detail2 = xtoml::Table{};
         detail2["region"] = "East";
         detail2["prcode"] = "11223";
         addr2["detail"] = detail2;
@@ -131,7 +131,7 @@ int main() {
         root["address2"] = address2_arr;
 
         // Output TOML string
-        std::cout << shark::format(root) << std::endl;
+        std::cout << xtoml::format(root) << std::endl;
     }
 
 

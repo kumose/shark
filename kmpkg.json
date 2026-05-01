@@ -1,6 +1,7 @@
 {
   "dependencies": [
     "gtest",
+    "nlohmann-json",
     {
       "name": "protobuf",
       "features": [
@@ -9,6 +10,6 @@
     },
     "turbo",
     "xsimd",
-    "nlohmann-json"
+    "xtoml"
   ]
 }

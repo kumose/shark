@@ -8,362 +8,348 @@
 #include <turbo/log/logging.h>
 
 
-
 namespace my::custom::ns {
-  std::optional<Color> parse_Color(std::string_view value) {
-    static turbo::flat_hash_map<std::string, Color> enum_map = {
-      {"RED", static_cast<Color>(0)},
-      {"GREEN", static_cast<Color>(1)},
-      {"BLUE", static_cast<Color>(2)},
-    };
+    std::optional<Color> parse_Color(std::string_view value) {
+        static turbo::flat_hash_map<std::string, Color> enum_map = {
+            {"RED", static_cast<Color>(0)},
+            {"GREEN", static_cast<Color>(1)},
+            {"BLUE", static_cast<Color>(2)},
+        };
 
-    auto it = enum_map.find(value);
-    if (it == enum_map.end()) {
-      return std::nullopt;
-    }
-    return it->second;
-  }
-  std::optional<ColorU16> parse_ColorU16(std::string_view value) {
-    static turbo::flat_hash_map<std::string, ColorU16> enum_map = {
-      {"RED16", static_cast<ColorU16>(0)},
-      {"GREEN16", static_cast<ColorU16>(1)},
-      {"BLUE16", static_cast<ColorU16>(2)},
-    };
-
-    auto it = enum_map.find(value);
-    if (it == enum_map.end()) {
-      return std::nullopt;
-    }
-    return it->second;
-  }
-  std::optional<ColorU32> parse_ColorU32(std::string_view value) {
-    static turbo::flat_hash_map<std::string, ColorU32> enum_map = {
-      {"RED32", static_cast<ColorU32>(0)},
-      {"GREEN32", static_cast<ColorU32>(1)},
-      {"BLUE32", static_cast<ColorU32>(2)},
-    };
-
-    auto it = enum_map.find(value);
-    if (it == enum_map.end()) {
-      return std::nullopt;
-    }
-    return it->second;
-  }
-  std::optional<Person::Dolor> Person::parse_Dolor(std::string_view value) {
-    static turbo::flat_hash_map<std::string, Dolor> enum_map = {
-      {"DRED", static_cast<Person::Dolor>(0)},
-      {"DGREEN", static_cast<Person::Dolor>(1)},
-      {"DBLUE", static_cast<Person::Dolor>(2)},
-    };
-
-    auto it = enum_map.find(value);
-    if (it == enum_map.end()) {
-      return std::nullopt;
-    }
-    return it->second;
-  }
-  turbo::Status Person::Address::Detail::parse_toml_str(const std::string& str) {
-
-    try {
-      auto val = shark::parse_str(str);
-      return  parse_toml(val, {});
-    } catch(const std::exception &e) {
-      return turbo::unknown_error(e.what());
-    }
-
-  }
-
-  turbo::Status Person::Address::Detail::parse_toml_file(const std::string& path) {
-    try {
-      auto val = shark::parse(path);
-      return  parse_toml(val, {});
-    } catch(const std::exception &e) {
-      return turbo::unknown_error(e.what());
-    }
-
-  }
-
-  ///////////////////////////////////////////////////////////////////////// 
-  /// transfers 
-  turbo::Status Person::Address::Detail::parse_toml(const shark::Value& config, const std::vector<std::string> &prefix) {
-    std::vector<std::string> uri = prefix;
-    {
-      uri.push_back("region");
-      uri.pop_back();
-      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "region", region));
-    }
-    {
-      uri.push_back("prcode");
-      uri.pop_back();
-      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "prcode", prcode));
-    }
-  return turbo::OkStatus();
-  }
-
-  shark::Value Person::Address::Detail::serialize_toml() const {
-    shark::Value result;
-    {
-      shark::Value val = region;
-      result["region"] = val;
-    }
-    {
-      shark::Value val = prcode;
-      result["prcode"] = val;
-    }
-    return result;
-  }
-
-  std::string Person::Address::Detail::serialize_to_string() const {
-
-    auto v = serialize_toml();
-
-    return shark::format(v);
-
-  }
-
-  turbo::Status Person::Address::parse_toml_str(const std::string& str) {
-
-    try {
-      auto val = shark::parse_str(str);
-      return  parse_toml(val, {});
-    } catch(const std::exception &e) {
-      return turbo::unknown_error(e.what());
-    }
-
-  }
-
-  turbo::Status Person::Address::parse_toml_file(const std::string& path) {
-    try {
-      auto val = shark::parse(path);
-      return  parse_toml(val, {});
-    } catch(const std::exception &e) {
-      return turbo::unknown_error(e.what());
-    }
-
-  }
-
-  ///////////////////////////////////////////////////////////////////////// 
-  /// transfers 
-  turbo::Status Person::Address::parse_toml(const shark::Value& config, const std::vector<std::string> &prefix) {
-    std::vector<std::string> uri = prefix;
-    {
-      uri.push_back("street");
-      uri.pop_back();
-      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "street", street));
-    }
-    {
-      uri.push_back("number");
-      uri.pop_back();
-      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "number", number));
-    }
-    {
-      uri.push_back("detail");
-      shark::Value val;
-      auto rs = safe_find_table(config, "detail", val);
-      if (rs.ok()) {
-        TURBO_RETURN_NOT_OK(detail.parse_toml(val, uri));
-      } else if (!turbo::is_not_found(rs)) {
-        return rs;
-      }
-    }
-  return turbo::OkStatus();
-  }
-
-  shark::Value Person::Address::serialize_toml() const {
-    shark::Value result;
-    {
-      shark::Value val = street;
-      result["street"] = val;
-    }
-    {
-      shark::Value val = number;
-      result["number"] = val;
-    }
-    {
-      auto var = detail.serialize_toml();
-      result["detail"] = var;
-    }
-    return result;
-  }
-
-  std::string Person::Address::serialize_to_string() const {
-
-    auto v = serialize_toml();
-
-    return shark::format(v);
-
-  }
-
-  turbo::Status Person::parse_toml_str(const std::string& str) {
-
-    try {
-      auto val = shark::parse_str(str);
-      return  parse_toml(val, {});
-    } catch(const std::exception &e) {
-      return turbo::unknown_error(e.what());
-    }
-
-  }
-
-  turbo::Status Person::parse_toml_file(const std::string& path) {
-    try {
-      auto val = shark::parse(path);
-      return  parse_toml(val, {});
-    } catch(const std::exception &e) {
-      return turbo::unknown_error(e.what());
-    }
-
-  }
-
-  ///////////////////////////////////////////////////////////////////////// 
-  /// transfers 
-  turbo::Status Person::parse_toml(const shark::Value& config, const std::vector<std::string> &prefix) {
-    std::vector<std::string> uri = prefix;
-    {
-      uri.push_back("name");
-      uri.pop_back();
-      TURBO_RETURN_NOT_OK(safe_find_primitive(config, "name", name));
-    }
-    {
-      uri.push_back("age");
-      uri.pop_back();
-      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "age", age));
-    }
-    {
-      TURBO_RETURN_NOT_OK(safe_try_find_array(config, "emails", emails));
-    }
-    {
-      TURBO_RETURN_NOT_OK(safe_try_find_array(config, "ages", ages));
-    }
-    {
-      uri.push_back("favorite_color");
-      uri.pop_back();
-      std::string str;
-      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "favorite_color", str));
-      if (!str.empty()) {
-        auto tmp = parse_Color(str);
-        if (tmp) {
-          favorite_color = *tmp;
-        } else {
-          return turbo::invalid_argument_error("field favorite_color is not enum type, got", str);
+        auto it = enum_map.find(value);
+        if (it == enum_map.end()) {
+            return std::nullopt;
         }
-      }
+        return it->second;
     }
-    {
-      uri.push_back("address");
-      shark::Value val;
-      auto rs = safe_find_table(config, "address", val);
-      if (rs.ok()) {
-        TURBO_RETURN_NOT_OK(address.parse_toml(val, uri));
-      } else if (!turbo::is_not_found(rs)) {
-        return rs;
-      }
-    }
-    {
-      uri.push_back("ad");
-      shark::Value val;
-      auto rs = safe_find_table(config, "ad", val);
-      if (rs.ok()) {
-        TURBO_RETURN_NOT_OK(ad.parse_toml(val, uri));
-      } else if (!turbo::is_not_found(rs)) {
-        return rs;
-      }
-    }
-    {
-      shark::Array arrs;
-      auto rs = safe_find_array(config, "address2", arrs);
-      if (rs.ok()) {
-        address2.clear();
-        int i = 0;
-        for (auto& elem : arrs) {
-          uri.push_back(turbo::str_format("address2[%d]", i++));
-          Address tmp;
-          TURBO_RETURN_NOT_OK(tmp.parse_toml(elem, uri));
-          address2.push_back(tmp);
-          uri.pop_back();
+
+    std::optional<ColorU16> parse_ColorU16(std::string_view value) {
+        static turbo::flat_hash_map<std::string, ColorU16> enum_map = {
+            {"RED16", static_cast<ColorU16>(0)},
+            {"GREEN16", static_cast<ColorU16>(1)},
+            {"BLUE16", static_cast<ColorU16>(2)},
+        };
+
+        auto it = enum_map.find(value);
+        if (it == enum_map.end()) {
+            return std::nullopt;
         }
-      } else if (!turbo::is_not_found(rs)) {
-        return rs;
-      }
+        return it->second;
     }
-    {
-      uri.push_back("long_name");
-      uri.pop_back();
-      TURBO_RETURN_NOT_OK(safe_try_find_primitive(config, "long_name", long_name));
-    }
-  return turbo::OkStatus();
-  }
 
-  shark::Value Person::serialize_toml() const {
-    shark::Value result;
-    {
-      shark::Value val = name;
-      val.comments().push_back("#############################################\n"
-      "# this is my ssdsf\n"
-      "### end\n");
-      result["name"] = val;
-    }
-    {
-      shark::Value val = age;
-      val.comments().push_back("#############################################\n"
-      "# my comment\n"
-      "### end\n");
-      result["age"] = val;
-    }
-    {
-      shark::Value arr = shark::Array{};
-      arr.comments().push_back("#############################################\n"
-      "# leading comment 1\n"
-      "# leading comment 2\n"
-      "### end\n");
-      for(size_t i = 0; i < emails.size(); ++i) {
-        arr.push_back(emails[i]);
-      }
-      result["emails"] = arr;
-    }
-    {
-      shark::Value arr = shark::Array{};
-      for(size_t i = 0; i < ages.size(); ++i) {
-        arr.push_back(ages[i]);
-      }
-      result["ages"] = arr;
-    }
-    {
-      shark::Value var = my::custom::ns::to_string(favorite_color);
-      result["favorite_color"] = var;
-    }
-    {
-      auto var = address.serialize_toml();
-      result["address"] = var;
-    }
-    {
-      auto var = ad.serialize_toml();
-      result["ad"] = var;
-    }
-    {
-      shark::Value arr = shark::Array{};
-      arr.comments().push_back("#############################################\n"
-      "# leading comment 2\n"
-      "### end\n");
-      for(size_t i = 0; i < address2.size(); ++i) {
-        arr.push_back(address2[i].serialize_toml());
-      }
-      result["address2"] = arr;
-    }
-    {
-      shark::Value val = long_name;
-      result["long_name"] = val;
-    }
-    return result;
-  }
+    std::optional<ColorU32> parse_ColorU32(std::string_view value) {
+        static turbo::flat_hash_map<std::string, ColorU32> enum_map = {
+            {"RED32", static_cast<ColorU32>(0)},
+            {"GREEN32", static_cast<ColorU32>(1)},
+            {"BLUE32", static_cast<ColorU32>(2)},
+        };
 
-  std::string Person::serialize_to_string() const {
+        auto it = enum_map.find(value);
+        if (it == enum_map.end()) {
+            return std::nullopt;
+        }
+        return it->second;
+    }
 
-    auto v = serialize_toml();
+    std::optional<Person::Dolor> Person::parse_Dolor(std::string_view value) {
+        static turbo::flat_hash_map<std::string, Dolor> enum_map = {
+            {"DRED", static_cast<Person::Dolor>(0)},
+            {"DGREEN", static_cast<Person::Dolor>(1)},
+            {"DBLUE", static_cast<Person::Dolor>(2)},
+        };
 
-    return shark::format(v);
+        auto it = enum_map.find(value);
+        if (it == enum_map.end()) {
+            return std::nullopt;
+        }
+        return it->second;
+    }
 
-  }
+    turbo::Status Person::Address::Detail::parse_toml_str(const std::string &str) {
+        try {
+            TURBO_MOVE_OR_RAISE(auto val, xtoml::parse_string(str));
+            return parse_toml(val, {});
+        } catch (const std::exception &e) {
+            return turbo::unknown_error(e.what());
+        }
+    }
 
-}  // my::custom::ns
+    turbo::Status Person::Address::Detail::parse_toml_file(const std::string &path) {
+        try {
+            TURBO_MOVE_OR_RAISE(auto val, xtoml::parse_file(path));
+            return parse_toml(val, {});
+        } catch (const std::exception &e) {
+            return turbo::unknown_error(e.what());
+        }
+    }
 
+    /////////////////////////////////////////////////////////////////////////
+    /// transfers
+    turbo::Status Person::Address::Detail::parse_toml(const xtoml::Value &config,
+                                                      const std::vector<std::string> &prefix) {
+        std::vector<std::string> uri = prefix;
+        {
+            uri.push_back("region");
+            uri.pop_back();
+            region = xtoml::find_key(config, "region", region);
+        }
+        {
+            uri.push_back("prcode");
+            uri.pop_back();
+            prcode = xtoml::find_key(config, "prcode", prcode);
+        }
+        return turbo::OkStatus();
+    }
+
+    xtoml::Value Person::Address::Detail::serialize_toml() const {
+        xtoml::Value result;
+        {
+            xtoml::Value val = region;
+            result["region"] = val;
+        }
+        {
+            xtoml::Value val = prcode;
+            result["prcode"] = val;
+        }
+        return result;
+    }
+
+    turbo::Result<std::string> Person::Address::Detail::serialize_to_string() const {
+        auto v = serialize_toml();
+
+        return xtoml::serialize(v);
+    }
+
+    turbo::Status Person::Address::parse_toml_str(const std::string &str) {
+        try {
+            TURBO_MOVE_OR_RAISE(auto val, xtoml::parse_string(str));
+            return parse_toml(val, {});
+        } catch (const std::exception &e) {
+            return turbo::unknown_error(e.what());
+        }
+    }
+
+    turbo::Status Person::Address::parse_toml_file(const std::string &path) {
+        try {
+            TURBO_MOVE_OR_RAISE(auto val, xtoml::parse_file(path));
+            return parse_toml(val, {});
+        } catch (const std::exception &e) {
+            return turbo::unknown_error(e.what());
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    /// transfers
+    turbo::Status Person::Address::parse_toml(const xtoml::Value &config, const std::vector<std::string> &prefix) {
+        std::vector<std::string> uri = prefix;
+        {
+            uri.push_back("street");
+            uri.pop_back();
+            street = xtoml::find_key(config, "street", street);
+        }
+        {
+            uri.push_back("number");
+            uri.pop_back();
+            number = xtoml::find_key(config, "number", number);
+        }
+        {
+            uri.push_back("detail");
+            auto rs = xtoml::find_key_table(config, "detail");
+            if (rs.ok()) {
+                const xtoml::Value *val = rs.value_or_die();
+                TURBO_RETURN_NOT_OK(detail.parse_toml(*val, uri));
+            } else if (!turbo::is_not_found(rs.status())) {
+                return rs.status();
+            }
+        }
+        return turbo::OkStatus();
+    }
+
+    xtoml::Value Person::Address::serialize_toml() const {
+        xtoml::Value result;
+        {
+            xtoml::Value val = street;
+            result["street"] = val;
+        }
+        {
+            xtoml::Value val = number;
+            result["number"] = val;
+        }
+        {
+            auto var = detail.serialize_toml();
+            result["detail"] = var;
+        }
+        return result;
+    }
+
+    turbo::Result<std::string> Person::Address::serialize_to_string() const {
+        auto v = serialize_toml();
+
+        return xtoml::serialize(v);
+    }
+
+    turbo::Status Person::parse_toml_str(const std::string &str) {
+        try {
+            TURBO_MOVE_OR_RAISE(auto val, xtoml::parse_string(str));
+            return parse_toml(val, {});
+        } catch (const std::exception &e) {
+            return turbo::unknown_error(e.what());
+        }
+    }
+
+    turbo::Status Person::parse_toml_file(const std::string &path) {
+        try {
+            TURBO_MOVE_OR_RAISE(auto val, xtoml::parse_file(path));
+            return parse_toml(val, {});
+        } catch (const std::exception &e) {
+            return turbo::unknown_error(e.what());
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    /// transfers
+    turbo::Status Person::parse_toml(const xtoml::Value &config, const std::vector<std::string> &prefix) {
+        std::vector<std::string> uri = prefix;
+        {
+            uri.push_back("name");
+            uri.pop_back();
+            TURBO_MOVE_OR_RAISE(name, xtoml::find_key<std::string>(config, "name"));
+        }
+        {
+            uri.push_back("age");
+            uri.pop_back();
+            age = xtoml::find_key(config, "age", age);
+        }
+        {
+            TURBO_RETURN_NOT_OK(xtoml::find_key_array(config, "emails", emails).ignore_not_found_error());
+        }
+        {
+            TURBO_RETURN_NOT_OK(xtoml::find_key_array(config, "ages", ages).ignore_not_found_error());
+        }
+        {
+            uri.push_back("favorite_color");
+            uri.pop_back();
+            std::string str = xtoml::find_key(config, "favorite_color", "");
+            if (!str.empty()) {
+                auto tmp = parse_Color(str);
+                if (tmp) {
+                    favorite_color = *tmp;
+                } else {
+                    return turbo::invalid_argument_error("field favorite_color is not enum type, got", str);
+                }
+            }
+        }
+        {
+            uri.push_back("address");
+            auto rs = xtoml::find_key_table(config, "address");
+            if (rs.ok()) {
+                const xtoml::Value *val = rs.value_or_die();
+                TURBO_RETURN_NOT_OK(address.parse_toml(*val, uri));
+            } else if (!turbo::is_not_found(rs.status())) {
+                return rs.status();
+            }
+        }
+        {
+            uri.push_back("ad");
+            auto rs = xtoml::find_key_table(config, "ad");
+            if (rs.ok()) {
+                const xtoml::Value *val = rs.value_or_die();
+                TURBO_RETURN_NOT_OK(ad.parse_toml(*val, uri));
+            } else if (!turbo::is_not_found(rs.status())) {
+                return rs.status();
+            }
+        }
+        {
+            auto rs = xtoml::find_key_array(config, "address2");
+            if (rs.ok()) {
+                address2.clear();
+                xtoml::Array arrs = rs.value_or_die()->as_array();
+                int i = 0;
+                for (auto &elem: arrs) {
+                    uri.push_back(turbo::str_format("address2[%d]", i++));
+                    Address tmp;
+                    TURBO_RETURN_NOT_OK(tmp.parse_toml(elem, uri));
+                    address2.push_back(tmp);
+                    uri.pop_back();
+                }
+            } else if (!turbo::is_not_found(rs.status())) {
+                return rs.status();
+            }
+        }
+        {
+            uri.push_back("long_name");
+            uri.pop_back();
+            long_name = xtoml::find_key(config, "long_name", long_name);
+        }
+        return turbo::OkStatus();
+    }
+
+    xtoml::Value Person::serialize_toml() const {
+        xtoml::Value result;
+        {
+            xtoml::Value val = name;
+            val.comments().push_back("#############################################\n"
+                "# this is my ssdsf\n"
+                "### end\n");
+            result["name"] = val;
+        }
+        {
+            xtoml::Value val = age;
+            val.comments().push_back("#############################################\n"
+                "# my comment\n"
+                "### end\n");
+            result["age"] = val;
+        }
+        {
+            xtoml::Value arr = xtoml::Array{};
+            arr.comments().push_back("#############################################\n"
+                "# leading comment 1\n"
+                "# leading comment 2\n"
+                "### end\n");
+            for (size_t i = 0; i < emails.size(); ++i) {
+                arr.push_back(emails[i]);
+            }
+            result["emails"] = arr;
+        }
+        {
+            xtoml::Value arr = xtoml::Array{};
+            for (size_t i = 0; i < ages.size(); ++i) {
+                arr.push_back(ages[i]);
+            }
+            result["ages"] = arr;
+        }
+        {
+            xtoml::Value var = my::custom::ns::to_string(favorite_color);
+            result["favorite_color"] = var;
+        }
+        {
+            auto var = address.serialize_toml();
+            result["address"] = var;
+        }
+        {
+            auto var = ad.serialize_toml();
+            result["ad"] = var;
+        }
+        {
+            xtoml::Value arr = xtoml::Array{};
+            arr.comments().push_back("#############################################\n"
+                "# leading comment 2\n"
+                "### end\n");
+            for (size_t i = 0; i < address2.size(); ++i) {
+                arr.push_back(address2[i].serialize_toml());
+            }
+            result["address2"] = arr;
+        }
+        {
+            xtoml::Value val = long_name;
+            result["long_name"] = val;
+        }
+        return result;
+    }
+
+    turbo::Result<std::string> Person::serialize_to_string() const {
+        auto v = serialize_toml();
+
+        return xtoml::serialize(v);
+    }
+} // my::custom::ns

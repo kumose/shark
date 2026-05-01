@@ -1,11 +1,11 @@
-#include <shark/toml.h>
+#include <xtoml/toml.h>
 #include <iostream>
 #include <string>
 #include <sstream>
 
-std::string to_toml_string(const shark::Value& v, bool in_array_context = false);
+std::string to_toml_string(const xtoml::Value& v, bool in_array_context = false);
 
-std::string format_inline_table(const shark::Table& tbl) {
+std::string format_inline_table(const xtoml::Table& tbl) {
     std::stringstream ss;
     ss << "{ ";
     bool first = true;
@@ -18,7 +18,7 @@ std::string format_inline_table(const shark::Table& tbl) {
     return ss.str();
 }
 
-std::string format_standard_table(const shark::Table& tbl, const std::string& path_prefix) {
+std::string format_standard_table(const xtoml::Table& tbl, const std::string& path_prefix) {
     std::stringstream ss;
     for (const auto& [key, val] : tbl) {
         std::string new_path = path_prefix.empty() ? key : path_prefix + "." + key;
@@ -35,7 +35,7 @@ std::string format_standard_table(const shark::Table& tbl, const std::string& pa
     return ss.str();
 }
 
-std::string to_toml_string(const shark::Value& v, bool in_array_context) {
+std::string to_toml_string(const xtoml::Value& v, bool in_array_context) {
     if (v.is_string()) {
         return "\"" + v.as_string() + "\"";
     } else if (v.is_integer()) {
@@ -75,17 +75,17 @@ std::string to_toml_string(const shark::Value& v, bool in_array_context) {
 
 int main() {
     // Build the data structure using Shark's API
-    shark::Table root;
+    xtoml::Table root;
     root["name"] = "Lothar";
     root["age"] = 42;
     root["long_name"] = "This is a long string";
 
-    shark::Array emails;
+    xtoml::Array emails;
     emails.push_back("alice@example.com");
     emails.push_back("bob@example.com");
     root["emails"] = std::move(emails);
 
-    shark::Array ages;
+    xtoml::Array ages;
     ages.push_back(25);
     ages.push_back(30);
     ages.push_back(35);
@@ -93,29 +93,29 @@ int main() {
 
     root["favorite_color"] = "GREEN";
 
-    shark::Table address;
+    xtoml::Table address;
     address["street"] = "123 Main St";
     address["number"] = 100;
-    shark::Table detail;
+    xtoml::Table detail;
     detail["region"] = "North";
     detail["prcode"] = "12345";
     address["detail"] = std::move(detail);
     root["address"] = std::move(address);
 
-    shark::Array address2_arr;
-    shark::Table addr1;
+    xtoml::Array address2_arr;
+    xtoml::Table addr1;
     addr1["street"] = "456 Oak Ave";
     addr1["number"] = 200;
-    shark::Table detail1;
+    xtoml::Table detail1;
     detail1["region"] = "South";
     detail1["prcode"] = "67890";
     addr1["detail"] = std::move(detail1);
     address2_arr.push_back(std::move(addr1));
 
-    shark::Table addr2;
+    xtoml::Table addr2;
     addr2["street"] = "789 Pine Rd";
     addr2["number"] = 300;
-    shark::Table detail2;
+    xtoml::Table detail2;
     detail2["region"] = "East";
     detail2["prcode"] = "11223";
     addr2["detail"] = std::move(detail2);

@@ -147,7 +147,7 @@ kmcmake_cc_binary(
         -fsanitize=address
         LINKS
         shark::sk_test_static
-        shark::shark_static
+
         ${KMCMAKE_DEPS_LINK}
         LINKOPTS
         -fsanitize=address
@@ -162,7 +162,7 @@ kmcmake_cc_binary(
         ${KMCMAKE_CXX_OPTIONS}
         -fsanitize=address
         LINKS
-        shark::shark_static
+
         ${KMCMAKE_DEPS_LINK}
         LINKOPTS
         -fsanitize=address
@@ -179,7 +179,7 @@ kmcmake_cc_test(
         ${KMCMAKE_CXX_OPTIONS}
         LINKS
         shark::sk_test_static
-        shark::shark_static
+
         GTest::gtest_main
         GTest::gtest
         ${KMCMAKE_DEPS_LINK}
