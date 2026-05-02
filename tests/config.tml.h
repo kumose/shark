@@ -42,7 +42,11 @@ namespace my::custom::ns {
 
     turbo::Status parse_toml_file(const std::string& str);
 
-    turbo::Status parse_toml(const xtoml::Value& v, const std::vector<std::string> &prefix);
+    turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix);
+
+    void add_checker(std::unique_ptr<xtoml::BasicHandler> handler);
+
+    const xtoml::HandlerMap &checkers() const;
 
     xtoml::Value serialize_toml() const;
 
@@ -56,6 +60,12 @@ namespace my::custom::ns {
     std::string name{"default_name"};
     int32_t age{0};
     bool enabled{1};
+
+  //////////////////////////////////////////////////////////////////////
+  /// global checkers
+
+  xtoml::TomlUri    _uri_prefix;
+  xtoml::HandlerMap _handler_map;
   };
 
   ///////////////////////////////////////////////////////////

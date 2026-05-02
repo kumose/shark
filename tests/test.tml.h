@@ -18,8 +18,6 @@
 namespace my::custom::ns {
 
   class Person;
-  class Address;
-  class Detail;
 
 
 
@@ -74,11 +72,7 @@ namespace my::custom::ns {
       public:
         ///////////////////////////////////////////////////////////////////////// 
         /// transfers 
-        turbo::Status parse_toml_str(const std::string& path);
-
-        turbo::Status parse_toml_file(const std::string& str);
-
-        turbo::Status parse_toml(const xtoml::Value& v, const std::vector<std::string> &prefix);
+        turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map);
 
         xtoml::Value serialize_toml() const;
 
@@ -96,11 +90,7 @@ namespace my::custom::ns {
     public:
       ///////////////////////////////////////////////////////////////////////// 
       /// transfers 
-      turbo::Status parse_toml_str(const std::string& path);
-
-      turbo::Status parse_toml_file(const std::string& str);
-
-      turbo::Status parse_toml(const xtoml::Value& v, const std::vector<std::string> &prefix);
+      turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map);
 
       xtoml::Value serialize_toml() const;
 
@@ -131,7 +121,11 @@ namespace my::custom::ns {
 
     turbo::Status parse_toml_file(const std::string& str);
 
-    turbo::Status parse_toml(const xtoml::Value& v, const std::vector<std::string> &prefix);
+    turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix);
+
+    void add_checker(std::unique_ptr<xtoml::BasicHandler> handler);
+
+    const xtoml::HandlerMap &checkers() const;
 
     xtoml::Value serialize_toml() const;
 
@@ -156,6 +150,12 @@ namespace my::custom::ns {
     /// leading comment 2
     std::vector<Address> address2;
     std::string long_name{""};
+
+  //////////////////////////////////////////////////////////////////////
+  /// global checkers
+
+  xtoml::TomlUri    _uri_prefix;
+  xtoml::HandlerMap _handler_map;
   };
 
   ///////////////////////////////////////////////////////////

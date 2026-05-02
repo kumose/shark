@@ -88,14 +88,19 @@ namespace shark {
     void EnumFieldGenerator::generate_trans_parse_toml_implementations(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
-                printer->Print(_variables, "uri.push_back(\"$name$\");\n");
-                printer->Print(_variables, "uri.pop_back();\n");
+                printer->Print(_variables, "xtoml::TomlUriGuard gard(uri, {xtoml::FieldKey(\"$name$\")});\n");
                 printer->Print(_variables, "TURBO_MOVE_OR_RAISE(std::string str, xtoml::find_key(config, \"$name$\"));\n");
                 printer->Print(_variables, "if (!str.empty()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
                 printer->Print(_variables, "if (tmp) {\n");
                 printer->Indent();
+                printer->Print(_variables, "auto checker = xtoml::find_handler(map, uri);\n");
+                printer->Print(_variables, "if(checker) {\n");
+                printer->Indent();
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check(&*tmp));\n");
+                printer->Outdent();
+                printer->Print(_variables, "}\n");
                 printer->Print(_variables, "$name$ = *tmp;\n");
                 printer->Outdent();
                 printer->Print(_variables, "} else {\n");
@@ -110,14 +115,19 @@ namespace shark {
                 break;
 
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "uri.push_back(\"$name$\");\n");
-                printer->Print(_variables, "uri.pop_back();\n");
+                printer->Print(_variables, "xtoml::TomlUriGuard gard(uri, {xtoml::FieldKey(\"$name$\")});\n");
                 printer->Print(_variables, "std::string str = xtoml::find_key(config, \"$name$\", \"\");\n");
                 printer->Print(_variables, "if (!str.empty()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
                 printer->Print(_variables, "if (tmp) {\n");
                 printer->Indent();
+                printer->Print(_variables, "auto checker = xtoml::find_handler(map, uri);\n");
+                printer->Print(_variables, "if(checker) {\n");
+                printer->Indent();
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check(&*tmp));\n");
+                printer->Outdent();
+                printer->Print(_variables, "}\n");
                 printer->Print(_variables, "$name$ = *tmp;\n");
                 printer->Outdent();
                 printer->Print(_variables, "} else {\n");
@@ -131,20 +141,26 @@ namespace shark {
                 printer->Print("}\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
+                printer->Print(_variables, "xtoml::TomlUriGuard gard(uri, {xtoml::FieldKey(\"$name$\")});\n");
                 printer->Print(
                     _variables, "std::vector<std::string> arrs;\n");
                 printer->Print(_variables, "TURBO_RETURN_NOT_OK(xtoml::find_key_array(config, \"$name$\", arrs).ignore_not_found_error());\n");
                 printer->Print(_variables, "if (!arrs.empty()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "$name$.clear();\n");
-                printer->Print(_variables, "int i = 0;\n");
-                printer->Print(_variables, "for (auto& elem : arrs) {\n");
+                printer->Print(_variables, "auto checker = xtoml::find_handler(map, uri);\n");
+                printer->Print(_variables, "for (size_t i =0; i < arrs.size(); ++i) {\n");
                 printer->Indent();
-                printer->Print(_variables, "uri.push_back(turbo::str_format(\"$name$[%d]\", i++));\n");
-                printer->Print(_variables, "uri.pop_back();\n");
+                printer->Print(_variables, "xtoml::TomlUriGuard lg(uri, {xtoml::FieldKey(i)});\n");
                 printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
                 printer->Print(_variables, "if (tmp) {\n");
                 printer->Indent();
+                printer->Print(_variables, "if(checker) {\n");
+                printer->Indent();
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check_element(i, &*tmp));\n");
+                printer->Outdent();
+                printer->Print(_variables, "}\n");
+
                 printer->Print(_variables, "$name$ = *tmp;\n");
                 printer->Outdent();
                 printer->Print(_variables, "} else {\n");
@@ -156,6 +172,11 @@ namespace shark {
                 printer->Print(_variables, "}\n");
                 printer->Outdent();
                 printer->Print("}\n");
+                printer->Print(_variables, "if(checker) {\n");
+                printer->Indent();
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check($name$));\n");
+                printer->Outdent();
+                printer->Print(_variables, "}\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 break;

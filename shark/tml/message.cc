@@ -85,9 +85,6 @@ namespace shark {
     generate_fwd_typedef(google::protobuf::io::Printer *printer) {
         printer->Print("class $classname$;\n",
                        "classname", _descriptor->name());
-        for (int i = 0; i < nested_generators_.size(); i++) {
-            nested_generators_[i]->generate_fwd_typedef(printer);
-        }
     }
 
     void MessageGenerator::generate_inline_implement(google::protobuf::io::Printer *printer) {
@@ -147,9 +144,15 @@ namespace shark {
 
         printer->Print("///////////////////////////////////////////////////////////////////////// \n");
         printer->Print("/// transfers \n");
-        printer->Print(_vars, "turbo::Status parse_toml_str(const std::string& path);\n\n");
-        printer->Print(_vars, "turbo::Status parse_toml_file(const std::string& str);\n\n");
-        printer->Print(_vars, "turbo::Status parse_toml(const xtoml::Value& v, const std::vector<std::string> &prefix);\n\n");
+        if (_descriptor->containing_type() == nullptr) {
+            printer->Print(_vars, "turbo::Status parse_toml_str(const std::string& path);\n\n");
+            printer->Print(_vars, "turbo::Status parse_toml_file(const std::string& str);\n\n");
+            printer->Print(_vars, "turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix);\n\n");
+            printer->Print(_vars, "void add_checker(std::unique_ptr<xtoml::BasicHandler> handler);\n\n");
+            printer->Print(_vars, "const xtoml::HandlerMap &checkers() const;\n\n");
+        } else {
+            printer->Print(_vars, "turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map);\n\n");
+        }
         printer->Print(_vars, "xtoml::Value serialize_toml() const;\n\n");
         printer->Print(_vars, "turbo::Result<std::string> serialize_to_string() const;\n\n");
         printer->Outdent();
@@ -171,7 +174,12 @@ namespace shark {
         }
 
         printer->Outdent();
-
+        if (_descriptor->containing_type() == nullptr) {
+            printer->Print("\n//////////////////////////////////////////////////////////////////////\n");
+            printer->Print("/// global checkers\n\n");
+            printer->Print("xtoml::TomlUri    _uri_prefix;\n");
+            printer->Print("xtoml::HandlerMap _handler_map;\n");
+        }
         printer->Print(_vars, "};\n");
     }
 
@@ -194,42 +202,69 @@ namespace shark {
     }
 
     void MessageGenerator::generate_trans_implement(google::protobuf::io::Printer *printer) {
+        if (_descriptor->containing_type() == nullptr) {
+            printer->Print(_vars, "turbo::Status $domain$::parse_toml_str(const std::string& str) {\n\n");
+            printer->Indent();
+            printer->Print(_vars, "try {\n");
+            printer->Indent();
+            printer->Print(_vars, "TURBO_MOVE_OR_RAISE(auto val , xtoml::parse_string(str));\n");
+            printer->Print(_vars, "return  parse_toml(val, xtoml::TomlUri());\n");
+            printer->Outdent();
+            printer->Print(_vars, "} catch(const std::exception &e) {\n");
+            printer->Indent();
+            printer->Print(_vars, "return turbo::unknown_error(e.what());\n");
+            printer->Outdent();
+            printer->Print(_vars, "}\n\n");
+            printer->Outdent();
+            printer->Print(_vars, "}\n\n");
 
-        printer->Print(_vars, "turbo::Status $domain$::parse_toml_str(const std::string& str) {\n\n");
-        printer->Indent();
-        printer->Print(_vars, "try {\n");
-        printer->Indent();
-        printer->Print(_vars, "TURBO_MOVE_OR_RAISE(auto val , xtoml::parse_string(str));\n");
-        printer->Print(_vars, "return  parse_toml(val, {});\n");
-        printer->Outdent();
-        printer->Print(_vars, "} catch(const std::exception &e) {\n");
-        printer->Indent();
-        printer->Print(_vars, "return turbo::unknown_error(e.what());\n");
-        printer->Outdent();
-        printer->Print(_vars, "}\n\n");
-        printer->Outdent();
-        printer->Print(_vars, "}\n\n");
+            printer->Print(_vars, "turbo::Status $domain$::parse_toml_file(const std::string& path) {\n");
+            printer->Indent();
+            printer->Print(_vars, "try {\n");
+            printer->Indent();
+            printer->Print(_vars, "TURBO_MOVE_OR_RAISE(auto val , xtoml::parse_file(path));\n");
+            printer->Print(_vars, "return  parse_toml(val, xtoml::TomlUri());\n");
+            printer->Outdent();
+            printer->Print(_vars, "} catch(const std::exception &e) {\n");
+            printer->Indent();
+            printer->Print(_vars, "return turbo::unknown_error(e.what());\n");
+            printer->Outdent();
+            printer->Print(_vars, "}\n\n");
+            printer->Outdent();
+            printer->Print(_vars, "}\n\n");
 
-        printer->Print(_vars, "turbo::Status $domain$::parse_toml_file(const std::string& path) {\n");
-        printer->Indent();
-        printer->Print(_vars, "try {\n");
-        printer->Indent();
-        printer->Print(_vars, "TURBO_MOVE_OR_RAISE(auto val , xtoml::parse_file(path));\n");
-        printer->Print(_vars, "return  parse_toml(val, {});\n");
-        printer->Outdent();
-        printer->Print(_vars, "} catch(const std::exception &e) {\n");
-        printer->Indent();
-        printer->Print(_vars, "return turbo::unknown_error(e.what());\n");
-        printer->Outdent();
-        printer->Print(_vars, "}\n\n");
-        printer->Outdent();
-        printer->Print(_vars, "}\n\n");
+            printer->Print(_vars, "void $domain$::add_checker(std::unique_ptr<xtoml::BasicHandler> handler) {\n");
+            printer->Indent();
+            printer->Print(_vars, "if(!handler) {\n");
+            printer->Indent();
+            printer->Print(_vars, "return;\n");
+            printer->Outdent();
+            printer->Print(_vars, "}\n\n");
+            printer->Print(_vars, "_handler_map[handler->handler_uri()] = std::move(handler);\n");
+            printer->Outdent();
+            printer->Print(_vars, "}\n\n");
+
+            printer->Print(_vars, "const xtoml::HandlerMap& $domain$::checkers() const {\n\n");
+            printer->Indent();
+            printer->Print(_vars, "return _handler_map;\n");
+            printer->Outdent();
+            printer->Print(_vars, "}\n\n");
+        }
 
         printer->Print("///////////////////////////////////////////////////////////////////////// \n");
         printer->Print("/// transfers \n");
-        printer->Print(_vars, "turbo::Status $domain$::parse_toml(const xtoml::Value& config, const std::vector<std::string> &prefix) {\n");
-        printer->Indent();
-        printer->Print(_vars, "std::vector<std::string> uri = prefix;\n");
+        if (_descriptor->containing_type() == nullptr) {
+            printer->Print(_vars, "turbo::Status $domain$::parse_toml(const xtoml::Value& config, const xtoml::TomlUri &prefix) {\n");
+            printer->Indent();
+            printer->Print(_vars, "xtoml::TomlUri uri = prefix;\n");
+            printer->Print(_vars, "const xtoml::HandlerMap &map = _handler_map;\n");
+        } else {
+            printer->Print(_vars, "turbo::Status $domain$::parse_toml(const xtoml::Value& config, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map) {\n\n");
+            printer->Indent();
+            printer->Print(_vars, "xtoml::TomlUri uri = prefix;\n");
+        }
+
+
         for (int i = 0; i < _descriptor->field_count(); i++) {
             const google::protobuf::FieldDescriptor *field = _descriptor->field(i);
             if (field->containing_oneof() == NULL) {

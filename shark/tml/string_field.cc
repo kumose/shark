@@ -65,18 +65,45 @@ namespace shark {
     void StringFieldGenerator::generate_trans_parse_toml_implementations(google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
-                printer->Print(_variables, "uri.push_back(\"$name$\");\n");
-                printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(_variables, "TURBO_MOVE_OR_RAISE($name$, xtoml::find_key<std::string>(config, \"$name$\"));\n");
+                printer->Print(_variables, "xtoml::TomlUriGuard gard(uri, {xtoml::FieldKey(\"$name$\")});\n");
+                printer->Print(_variables, "TURBO_MOVE_OR_RAISE(auto tmp, xtoml::find_key<std::string>(config, \"$name$\"));\n");
+                printer->Print(_variables, "auto checker = xtoml::find_handler(map, uri);\n");
+                printer->Print(_variables, "if(checker) {\n");
+                printer->Indent();
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check(&tmp));\n");
+                printer->Outdent();
+                printer->Print(_variables, "}\n");
+                printer->Print(_variables, "$name$ = tmp;\n");
                 break;
 
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
-                printer->Print(_variables, "uri.push_back(\"$name$\");\n");
-                printer->Print(_variables, "uri.pop_back();\n");
-                printer->Print(_variables, "$name$ = xtoml::find_key(config, \"$name$\", $name$);\n");
+                printer->Print(_variables, "xtoml::TomlUriGuard gard(uri, {xtoml::FieldKey(\"$name$\")});\n");
+                printer->Print(_variables, "auto tmp = xtoml::find_key(config, \"$name$\", $name$);\n");
+                printer->Print(_variables, "auto checker = xtoml::find_handler(map, uri);\n");
+                printer->Print(_variables, "if(checker) {\n");
+                printer->Indent();
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check(&tmp));\n");
+                printer->Outdent();
+                printer->Print(_variables, "}\n");
+                printer->Print(_variables, "$name$ = tmp;\n");
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(xtoml::find_key_array(config, \"$name$\", $name$).ignore_not_found_error());\n");
+                printer->Print(_variables, "xtoml::TomlUriGuard gard(uri, {xtoml::FieldKey(\"$name$\")});\n");
+                printer->Print(_variables, "std::vector<std::string> tmp;\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(xtoml::find_key_array(config, \"$name$\", tmp).ignore_not_found_error());\n");
+                printer->Print(_variables, "auto checker = xtoml::find_handler(map, uri);\n");
+                printer->Print(_variables, "if(checker) {\n");
+                printer->Indent();
+                printer->Print(_variables, "for(size_t i = 0; i < tmp.size(); ++i) {\n");
+                printer->Indent();
+                printer->Print(_variables, "xtoml::TomlUriGuard lg(uri, {xtoml::FieldKey(i)});\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check_element(i, &tmp[i]));\n");
+                printer->Outdent();
+                printer->Print(_variables, "}\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check(&tmp));\n");
+                printer->Outdent();
+                printer->Print(_variables, "}\n");
+                printer->Print(_variables, "$name$ = std::move(tmp);\n");
                 break;
         }
     }
