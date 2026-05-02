@@ -14,7 +14,6 @@
 //
 
 
-
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
 #include <google/protobuf/wire_format.h>
@@ -26,7 +25,23 @@ namespace shark {
     MessageFieldGenerator::
     MessageFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
         : FieldNoMetaGenerator(descriptor) {
-        _variables["type"] = descriptor_->message_type()->name();
+        _is_extern_type = descriptor_->file() != descriptor_->message_type()->file();
+        _is_neat_type = descriptor_->message_type()->containing_type() != nullptr;
+
+        if (descriptor_->message_type()->containing_type() != nullptr &&
+            descriptor_->message_type()->containing_type() != descriptor_->containing_type()) {
+            KLOG(FATAL) << "Field " << descriptor_->containing_type()->full_name() << "."
+                << descriptor_->name() << " references nested message type "
+                << descriptor_->message_type()->full_name()
+                << " which is not a direct nested type of "
+                << descriptor_->containing_type()->full_name();
+        }
+        if (!_is_extern_type) {
+            _variables["type"] = descriptor_->message_type()->name();
+        } else {
+            _variables["type"] = message_type(descriptor_->message_type());
+        }
+
         _variables["domain_type"] = message_type(descriptor->message_type());
     }
 
@@ -48,24 +63,24 @@ namespace shark {
     void MessageFieldGenerator::generate_move_ctor_define(google::protobuf::io::Printer *printer) const {
         printer->Print(_variables, "$name$ = std::move(rhs.$name$);\n");
     }
+
     void MessageFieldGenerator::generate_copy_ctor_define(google::protobuf::io::Printer *printer) const {
         printer->Print(_variables, "$name$ = rhs.$name$;\n");
     }
 
     void MessageFieldGenerator::generate_members_declares(google::protobuf::io::Printer *printer) const {
-
     }
 
     void MessageFieldGenerator::generate_members_inline_implementations(google::protobuf::io::Printer *printer) const {
-
     }
 
-    void MessageFieldGenerator::generate_trans_parse_toml_implementations(google::protobuf::io::Printer *printer) const {
-
+    void MessageFieldGenerator::generate_trans_parse_toml_implementations(
+        google::protobuf::io::Printer *printer) const {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
                 printer->Print(_variables, "xtoml::TomlUriGuard gard(uri, {xtoml::FieldKey(\"$name$\")});\n");
-                printer->Print(_variables, "TURBO_MOVE_OR_RAISE(auto const *val, try_find_key(config, \"$name$\", val));\n");
+                printer->Print(
+                    _variables, "TURBO_MOVE_OR_RAISE(auto const *val, try_find_key(config, \"$name$\", val));\n");
                 printer->Print(_variables, "$type$ tmp;\n");
                 printer->Print(_variables, "TURBO_RETURN_NOT_OK(tmp.parse_toml(*val, uri, map));\n");
                 printer->Print(_variables, "auto checker = xtoml::find_handler(map, uri);\n");
@@ -85,6 +100,7 @@ namespace shark {
                 printer->Indent();
                 printer->Print(_variables, "$type$ tmp;\n");
                 printer->Print(_variables, "auto val = std::move(rs).value_or_die();\n");
+
                 printer->Print(_variables, "TURBO_RETURN_NOT_OK(tmp.parse_toml(*val, uri, map));\n");
                 printer->Print(_variables, "auto checker = xtoml::find_handler(map, uri);\n");
                 printer->Print(_variables, "if(checker) {\n");
@@ -114,7 +130,9 @@ namespace shark {
                 printer->Indent();
                 printer->Print(_variables, "xtoml::TomlUriGuard lg(uri, {xtoml::FieldKey(i)});\n");
                 printer->Print(_variables, "$type$ tmp;\n");
+
                 printer->Print(_variables, "TURBO_RETURN_NOT_OK(tmp.parse_toml(arrs[i], uri, map));\n");
+
                 printer->Print(_variables, "if(checker) {\n");
                 printer->Indent();
                 printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check_element(i, &tmp));\n");
@@ -147,7 +165,7 @@ namespace shark {
 
         auto n = fieldSourceLoc.leading_comments.size();
         n += fieldSourceLoc.trailing_comments.size();
-        for (auto &it : fieldSourceLoc.leading_detached_comments) {
+        for (auto &it: fieldSourceLoc.leading_detached_comments) {
             n += it.size();
         }
         switch (descriptor_->label()) {
@@ -156,7 +174,7 @@ namespace shark {
                 printer->Print(_variables, "auto var = $name$.serialize_toml();\n");
                 if (n > 0) {
                     printer->Print("val.comments().push_back(\"#############################################\\n\"\n");
-                    for (auto &it : fieldSourceLoc.leading_detached_comments) {
+                    for (auto &it: fieldSourceLoc.leading_detached_comments) {
                         print_toml_comment(printer, it);
                     }
                     print_toml_comment(printer, fieldSourceLoc.leading_comments);
@@ -169,7 +187,7 @@ namespace shark {
                 printer->Print(_variables, "xtoml::Value arr = xtoml::Array{};\n");
                 if (n > 0) {
                     printer->Print("arr.comments().push_back(\"#############################################\\n\"\n");
-                    for (auto &it : fieldSourceLoc.leading_detached_comments) {
+                    for (auto &it: fieldSourceLoc.leading_detached_comments) {
                         print_toml_comment(printer, it);
                     }
                     print_toml_comment(printer, fieldSourceLoc.leading_comments);
@@ -193,7 +211,4 @@ namespace shark {
          */
         return "";
     }
-
-
-
 } // namespace shark

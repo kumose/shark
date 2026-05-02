@@ -62,7 +62,7 @@ namespace shark {
         }
 
         if (descriptor->oneof_decl_count() > 0) {
-            KLOG(FATAL)<<"shark do not support oneof fields";
+            KLOG(FATAL) << "shark do not support oneof fields";
         }
 
         _vars["classname"] = _descriptor->name();
@@ -110,6 +110,15 @@ namespace shark {
 
 
     void MessageGenerator::generate_definition(google::protobuf::io::Printer *printer) {
+        printer->Print("\n//////////////////////////////////////////////////////////////////////\n");
+        printer->Print(_vars,
+                      "/// $classname$ \n");
+        google::protobuf::SourceLocation message_sourceLoc;
+        _descriptor->GetSourceLocation(&message_sourceLoc);
+
+        PrintComment(printer, message_sourceLoc.leading_comments);
+        PrintComment(printer, message_sourceLoc.trailing_comments);
+
         printer->Print(_vars,
                        "class $dllexport$ $classname$ {\n"
                        "public:\n\n");
@@ -147,12 +156,12 @@ namespace shark {
         if (_descriptor->containing_type() == nullptr) {
             printer->Print(_vars, "turbo::Status parse_toml_str(const std::string& path);\n\n");
             printer->Print(_vars, "turbo::Status parse_toml_file(const std::string& str);\n\n");
-            printer->Print(_vars, "turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix);\n\n");
             printer->Print(_vars, "void add_checker(std::unique_ptr<xtoml::BasicHandler> handler);\n\n");
             printer->Print(_vars, "const xtoml::HandlerMap &checkers() const;\n\n");
-        } else {
-            printer->Print(_vars, "turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map);\n\n");
         }
+        printer->Print(
+            _vars,
+            "turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map);\n\n");
         printer->Print(_vars, "xtoml::Value serialize_toml() const;\n\n");
         printer->Print(_vars, "turbo::Result<std::string> serialize_to_string() const;\n\n");
         printer->Outdent();
@@ -173,14 +182,15 @@ namespace shark {
             }
         }
 
-        printer->Outdent();
+
         if (_descriptor->containing_type() == nullptr) {
             printer->Print("\n//////////////////////////////////////////////////////////////////////\n");
             printer->Print("/// global checkers\n\n");
             printer->Print("xtoml::TomlUri    _uri_prefix;\n");
             printer->Print("xtoml::HandlerMap _handler_map;\n");
         }
-        printer->Print(_vars, "};\n");
+        printer->Outdent();
+        printer->Print(_vars, "};\n\n");
     }
 
     void MessageGenerator::generate_static_variable(google::protobuf::io::Printer *printer) {
@@ -190,15 +200,12 @@ namespace shark {
     }
 
     void MessageGenerator::generate_ctor_implemention(google::protobuf::io::Printer *printer) {
-
     }
 
     void MessageGenerator::generate_cpy_ctor_implemention(google::protobuf::io::Printer *printer) {
-
     }
 
     void MessageGenerator::generate_move_ctor_implement(google::protobuf::io::Printer *printer) {
-
     }
 
     void MessageGenerator::generate_trans_implement(google::protobuf::io::Printer *printer) {
@@ -208,7 +215,7 @@ namespace shark {
             printer->Print(_vars, "try {\n");
             printer->Indent();
             printer->Print(_vars, "TURBO_MOVE_OR_RAISE(auto val , xtoml::parse_string(str));\n");
-            printer->Print(_vars, "return  parse_toml(val, xtoml::TomlUri());\n");
+            printer->Print(_vars, "return  parse_toml(val, _uri_prefix, _handler_map);\n");
             printer->Outdent();
             printer->Print(_vars, "} catch(const std::exception &e) {\n");
             printer->Indent();
@@ -223,7 +230,7 @@ namespace shark {
             printer->Print(_vars, "try {\n");
             printer->Indent();
             printer->Print(_vars, "TURBO_MOVE_OR_RAISE(auto val , xtoml::parse_file(path));\n");
-            printer->Print(_vars, "return  parse_toml(val, xtoml::TomlUri());\n");
+            printer->Print(_vars, "return  parse_toml(val, _uri_prefix, _handler_map);\n");
             printer->Outdent();
             printer->Print(_vars, "} catch(const std::exception &e) {\n");
             printer->Indent();
@@ -253,16 +260,12 @@ namespace shark {
 
         printer->Print("///////////////////////////////////////////////////////////////////////// \n");
         printer->Print("/// transfers \n");
-        if (_descriptor->containing_type() == nullptr) {
-            printer->Print(_vars, "turbo::Status $domain$::parse_toml(const xtoml::Value& config, const xtoml::TomlUri &prefix) {\n");
-            printer->Indent();
-            printer->Print(_vars, "xtoml::TomlUri uri = prefix;\n");
-            printer->Print(_vars, "const xtoml::HandlerMap &map = _handler_map;\n");
-        } else {
-            printer->Print(_vars, "turbo::Status $domain$::parse_toml(const xtoml::Value& config, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map) {\n\n");
-            printer->Indent();
-            printer->Print(_vars, "xtoml::TomlUri uri = prefix;\n");
-        }
+
+        printer->Print(
+            _vars,
+            "turbo::Status $domain$::parse_toml(const xtoml::Value& config, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map) {\n\n");
+        printer->Indent();
+        printer->Print(_vars, "xtoml::TomlUri uri = prefix;\n");
 
 
         for (int i = 0; i < _descriptor->field_count(); i++) {

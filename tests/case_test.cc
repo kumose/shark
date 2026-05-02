@@ -33,7 +33,7 @@ TEST(EmptyFileTest, ParsesSuccessfullyWithDefaults) {
     auto empty_toml = "";
     auto val = xtoml::parse_str(empty_toml);
     my::custom::ns::Config cfg;
-    auto status = cfg.parse_toml(val, {});
+    auto status = cfg.parse_toml(val, {}, {});
     ASSERT_TRUE(status.ok());
     EXPECT_EQ(cfg.name, "default_name");
     EXPECT_EQ(cfg.age, 0);

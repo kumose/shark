@@ -45,5 +45,8 @@ namespace shark {
 
         std::string get_default_value(void) const override;
 
+    private:
+        bool _is_extern_type{false};
+        bool _is_neat_type{false};
     };
 } // namespace shark

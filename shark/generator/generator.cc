@@ -97,6 +97,10 @@ namespace shark {
         }
 
         // -----------------------------------------------------------------
+        google::protobuf::io::Printer::Options opt;
+        opt.spaces_per_indent = 4;
+        opt.variable_delimiter = '$';
+
         GlobalState::instance().registry(file);
         {
             std::string basename = StripProto(file->name());
@@ -108,7 +112,7 @@ namespace shark {
             {
                 std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
                     output_directory->Open(basename + ".h"));
-                google::protobuf::io::Printer printer(output.get(), '$');
+                google::protobuf::io::Printer printer(output.get(), opt);
                 file_generator.generate_header(&printer);
             }
 
@@ -116,7 +120,7 @@ namespace shark {
             {
                 std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
                     output_directory->Open(basename + ".cc"));
-                google::protobuf::io::Printer printer(output.get(), '$');
+                google::protobuf::io::Printer printer(output.get(), opt);
                 file_generator.generate_source(&printer);
             }
         }

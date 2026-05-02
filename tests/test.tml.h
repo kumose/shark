@@ -17,42 +17,37 @@
 
 namespace my::custom::ns {
 
-  class Person;
+    class Person;
 
 
 
-  /// --- enums ---
+    /// --- enums ---
 
-  enum class Color : uint8_t{
-    RED = 0,
-    GREEN = 1,
-    BLUE = 2
-  };  // 
-  std::optional<Color> parse_Color(std::string_view value);
-  enum class ColorU16 : uint16_t{
-    RED16 = 0,
-    GREEN16 = 1,
-    BLUE16 = 2
-  };  // 
-  std::optional<ColorU16> parse_ColorU16(std::string_view value);
-  enum class ColorU32 : uint32_t{
-    RED32 = 0,
-    GREEN32 = 1,
-    BLUE32 = 2
-  };  // 
-  std::optional<ColorU32> parse_ColorU32(std::string_view value);
+    enum class Color : uint8_t{
+        RED = 0,
+        GREEN = 1,
+        BLUE = 2
+    };  // 
+    std::optional<Color> parse_Color(std::string_view value);
+    enum class ColorU16 : uint16_t{
+        RED16 = 0,
+        GREEN16 = 1,
+        BLUE16 = 2
+    };  // 
+    std::optional<ColorU16> parse_ColorU16(std::string_view value);
+    enum class ColorU32 : uint32_t{
+        RED32 = 0,
+        GREEN32 = 1,
+        BLUE32 = 2
+    };  // 
+    std::optional<ColorU32> parse_ColorU32(std::string_view value);
 
-  /// --- messages --- 
-
-  class  Person {
-  public:
-
-  ///  runtime identify for traits
-  static constexpr bool is_runtime_type = true;
+    /// --- messages --- 
 
 
-  public:
-    class  Address {
+    //////////////////////////////////////////////////////////////////////
+    /// Person 
+    class  Person {
     public:
 
     ///  runtime identify for traits
@@ -60,18 +55,87 @@ namespace my::custom::ns {
 
 
     public:
-      class  Detail {
-      public:
 
-      ///  runtime identify for traits
-      static constexpr bool is_runtime_type = true;
+        //////////////////////////////////////////////////////////////////////
+        /// Address 
+        class  Address {
+        public:
+
+        ///  runtime identify for traits
+        static constexpr bool is_runtime_type = true;
 
 
-      public:
+        public:
+
+            //////////////////////////////////////////////////////////////////////
+            /// Detail 
+            class  Detail {
+            public:
+
+            ///  runtime identify for traits
+            static constexpr bool is_runtime_type = true;
+
+
+            public:
+                /// -----enums-------- 
+            public:
+                ///////////////////////////////////////////////////////////////////////// 
+                /// transfers 
+                turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map);
+
+                xtoml::Value serialize_toml() const;
+
+                turbo::Result<std::string> serialize_to_string() const;
+
+
+            //////////////////////////////////////////////////////////////////////
+            /// members
+            /// Keep members protected for inheritance and extension
+            public:
+                std::string region{""};
+                std::string prcode{""};
+            };
+
+            /// -----enums-------- 
+        public:
+            ///////////////////////////////////////////////////////////////////////// 
+            /// transfers 
+            turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map);
+
+            xtoml::Value serialize_toml() const;
+
+            turbo::Result<std::string> serialize_to_string() const;
+
+
+        //////////////////////////////////////////////////////////////////////
+        /// members
+        /// Keep members protected for inheritance and extension
+        public:
+            std::string street{""};
+            int32_t number{20};
+            Detail detail;
+        };
+
         /// -----enums-------- 
-      public:
+        enum class Dolor : uint32_t{
+            DRED = 0,
+            DGREEN = 1,
+            DBLUE = 2
+        };  // 
+
+        static std::string_view to_string(Dolor value);
+        static std::optional<Dolor> parse_Dolor(std::string_view value);
+    public:
         ///////////////////////////////////////////////////////////////////////// 
         /// transfers 
+        turbo::Status parse_toml_str(const std::string& path);
+
+        turbo::Status parse_toml_file(const std::string& str);
+
+        void add_checker(std::unique_ptr<xtoml::BasicHandler> handler);
+
+        const xtoml::HandlerMap &checkers() const;
+
         turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map);
 
         xtoml::Value serialize_toml() const;
@@ -79,119 +143,67 @@ namespace my::custom::ns {
         turbo::Result<std::string> serialize_to_string() const;
 
 
-      //////////////////////////////////////////////////////////////////////
-      /// members
-      /// Keep members protected for inheritance and extension
-      public:
-        std::string region{""};
-        std::string prcode{""};
-      };
-      /// -----enums-------- 
-    public:
-      ///////////////////////////////////////////////////////////////////////// 
-      /// transfers 
-      turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map);
-
-      xtoml::Value serialize_toml() const;
-
-      turbo::Result<std::string> serialize_to_string() const;
-
-
     //////////////////////////////////////////////////////////////////////
     /// members
     /// Keep members protected for inheritance and extension
     public:
-      std::string street{""};
-      int32_t number{20};
-      Detail detail;
+        /// this is my ssdsf
+        std::string name{"Lothar"};
+        /// my comment
+        int8_t age{0};
+        /// leading comment 1
+        /// leading comment 2
+        std::vector<std::string> emails;
+        std::vector<int32_t> ages;
+        Color favorite_color{Color::GREEN};
+        Address address;
+        Address ad;
+        /// leading comment 2
+        std::vector<Address> address2;
+        std::string long_name{""};
+
+        //////////////////////////////////////////////////////////////////////
+        /// global checkers
+
+        xtoml::TomlUri    _uri_prefix;
+        xtoml::HandlerMap _handler_map;
     };
-    /// -----enums-------- 
-    enum class Dolor : uint32_t{
-      DRED = 0,
-      DGREEN = 1,
-      DBLUE = 2
-    };  // 
-
-    static std::string_view to_string(Dolor value);
-    static std::optional<Dolor> parse_Dolor(std::string_view value);
-  public:
-    ///////////////////////////////////////////////////////////////////////// 
-    /// transfers 
-    turbo::Status parse_toml_str(const std::string& path);
-
-    turbo::Status parse_toml_file(const std::string& str);
-
-    turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix);
-
-    void add_checker(std::unique_ptr<xtoml::BasicHandler> handler);
-
-    const xtoml::HandlerMap &checkers() const;
-
-    xtoml::Value serialize_toml() const;
-
-    turbo::Result<std::string> serialize_to_string() const;
 
 
-  //////////////////////////////////////////////////////////////////////
-  /// members
-  /// Keep members protected for inheritance and extension
-  public:
-    /// this is my ssdsf
-    std::string name{"Lothar"};
-    /// my comment
-    int8_t age{0};
-    /// leading comment 1
-    /// leading comment 2
-    std::vector<std::string> emails;
-    std::vector<int32_t> ages;
-    Color favorite_color{Color::GREEN};
-    Address address;
-    Address ad;
-    /// leading comment 2
-    std::vector<Address> address2;
-    std::string long_name{""};
-
-  //////////////////////////////////////////////////////////////////////
-  /// global checkers
-
-  xtoml::TomlUri    _uri_prefix;
-  xtoml::HandlerMap _handler_map;
-  };
-
-  ///////////////////////////////////////////////////////////
-  inline std::string_view to_string(Color value) {
-    switch (value) {
-      case Color::RED: return "RED";
-      case Color::GREEN: return "GREEN";
-      case Color::BLUE: return "BLUE";
-      default: return "UNKNOWN";
+    ///////////////////////////////////////////////////////////
+    inline std::string_view to_string(Color value) {
+        switch (value) {
+          case Color::RED: return "RED";
+          case Color::GREEN: return "GREEN";
+          case Color::BLUE: return "BLUE";
+          default: return "UNKNOWN";
+        }
     }
-  }
-  inline std::string_view to_string(ColorU16 value) {
-    switch (value) {
-      case ColorU16::RED16: return "RED16";
-      case ColorU16::GREEN16: return "GREEN16";
-      case ColorU16::BLUE16: return "BLUE16";
-      default: return "UNKNOWN";
+    inline std::string_view to_string(ColorU16 value) {
+        switch (value) {
+          case ColorU16::RED16: return "RED16";
+          case ColorU16::GREEN16: return "GREEN16";
+          case ColorU16::BLUE16: return "BLUE16";
+          default: return "UNKNOWN";
+        }
     }
-  }
-  inline std::string_view to_string(ColorU32 value) {
-    switch (value) {
-      case ColorU32::RED32: return "RED32";
-      case ColorU32::GREEN32: return "GREEN32";
-      case ColorU32::BLUE32: return "BLUE32";
-      default: return "UNKNOWN";
+    inline std::string_view to_string(ColorU32 value) {
+        switch (value) {
+          case ColorU32::RED32: return "RED32";
+          case ColorU32::GREEN32: return "GREEN32";
+          case ColorU32::BLUE32: return "BLUE32";
+          default: return "UNKNOWN";
+        }
     }
-  }
 
-  inline std::string_view Person::to_string(Person::Dolor value) {
-    switch (value) {
-      case Person::Dolor::DRED: return "DRED";
-      case Person::Dolor::DGREEN: return "DGREEN";
-      case Person::Dolor::DBLUE: return "DBLUE";
-      default: return "UNKNOWN";
+    inline std::string_view Person::to_string(Person::Dolor value) {
+        switch (value) {
+          case Person::Dolor::DRED: return "DRED";
+          case Person::Dolor::DGREEN: return "DGREEN";
+          case Person::Dolor::DBLUE: return "DBLUE";
+          default: return "UNKNOWN";
+        }
     }
-  }
 
 }  // my::custom::ns
 

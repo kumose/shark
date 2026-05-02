@@ -102,7 +102,6 @@ kmcmake_cc_test(
 
 find_package(GTest REQUIRED)
 
-include_directories(${PROJECT_SOURCE_DIR}/shark/lib)
 set(SHARK_IDL_TEST_FILES
         test.proto
         config.proto
@@ -184,3 +183,30 @@ kmcmake_cc_test(
         GTest::gtest
         ${KMCMAKE_DEPS_LINK}
 )
+
+set(SHARK_IMPORT_TEST_FILES
+        base.proto
+        advance.proto
+)
+kmcmake_cc_tml(
+        NAME import_sk_gen
+        PROTOS
+        ${SHARK_IMPORT_TEST_FILES}
+        OUTDIR
+        ${PROJECT_SOURCE_DIR}
+)
+
+kmcmake_cc_library(
+        NAMESPACE ${PROJECT_NAME}
+        NAME import_test
+        SOURCES
+        ${import_sk_gen_SRCS}
+        PINCLUDES
+        ${PROTOBUF_INCLUDE_DIRS}
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        PLINKS
+        ${KMCMAKE_DEPS_LINK}
+
+)
+

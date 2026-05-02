@@ -83,7 +83,7 @@ namespace shark {
                     continue;
                 }
                 printer->Print(
-                    "#include \"$dependency$.tml.h\"\n",
+                    "#include <$dependency$.tml.h>\n",
                     "dependency", StripProto(_file->dependency(i)->name()));
             }
         }

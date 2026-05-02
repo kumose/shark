@@ -64,9 +64,28 @@ namespace shark {
 
 
     std::string message_type(const google::protobuf::Descriptor *md) {
-        auto s = md->full_name();
-        auto t = turbo::str_replace_all(s, {{".", "::"}});
-        return std::string(turbo::strip_prefix(t, GlobalState::instance().pb_namespace_prefix));
+        auto file = md->file();
+
+        if (!file->options().HasExtension(idl::shark_file)) {
+            KLOG(FATAL) << "file:"<<file->name()<<" does not have extension idl::shark_file";
+        }
+        auto ext = file->options().GetExtension(idl::shark_file);
+        if (!ext.has_runtime_namespace() && ext.runtime_namespace().empty()) {
+            KLOG(FATAL) << "file:"<<file->name()<<" must spefic runtime_namespace";
+        }
+
+
+        auto full_pb_type = turbo::str_replace_all(md->full_name(), {{".", "::"}});
+
+        auto full_pb_ns = turbo::str_replace_all(file->package(), {{".", "::"}});
+
+
+
+        auto full_type = turbo::str_replace_all(full_pb_type, {{full_pb_ns, ext.runtime_namespace()}});
+
+        auto local_cnamespace = turbo::str_replace_all(GlobalState::instance().ext_file_options.runtime_namespace(), {{".", "::"}}) + "::";
+
+        return std::string(turbo::strip_prefix(full_type, local_cnamespace));
     }
 
     std::string message_type(const google::protobuf::Descriptor *des, const std::string &suffix) {
