@@ -1,5 +1,5 @@
 *.pb.h
 *.tml.cc
 *.pb.cc
-*.tml.cc
+*.tml.h
 
