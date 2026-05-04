@@ -164,6 +164,10 @@ namespace shark {
             "turbo::Status parse_toml(const xtoml::Value& v, const xtoml::TomlUri &prefix, const xtoml::HandlerMap &map);\n\n");
         printer->Print(_vars, "xtoml::Value serialize_toml() const;\n\n");
         printer->Print(_vars, "turbo::Result<std::string> serialize_to_string() const;\n\n");
+
+        printer->Print(_vars, "xtoml::Value serialize_required_toml() const;\n\n");
+        printer->Print(_vars, "turbo::Result<std::string> serialize_required_to_string() const;\n\n");
+
         printer->Outdent();
         printer->Print("\n//////////////////////////////////////////////////////////////////////\n");
         printer->Print("/// members\n");
@@ -291,7 +295,7 @@ namespace shark {
             if (field->containing_oneof() == NULL) {
                 printer->Print(_vars, "{\n");
                 printer->Indent();
-                field_generators_.get(field).generate_trans_toml_implementations(printer);
+                field_generators_.get(field).generate_trans_toml_implementations(printer, false);
                 printer->Outdent();
                 printer->Print(_vars, "}\n");
             }
@@ -303,6 +307,35 @@ namespace shark {
         printer->Print(_vars, "turbo::Result<std::string> $domain$::serialize_to_string() const {\n\n");
         printer->Indent();
         printer->Print(_vars, "auto v = serialize_toml();\n\n");
+        printer->Print(_vars, "return xtoml::serialize(v);\n\n");
+        printer->Outdent();
+        printer->Print("}\n\n");
+
+        ////
+        printer->Print(_vars, "xtoml::Value $domain$::serialize_required_toml() const {\n");
+        printer->Indent();
+        printer->Print(_vars, "xtoml::Value result;\n");
+        for (int i = 0; i < _descriptor->field_count(); i++) {
+            const google::protobuf::FieldDescriptor *field = _descriptor->field(i);
+            if (field->containing_oneof() == NULL) {
+                auto &f = field_generators_.get(field);
+                if (!f.is_required()) {
+                    continue;
+                }
+                printer->Print(_vars, "{\n");
+                printer->Indent();
+                f.generate_trans_toml_implementations(printer, true);
+                printer->Outdent();
+                printer->Print(_vars, "}\n");
+            }
+        }
+        printer->Print(_vars, "return result;\n");
+        printer->Outdent();
+        printer->Print("}\n\n");
+
+        printer->Print(_vars, "turbo::Result<std::string> $domain$::serialize_required_to_string() const {\n\n");
+        printer->Indent();
+        printer->Print(_vars, "auto v = serialize_required_toml();\n\n");
         printer->Print(_vars, "return xtoml::serialize(v);\n\n");
         printer->Outdent();
         printer->Print("}\n\n");

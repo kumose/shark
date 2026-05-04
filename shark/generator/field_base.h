@@ -56,11 +56,13 @@ namespace shark {
 
         virtual void generate_trans_parse_toml_implementations(google::protobuf::io::Printer *printer) const = 0;
 
-        virtual void generate_trans_toml_implementations(google::protobuf::io::Printer *printer) const = 0;
+        virtual void generate_trans_toml_implementations(google::protobuf::io::Printer *printer, bool required= false) const = 0;
 
         virtual std::string get_default_value() const = 0;
 
-
+        bool is_required() const {
+            return _required;
+        }
 
     protected:
         virtual void do_initialize() {
@@ -71,5 +73,6 @@ namespace shark {
         std::map<std::string, std::string> _variables;
         idl::SharkFieldOptions _ext_option;
         google::protobuf::FieldOptions _option;
+        bool _required {false};
     };
 } // namespace shark

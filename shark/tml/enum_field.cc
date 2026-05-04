@@ -89,7 +89,7 @@ namespace shark {
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
                 printer->Print(_variables, "xtoml::TomlUriGuard gard(uri, {xtoml::FieldKey(\"$name$\")});\n");
-                printer->Print(_variables, "TURBO_MOVE_OR_RAISE(std::string str, xtoml::find_key(config, \"$name$\"));\n");
+                printer->Print(_variables, "TURBO_MOVE_OR_RAISE(std::string str, xtoml::find_key<std::string>(config, \"$name$\"));\n");
                 printer->Print(_variables, "if (!str.empty()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
@@ -140,11 +140,15 @@ namespace shark {
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
-            case google::protobuf::FieldDescriptor::LABEL_REPEATED:
+            case google::protobuf::FieldDescriptor::LABEL_REPEATED: {
                 printer->Print(_variables, "xtoml::TomlUriGuard gard(uri, {xtoml::FieldKey(\"$name$\")});\n");
                 printer->Print(
                     _variables, "std::vector<std::string> arrs;\n");
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(xtoml::find_key_array(config, \"$name$\", arrs).ignore_not_found_error());\n");
+                if (!_required) {
+                    printer->Print(_variables, "TURBO_RETURN_NOT_OK(xtoml::find_key_array(config, \"$name$\", arrs).ignore_not_found_error());\n");
+                } else {
+                    printer->Print(_variables, "TURBO_RETURN_NOT_OK(xtoml::find_key_array(config, \"$name$\", arrs));\n");
+                }
                 printer->Print(_variables, "if (!arrs.empty()) {\n");
                 printer->Indent();
                 printer->Print(_variables, "$name$.clear();\n");
@@ -180,10 +184,11 @@ namespace shark {
                 printer->Outdent();
                 printer->Print("}\n");
                 break;
+            }
         }
     }
 
-    void EnumFieldGenerator::generate_trans_toml_implementations(google::protobuf::io::Printer *printer) const {
+    void EnumFieldGenerator::generate_trans_toml_implementations(google::protobuf::io::Printer *printer, bool required) const {
         google::protobuf::SourceLocation fieldSourceLoc;
         descriptor_->GetSourceLocation(&fieldSourceLoc);
 
@@ -194,7 +199,6 @@ namespace shark {
         }
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
-            case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 printer->Print(_variables, "xtoml::Value var = $PREFIX$to_string($name$);\n");
                 if (n > 0) {
                     printer->Print("var.comments().push_back(\"#############################################\\n\"\n");
@@ -207,23 +211,40 @@ namespace shark {
                 }
                 printer->Print(_variables, "result[\"$name$\"] = var;\n");
                 break;
-            case google::protobuf::FieldDescriptor::LABEL_REPEATED:
-                printer->Print(_variables, "xtoml::Value arr = xtoml::Array{};\n");
-                if (n > 0) {
-                    printer->Print("arr.comments().push_back(\"#############################################\\n\"\n");
-                    for (auto &it: fieldSourceLoc.leading_detached_comments) {
-                        print_toml_comment(printer, it);
+            case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
+                if (!required) {
+                    printer->Print(_variables, "xtoml::Value var = $PREFIX$to_string($name$);\n");
+                    if (n > 0) {
+                        printer->Print("var.comments().push_back(\"#############################################\\n\"\n");
+                        for (auto &it: fieldSourceLoc.leading_detached_comments) {
+                            print_toml_comment(printer, it);
+                        }
+                        print_toml_comment(printer, fieldSourceLoc.leading_comments);
+                        print_toml_comment(printer, fieldSourceLoc.trailing_comments);
+                        printer->Print("\"### end\\n\");\n");
                     }
-                    print_toml_comment(printer, fieldSourceLoc.leading_comments);
-                    print_toml_comment(printer, fieldSourceLoc.trailing_comments);
-                    printer->Print("\"### end\\n\");\n");
+                    printer->Print(_variables, "result[\"$name$\"] = var;\n");
                 }
-                printer->Print(_variables, "for(size_t i = 0; i < $name$.size(); ++i) {\n");
-                printer->Indent();
-                printer->Print(_variables, "arr.push_back($PREFIX$to_string($name$[i]));\n");
-                printer->Outdent();
-                printer->Print("}\n");
-                printer->Print(_variables, "result[\"$name$\"] = arr;\n");
+                break;
+            case google::protobuf::FieldDescriptor::LABEL_REPEATED:
+                if (!required || _required) {
+                    printer->Print(_variables, "xtoml::Value arr = xtoml::Array{};\n");
+                    if (n > 0) {
+                        printer->Print("arr.comments().push_back(\"#############################################\\n\"\n");
+                        for (auto &it: fieldSourceLoc.leading_detached_comments) {
+                            print_toml_comment(printer, it);
+                        }
+                        print_toml_comment(printer, fieldSourceLoc.leading_comments);
+                        print_toml_comment(printer, fieldSourceLoc.trailing_comments);
+                        printer->Print("\"### end\\n\");\n");
+                    }
+                    printer->Print(_variables, "for(size_t i = 0; i < $name$.size(); ++i) {\n");
+                    printer->Indent();
+                    printer->Print(_variables, "arr.push_back($PREFIX$to_string($name$[i]));\n");
+                    printer->Outdent();
+                    printer->Print("}\n");
+                    printer->Print(_variables, "result[\"$name$\"] = arr;\n");
+                }
                 break;
         }
     }

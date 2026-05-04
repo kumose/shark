@@ -107,6 +107,9 @@ message SharkFieldOptions {
   /// Generate atomic type for this field
   optional bool              is_atomic = 2;
 
+  /// repeated field attribute
+  optional bool              is_required = 3;
+
   /// Treat string field as raw byte sequence in generated code
   /// Disables string-specific logic and treats data as pure bytes
   optional bool string_as_bytes = 11 [default = false];

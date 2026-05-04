@@ -32,7 +32,11 @@ message Median {
 message Advance {
   optional base.optional.Base base = 4;
   optional Median median = 6;
-  optional string ad_name = 1 [default = "default_name"];
-  optional int32 ad_age = 2;
-  optional bool ad_enabled = 3 [default = true];
+  required string ad_name = 1 [default = "default_name"];
+  required int32 ad_age = 2;
+  required bool ad_enabled = 3 [default = true];
+  repeated int64 ports     = 7 [(shark.idl.shark_field) = {is_required : true}];
+  required base.optional.Base rbase = 8;
+  repeated base.optional.Base repeat_base = 9 [(shark.idl.shark_field) = {is_required : true}];
+  repeated base.optional.Base repeat_base_no_requre = 10;
 }

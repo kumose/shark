@@ -34,7 +34,9 @@ namespace shark {
         _option = descriptor_->options();
         if (descriptor_->options().HasExtension(idl::shark_field)) {
             _ext_option = descriptor_->options().GetExtension(idl::shark_field);
+            _required = _ext_option.is_required();
         }
+        _required |= descriptor_->is_required();
 
         if (descriptor_->options().deprecated()) {
             _variables["deprecated"] = "[[deprecated]] ";

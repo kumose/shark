@@ -40,7 +40,7 @@ namespace shark {
 
         void generate_members_inline_implementations(google::protobuf::io::Printer *printer) const override;
         void generate_trans_parse_toml_implementations(google::protobuf::io::Printer *printer) const override;
-        void generate_trans_toml_implementations(google::protobuf::io::Printer *printer) const;
+        void generate_trans_toml_implementations(google::protobuf::io::Printer *printer, bool required) const;
 
         std::string get_default_value(void) const override;
 
