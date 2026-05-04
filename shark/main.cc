@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
   if (invocation_basename == standalone_name) {
     google::protobuf::compiler::CommandLineInterface cli;
-    cli.RegisterGenerator("--sk_out", &c_generator, "Generate sk.cc/sk.h files.");
+    cli.RegisterGenerator("--sk_out", &c_generator, "Generate tml.cc/tml.h files.");
     cli.SetVersionInfo(SHARK_VERSION_MAJOR);
     return cli.Run(argc, argv);
   }

@@ -1,0 +1,99 @@
+// Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto2";
+
+import "shark/idl/shark_options.proto";
+option (shark.idl.shark_file) = {
+  runtime_namespace: "my::base"
+  cpp_includes: ["turbo/container/flat_hash_map.h"]
+  sk_stand: CXX_20
+};
+
+package base.optional;
+
+
+/// BaseRepeat tests repeated fields for all scalar types supported by TOML.
+message BaseRepeat {
+  // === Basic examples (already provided) ===
+  /// name: optional string with default.
+  optional string name = 1 [default = "default_name"];
+  /// age: repeated int32, marked as required.
+  repeated int32 age = 2 [(shark.idl.shark_field) = {is_required : true}];
+  /// enabled: optional bool with default.
+  optional bool enabled = 3 [default = true];
+  /// required_friends: repeated string, marked as required.
+  repeated string required_friends = 4 [(shark.idl.shark_field) = {is_required : true}];
+  /// friends: ordinary repeated string.
+  repeated string friends = 5;
+
+  // === int32 ===
+  /// repeated_int32: normal repeated int32.
+  repeated int32 repeated_int32 = 6;
+  /// required_int32: repeated int32 that must appear in minimal output.
+  repeated int32 required_int32 = 7 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === int64 ===
+  repeated int64 repeated_int64 = 8;
+  repeated int64 required_int64 = 9 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === uint32 ===
+  repeated uint32 repeated_uint32 = 10;
+  repeated uint32 required_uint32 = 11 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === uint64 ===
+  repeated uint64 repeated_uint64 = 12;
+  repeated uint64 required_uint64 = 13 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === sint32 ===
+  repeated sint32 repeated_sint32 = 14;
+  repeated sint32 required_sint32 = 15 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === sint64 ===
+  repeated sint64 repeated_sint64 = 16;
+  repeated sint64 required_sint64 = 17 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === fixed32 ===
+  repeated fixed32 repeated_fixed32 = 18;
+  repeated fixed32 required_fixed32 = 19 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === fixed64 ===
+  repeated fixed64 repeated_fixed64 = 20;
+  repeated fixed64 required_fixed64 = 21 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === sfixed32 ===
+  repeated sfixed32 repeated_sfixed32 = 22;
+  repeated sfixed32 required_sfixed32 = 23 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === sfixed64 ===
+  repeated sfixed64 repeated_sfixed64 = 24;
+  repeated sfixed64 required_sfixed64 = 25 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === float ===
+  repeated float repeated_float = 26;
+  repeated float required_float = 27 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === double ===
+  repeated double repeated_double = 28;
+  repeated double required_double = 29 [(shark.idl.shark_field) = {is_required : true}];
+
+  // === bool ===
+  repeated bool repeated_bool = 30;
+  repeated bool required_bool = 31 [(shark.idl.shark_field) = {is_required : true}];
+
+  repeated string repeated_string = 32;
+  repeated string required_string = 33 [(shark.idl.shark_field) = {is_required : true}];
+
+}

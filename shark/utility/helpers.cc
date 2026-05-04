@@ -14,7 +14,6 @@
 //
 
 
-
 #include <cstdint>
 #include <memory>
 #include <set>
@@ -30,6 +29,7 @@
 #include <shark/utility/compat.h>
 #include <turbo/strings/str_split.h>
 #include <turbo/strings/str_replace.h>
+#include <turbo/strings/escaping.h>
 
 namespace shark {
 #if defined(_MSC_VER)
@@ -146,27 +146,75 @@ namespace shark {
     }
 
     void PrintComment(google::protobuf::io::Printer *printer, std::string comment) {
-        if (!comment.empty()) {
-            std::vector<std::string> comment_lines = turbo::str_split(comment, "\r\n", turbo::SkipEmpty());
-            printer->Print("/*\n");
-            for (size_t i = 0; i < comment_lines.size(); i++) {
-                if (!comment_lines[i].empty()) {
-                    /* Make sure we don't inadvertently close the comment block */
-                    if (comment_lines[i][0] == '/')
-                        comment_lines[i] = ' ' + comment_lines[i];
+        if (comment.empty()) {
+            return ;
+        }
 
-                    /* Or cause other compiler issues. */
-                    size_t delim_i;
-                    while ((delim_i = comment_lines[i].find("/*")) != std::string::npos)
-                        comment_lines[i][delim_i] = ' ';
+        std::vector<std::string> comment_lines = turbo::str_split(comment, turbo::ByAnyChar("\r\n"), turbo::SkipEmpty());
 
-                    while ((delim_i = comment_lines[i].find("*/")) != std::string::npos)
-                        comment_lines[i][delim_i + 1] = ' ';
-
-                    printer->Print(" *$line$\n", "line", comment_lines[i]);
-                }
+        for (size_t i = 0; i < comment_lines.size(); i++) {
+            if (comment_lines[i].empty()) {
+                continue;
             }
-            printer->Print(" */\n");
+            /* Make sure we don't inadvertently close the comment block */
+            while (turbo::starts_with(comment_lines[i], "///"))
+                comment_lines[i] = turbo::strip_prefix(comment_lines[i], "///");
+
+            while (turbo::starts_with(comment_lines[i], "//"))
+                comment_lines[i] = turbo::strip_prefix(comment_lines[i], "//");
+            while (turbo::starts_with(comment_lines[i], "/"))
+                comment_lines[i] = turbo::strip_prefix(comment_lines[i], "/");
+
+            while (turbo::ends_with(comment_lines[i], "\n"))
+                comment_lines[i] = turbo::strip_suffix(comment_lines[i], "\n");
+            while (turbo::ends_with(comment_lines[i], "\r"))
+                comment_lines[i] = turbo::strip_suffix(comment_lines[i], "\r");
+
+
+            size_t delim_i;
+            while ((delim_i = comment_lines[i].find("/*")) != std::string::npos)
+                comment_lines[i][delim_i] = ' ';
+            while ((delim_i = comment_lines[i].find("*/")) != std::string::npos)
+                comment_lines[i][delim_i + 1] = ' ';
+            auto trimd = turbo::trim_all(comment_lines[i]);
+            printer->Print("/// $comment$\n", "comment", trimd);
+        }
+    }
+
+    void print_toml_comment(google::protobuf::io::Printer *printer, std::string comment) {
+        if (comment.empty()) {
+            return ;
+        }
+
+        std::vector<std::string> comment_lines = turbo::str_split(comment, turbo::ByAnyChar("\r\n"), turbo::SkipEmpty());
+
+        for (size_t i = 0; i < comment_lines.size(); i++) {
+            if (comment_lines[i].empty()) {
+                continue;
+            }
+            /* Make sure we don't inadvertently close the comment block */
+            while (turbo::starts_with(comment_lines[i], "///"))
+                comment_lines[i] = turbo::strip_prefix(comment_lines[i], "///");
+
+            while (turbo::starts_with(comment_lines[i], "//"))
+                comment_lines[i] = turbo::strip_prefix(comment_lines[i], "//");
+            while (turbo::starts_with(comment_lines[i], "/"))
+                comment_lines[i] = turbo::strip_prefix(comment_lines[i], "/");
+
+            while (turbo::ends_with(comment_lines[i], "\n"))
+                comment_lines[i] = turbo::strip_suffix(comment_lines[i], "\n");
+            while (turbo::ends_with(comment_lines[i], "\r"))
+                comment_lines[i] = turbo::strip_suffix(comment_lines[i], "\r");
+
+
+            size_t delim_i;
+            while ((delim_i = comment_lines[i].find("/*")) != std::string::npos)
+                comment_lines[i][delim_i] = ' ';
+            while ((delim_i = comment_lines[i].find("*/")) != std::string::npos)
+                comment_lines[i][delim_i + 1] = ' ';
+            auto trimd = turbo::trim_all(comment_lines[i]);
+            auto coded = turbo::c_encode(trimd);
+            printer->Print("\"# $comment$\\n\"\n", "comment", coded);
         }
     }
 

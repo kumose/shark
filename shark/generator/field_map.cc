@@ -21,16 +21,13 @@
 
 #include <shark/idl/shark_options.pb.h>
 
-#include <shark/rt/bytes_field.h>
-#include <shark/rt/enum_field.h>
+#include <shark/tml/enum_field.h>
 #include <shark/generator/field_map.h>
 #include <shark/utility/helpers.h>
-#include <shark/rt/message_field.h>
-#include <shark/rt/primitive_field.h>
-#include <shark/rt/string_field.h>
+#include <shark/tml/message_field.h>
+#include <shark/tml/primitive_field.h>
+#include <shark/tml/string_field.h>
 #include <shark/utility/compat.h>
-#include <shark/rt/map_field.h>
-#include <shark/rt/any_field.h>
 
 namespace shark {
 
@@ -49,19 +46,16 @@ namespace shark {
         switch (field->type()) {
             case google::protobuf::FieldDescriptor::TYPE_MESSAGE:
                 if (field->is_map()) {
-                    return std::make_unique<MapFieldGenerator>(field);
+                    KLOG(FATAL)<<"shark do not support map field:"<<field->name();
                 }
                 if (is_protobuf_any(field)) {
-                    return std::make_unique<AnyFieldGenerator>(field);
+                    KLOG(FATAL)<<"shark do not support any field:"<<field->name();
                 }
                 return std::make_unique<MessageFieldGenerator>(field);
             case google::protobuf::FieldDescriptor::TYPE_STRING:
-                if (opt.string_as_bytes())
-                    return std::make_unique<BytesFieldGenerator>(field);
-                else
                     return std::make_unique<StringFieldGenerator>(field);
             case google::protobuf::FieldDescriptor::TYPE_BYTES:
-                return std::make_unique<BytesFieldGenerator>(field);
+                KLOG(FATAL)<<"shark do not support bytes field:"<<field->name();
             case google::protobuf::FieldDescriptor::TYPE_ENUM:
                 return std::make_unique<EnumFieldGenerator>(field);
             case google::protobuf::FieldDescriptor::TYPE_GROUP:

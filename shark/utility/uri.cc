@@ -1,0 +1,247 @@
+// Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#include <shark/utility/uri.h>
+#include <turbo/strings/ascii.h>
+#include <turbo/strings/str_split.h>
+#include <turbo/strings/str_replace.h>
+#include <turbo/strings/strip.h>
+#include <shark/generator/global_state.h>
+
+namespace shark {
+    const char *const kKeywordList[] = {
+        "and", "and_eq", "asm", "auto", "bitand", "bitor", "bool", "break", "case",
+        "catch", "char", "class", "compl", "const", "const_cast", "continue",
+        "default", "delete", "do", "double", "dynamic_cast", "else", "enum",
+        "explicit", "extern", "false", "float", "for", "friend", "goto", "if",
+        "inline", "int", "long", "mutable", "namespace", "new", "not", "not_eq",
+        "operator", "or", "or_eq", "private", "protected", "public", "register",
+        "reinterpret_cast", "return", "short", "signed", "sizeof", "static",
+        "static_cast", "struct", "switch", "template", "this", "throw", "true", "try",
+        "typedef", "typeid", "typename", "union", "unsigned", "using", "virtual",
+        "void", "volatile", "wchar_t", "while", "xor", "xor_eq"
+    };
+
+    std::set<std::string> MakeKeywordsMap() {
+        std::set<std::string> result;
+        for (size_t i = 0; i < GOOGLE_ARRAYSIZE(kKeywordList); i++) {
+            result.insert(kKeywordList[i]);
+        }
+        return result;
+    }
+
+    std::set<std::string> kKeywords = MakeKeywordsMap();
+
+    std::string varify_field_name(const google::protobuf::FieldDescriptor *field) {
+        std::string result = turbo::str_to_lower(field->name());
+        if (kKeywords.count(result) > 0) {
+            result.append("_");
+        }
+        return result;
+    }
+
+    std::string field_uri(const google::protobuf::FieldDescriptor *field) {
+        return field->full_name();
+    }
+
+    std::string field_uri_without_namespace(const google::protobuf::FieldDescriptor *field) {
+        auto p = field->file()->package();
+        auto s = field->full_name();
+        return s.substr(p.size());
+    }
+
+
+    std::string get_message_type(const google::protobuf::Descriptor *md) {
+        auto file = md->file();
+
+        if (!file->options().HasExtension(idl::shark_file)) {
+            KLOG(FATAL) << "file:"<<file->name()<<" does not have extension idl::shark_file";
+        }
+        auto ext = file->options().GetExtension(idl::shark_file);
+        if (!ext.has_runtime_namespace() && ext.runtime_namespace().empty()) {
+            KLOG(FATAL) << "file:"<<file->name()<<" must spefic runtime_namespace";
+        }
+
+        auto full_pb_type = turbo::str_replace_all(md->full_name(), {{".", "::"}});
+
+        auto full_pb_ns = turbo::str_replace_all(file->package(), {{".", "::"}});
+
+
+
+        auto full_type = turbo::str_replace_all(full_pb_type, {{full_pb_ns, ext.runtime_namespace()}});
+
+        auto local_cnamespace = turbo::str_replace_all(GlobalState::instance().ext_file_options.runtime_namespace(), {{".", "::"}}) + "::";
+
+        return std::string(turbo::strip_prefix(full_type, local_cnamespace));
+    }
+
+    std::string get_enum_type(const google::protobuf::EnumDescriptor *ed) {
+        auto file = ed->file();
+
+        if (!file->options().HasExtension(idl::shark_file)) {
+            KLOG(FATAL) << "file:"<<file->name()<<" does not have extension idl::shark_file";
+        }
+        auto ext = file->options().GetExtension(idl::shark_file);
+        if (!ext.has_runtime_namespace() && ext.runtime_namespace().empty()) {
+            KLOG(FATAL) << "file:"<<file->name()<<" must spefic runtime_namespace";
+        }
+
+        auto full_pb_type = turbo::str_replace_all(ed->full_name(), {{".", "::"}});
+
+        auto full_pb_ns = turbo::str_replace_all(file->package(), {{".", "::"}});
+
+
+
+        auto full_type = turbo::str_replace_all(full_pb_type, {{full_pb_ns, ext.runtime_namespace()}});
+
+        auto local_cnamespace = turbo::str_replace_all(GlobalState::instance().ext_file_options.runtime_namespace(), {{".", "::"}}) + "::";
+
+        return std::string(turbo::strip_prefix(full_type, local_cnamespace));
+    }
+
+    /// Returns the parse function name for an enum.
+    /// For enums in the same proto package: "parse_Outter_Color"
+    /// For enums in a different package: "other_ns::parse_Outter_Color"
+    std::string get_enum_type_parse_func(const google::protobuf::EnumDescriptor* ed) {
+        // Step 1: current proto package
+        const std::string& current_pkg = GlobalState::instance().g_file->package();
+
+        // Step 2: enum's file and its extension
+        auto file = ed->file();
+        if (!file->options().HasExtension(idl::shark_file)) {
+            KLOG(FATAL) << "File " << file->name() << " missing shark_file extension";
+        }
+        auto ext = file->options().GetExtension(idl::shark_file);
+        const std::string& enum_ns = ext.runtime_namespace();
+        const std::string& enum_pkg = file->package();
+
+        // Step 3: build short name
+        std::string short_name = ed->full_name();
+
+        // Remove package prefix if present
+        if (!enum_pkg.empty() && short_name.size() > enum_pkg.size() + 1 &&
+            short_name.compare(0, enum_pkg.size(), enum_pkg) == 0 &&
+            short_name[enum_pkg.size()] == '.') {
+            short_name = short_name.substr(enum_pkg.size() + 1);
+            }
+
+        // Replace remaining dots with underscores (use project's utility)
+        short_name = turbo::str_replace_all(short_name, {{".", "_"}});
+
+        // Step 4: base parse function name
+        std::string base = "parse_" + short_name;
+
+        // Step 5: add namespace if needed
+        if (current_pkg == enum_pkg) {
+            return base;
+        } else {
+            return enum_ns + "::" + base;
+        }
+    }
+
+    std::string get_enum_type_domain(const google::protobuf::EnumDescriptor *ed) {
+        auto str = get_enum_type(ed);
+        if (str == ed->name()) {
+            return "";
+        }
+        auto n = str.size() - ed->name().size();
+        str.resize(n);
+        return str;
+    }
+
+    std::string get_enum_type_to_string_domain(const google::protobuf::EnumDescriptor *ed) {
+        auto file = ed->file();
+        auto ext = file->options().GetExtension(idl::shark_file);
+        const std::string& enum_ns = ext.runtime_namespace();
+        if (enum_ns == GlobalState::instance().ext_file_options.runtime_namespace()) {
+            return "";
+        } else {
+            return enum_ns + "::";
+        }
+    }
+
+    std::string message_type(const google::protobuf::Descriptor *des, const std::string &suffix) {
+        auto f = des->file()->package();
+        auto mf = des->full_name();
+        auto t = std::string(turbo::strip_prefix(mf, f + "."));
+        std::vector<std::string_view> sps = turbo::str_split(t, '.');
+        std::string result;
+        for (size_t i = 0; i < sps.size(); i++) {
+            result += turbo::str_cat(sps[i], suffix, "::");
+        }
+        /// pop "::"
+        result.pop_back();
+        result.pop_back();
+
+        result = turbo::str_replace_all(f, {{".", "::"}}) + "::" +result;
+        return std::string(turbo::strip_prefix(result, GlobalState::instance().pb_namespace_prefix));
+    }
+
+    std::string relative_message_type(const google::protobuf::Descriptor *d, const google::protobuf::Descriptor *r) {
+        auto dm = get_message_type(d);
+        std::string rm;
+        if (r) {
+            rm = get_message_type(r) + "::";
+        }
+        return std::string(turbo::strip_prefix(dm, rm));
+    }
+
+    std::string relative_message_type(const google::protobuf::Descriptor *d, const google::protobuf::Descriptor *r, const std::string &suffix) {
+        auto dm = message_type(d, suffix);
+        std::string rm;
+        if (r) {
+            rm = message_type(r, suffix) + "::";
+        }
+        return std::string(turbo::strip_prefix(dm, rm));
+    }
+
+    std::string message_domain_without_namespace(const google::protobuf::FieldDescriptor *field) {
+        return message_domain_without_namespace(field->containing_type());
+    }
+
+    std::string message_domain_without_namespace(const google::protobuf::Descriptor *md) {
+        auto s = md->full_name();
+        s = s.substr(md->file()->package().size() + 1);
+        return turbo::str_replace_all(s, {{".", "::"}});
+    }
+
+
+    std::string message_domain_without_namespace(const google::protobuf::FieldDescriptor *field,
+                                                 const std::string &suffix) {
+        return message_domain_without_namespace(field->containing_type(), suffix);
+    }
+
+    std::string message_domain_without_namespace(const google::protobuf::Descriptor *md, const std::string &suffix) {
+        auto s = md->full_name();
+        s = s.substr(md->file()->package().size() + 1);
+        std::vector<std::string_view> sps = turbo::str_split(s, '.');
+        std::string result;
+        for (size_t i = 0; i < sps.size(); i++) {
+            result += turbo::str_cat(sps[i], suffix, "::");
+        }
+        /// pop "::"
+        result.pop_back();
+        result.pop_back();
+        return result;
+    }
+
+    std::string enum_type(const google::protobuf::FieldDescriptor *field) {
+        return enum_type(field->enum_type());
+    }
+
+    std::string enum_type(const google::protobuf::EnumDescriptor *field) {
+        return turbo::str_replace_all(field->full_name(), {{".", "::"}});
+    }
+} // namespace shark

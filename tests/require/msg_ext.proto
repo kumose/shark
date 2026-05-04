@@ -1,0 +1,47 @@
+// Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto2";
+
+import "shark/idl/shark_options.proto";
+import "tests/require/msg_base.proto";
+
+option (shark.idl.shark_file) = {
+  runtime_namespace: "msgext"
+  cpp_includes: ["turbo/container/flat_hash_map.h"]
+  sk_stand: CXX_20
+};
+
+package msgext.pb;
+
+message Wine {
+  required string name = 1;
+  optional string city   =2;
+}
+message Market {
+  required string name = 1;
+  repeated base.pb.Bear bears = 2;
+  repeated base.pb.Bear required_bears = 3 [(shark.idl.shark_field) = {is_required : true}];
+  optional Wine wine = 4;
+  required Wine required_wine = 5;
+  message Oid {
+    required int32 size = 1;
+    optional double data = 2;
+  }
+  required Oid required_oid = 10;
+  optional Oid oid = 11;
+  repeated Oid required_ids = 12 [(shark.idl.shark_field) = {is_required : true}];
+  repeated Oid ids = 13;
+}

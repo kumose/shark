@@ -23,7 +23,7 @@
 #include <google/protobuf/io/zero_copy_stream.h>
 
 #include <shark/idl/shark_options.pb.h>
-#include <shark/generator/rt_file.h>
+#include <shark/generator/tml_file.h>
 #include <shark/generator/generator.h>
 #include <shark/utility/helpers.h>
 
@@ -97,10 +97,14 @@ namespace shark {
         }
 
         // -----------------------------------------------------------------
+        google::protobuf::io::Printer::Options opt;
+        opt.spaces_per_indent = 4;
+        opt.variable_delimiter = '$';
+
         GlobalState::instance().registry(file);
         {
             std::string basename = StripProto(file->name());
-            basename.append(".sk");
+            basename.append(".tml");
 
             FileRtGenerator file_generator(file, dllexport_decl);
 
@@ -108,7 +112,7 @@ namespace shark {
             {
                 std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
                     output_directory->Open(basename + ".h"));
-                google::protobuf::io::Printer printer(output.get(), '$');
+                google::protobuf::io::Printer printer(output.get(), opt);
                 file_generator.generate_header(&printer);
             }
 
@@ -116,7 +120,7 @@ namespace shark {
             {
                 std::unique_ptr<google::protobuf::io::ZeroCopyOutputStream> output(
                     output_directory->Open(basename + ".cc"));
-                google::protobuf::io::Printer printer(output.get(), '$');
+                google::protobuf::io::Printer printer(output.get(), opt);
                 file_generator.generate_source(&printer);
             }
         }

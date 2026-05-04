@@ -24,7 +24,7 @@
 #include "common.h"
 #include <shark/skp/serialize.h>
 #include <shark/skp/serialize-packed.h>
-#include <shark/rt/debug.h>
+#include <shark/tml/debug.h>
 #if HAVE_SNAPPY
 #include <shark/skp/serialize-snappy.h>
 #endif  // HAVE_SNAPPY

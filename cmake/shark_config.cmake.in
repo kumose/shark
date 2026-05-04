@@ -28,12 +28,14 @@ set(@PROJECT_NAME@_VERSION_PATCH @PROJECT_VERSION_PATCH@)
 set(@PROJECT_NAME@_VERSION @PROJECT_VERSION@)
 set(@PROJECT_NAME@_INCLUDE_DIR ${PACKAGE_PREFIX_DIR}/include)
 
-get_target_property(SHARK_EXEC_FILE shark::protoc-gen-sk IMPORTED_LOCATION)
-if(NOT SHARK_EXEC_FILE)
-    message(FATAL_ERROR "Failed to get IMPORTED_LOCATION of shark::protoc-gen-sk")
-endif()
+
 
 include ("${CMAKE_CURRENT_LIST_DIR}/kmcmake_cc_sk.cmake")
+set(SHARK_TML_EXEC_FILE "$<TARGET_FILE:shark::protoc-gen-tml>")
+if(NOT SHARK_TML_EXEC_FILE)
+    message(FATAL_ERROR "Failed to get IMPORTED_LOCATION of shark::protoc-gen-tml")
+endif()
+include ("${CMAKE_CURRENT_LIST_DIR}/kmcmake_cc_tml.cmake")
 
 # Do not use global include_directories() here.
 # Consumers should get include paths from imported target properties

@@ -16,7 +16,7 @@
 #include <shark/generator/message.h>
 #include <turbo/strings/str_cat.h>
 #include <turbo/strings/str_replace.h>
-#include <shark/uri.h>
+#include <shark/utility/uri.h>
 #include <shark/utility/helpers.h>
 
 namespace shark {
@@ -24,7 +24,7 @@ namespace shark {
                                                const std::string &dllexport_decl) : _descriptor(descriptor),
         _dllexport_decl(dllexport_decl) {
         _variables["classname"] = _descriptor->name();
-        _variables["domain"] = message_type(_descriptor);
+        _variables["domain"] = get_message_type(_descriptor);
         _variables["lcclassname"] = FullNameToLower(_descriptor->full_name(), _descriptor->file());
         _variables["ucclassname"] = FullNameToUpper(_descriptor->full_name(), _descriptor->file());
         _variables["field_count"] = turbo::str_cat(_descriptor->field_count());

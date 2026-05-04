@@ -30,7 +30,7 @@
 #include <turbo/strings/str_format.h>
 #include <turbo/strings/match.h>
 #include <shark/utility/compat.h>
-#include <shark/type.h>
+#include <shark/utility/type.h>
 
 namespace shark {
 
@@ -125,4 +125,6 @@ namespace shark {
 
         return 2;
     }
+
+    void print_toml_comment(google::protobuf::io::Printer *printer, std::string comment);
 } // namespace shark

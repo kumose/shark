@@ -14,7 +14,7 @@
 //
 
 #include <shark/generator/field_base.h>
-#include <shark/uri.h>
+#include <shark/utility/uri.h>
 
 namespace shark {
 
@@ -34,16 +34,17 @@ namespace shark {
         _option = descriptor_->options();
         if (descriptor_->options().HasExtension(idl::shark_field)) {
             _ext_option = descriptor_->options().GetExtension(idl::shark_field);
+            _required = _ext_option.is_required();
         }
+        _required |= descriptor_->is_required();
 
         if (descriptor_->options().deprecated()) {
             _variables["deprecated"] = "[[deprecated]] ";
         }
 
         _variables["name"] = varify_field_name(descriptor_);
-        _variables["domain"] = message_type(descriptor_->containing_type());
-        _variables["domain_skb"] = message_type(descriptor_->containing_type(), "Skb");
-        _variables["domain_view"] = message_type(descriptor_->containing_type(), "View");
+        _variables["domain"] = get_message_type(descriptor_->containing_type());
+        _variables["cnamespace"] = GlobalState::instance().cnamespace;
 
         do_initialize();
 

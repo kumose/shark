@@ -31,23 +31,7 @@ kmcmake_cc_proto(
         ${PROJECT_SOURCE_DIR}
 )
 
-kmcmake_cc_library(
-        NAMESPACE ${PROJECT_NAME}
-        NAME shark
-        SOURCES
-        lib/shark.cc
-        lib/uri.cc
-        lib/type.cc
-        ${shark_idl_proto_gen_SRCS}
-        PINCLUDES
-        ${PROTOBUF_INCLUDE_DIRS}
-        CXXOPTS
-        ${KMCMAKE_CXX_OPTIONS}
-        PLINKS
-        ${KMCMAKE_DEPS_LINK}
-        PUBLIC
-        UNITY
-)
+include_directories(lib)
 
 
 set(GENERATOR_SRC
@@ -55,23 +39,22 @@ set(GENERATOR_SRC
         generator/field_base.cc
         generator/generator.cc
         generator/field_map.cc
-        generator/rt_file.cc
+        generator/tml_file.cc
         generator/message.cc
         generator/oneof_field.cc
-        rt/any_field.cc
-        rt/bytes_field.cc
-        rt/enum.cc
-        rt/enum_field.cc
-        rt/extension.cc
-        rt/file.cc
-        rt/map_field.cc
-        rt/message.cc
-        rt/message_field.cc
-        rt/oneof_field.cc
-        rt/primitive_field.cc
-        rt/service.cc
-        rt/string_field.cc
+        tml/enum.cc
+        tml/enum_field.cc
+        tml/extension.cc
+        tml/file.cc
+        tml/message.cc
+        tml/message_field.cc
+        tml/primitive_field.cc
+        tml/service.cc
+        tml/string_field.cc
         utility/helpers.cc
+        utility/uri.cc
+        utility/type.cc
+        ${shark_idl_proto_gen_SRCS}
 )
 
 kmcmake_cc_library(
@@ -84,56 +67,27 @@ kmcmake_cc_library(
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
         PLINKS
-        shark::shark_static
         ${KMCMAKE_DEPS_LINK}
         UNITY
 )
 
 kmcmake_cc_binary(
         NAMESPACE ${PROJECT_NAME}
-        NAME protoc-gen-sk
+        NAME protoc-gen-tml
         SOURCES
         main.cc
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
+        -fsanitize=address
         LINKS
         ${PROJECT_NAME}::inner_lib_static
         ${KMCMAKE_DEPS_LINK}
         LINKOPTS
+        -fsanitize=address
         ${KMCMAKE_STATIC_BIN_OPTION}
         PUBLIC
 )
-#[[
-kmcmake_cc_binary(
-        NAMESPACE ${PROJECT_NAME}
-        NAME protoc_gen_shark
-        SOURCES
-        cpp_generator.cc
-        CXXOPTS
-        ${KMCMAKE_CXX_OPTIONS}
-        DEPS
-        ${PROJECT_NAME}::generator_cc_static
-        LINKS
-        ${PROJECT_NAME}::generator_cc_static
-        ${KMCMAKE_DEPS_LINK}
-        PUBLIC
-)
 
-kmcmake_cc_binary(
-        NAMESPACE ${PROJECT_NAME}
-        NAME protoc-gen-sk
-        SOURCES
-        shark.cc
-        CXXOPTS
-        ${KMCMAKE_CXX_OPTIONS}
-        DEPS
-        ${PROJECT_NAME}::generator_cc_static
-        LINKS
-        ${PROJECT_NAME}::generator_cc_static
-        ${KMCMAKE_DEPS_LINK}
-        PUBLIC
-)
-]]
+
 
 ###kmcmake_example
-

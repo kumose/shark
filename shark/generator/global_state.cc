@@ -14,7 +14,7 @@
 //
 
 #include <shark/generator/global_state.h>
-#include <shark/type.h>
+#include <shark/utility/type.h>
 #include <turbo/strings/match.h>
 #include <turbo/strings/str_replace.h>
 #include <turbo/strings/match.h>

@@ -14,9 +14,34 @@
 # limitations under the License.
 #
 
+
+set(SHARK_TML_EXEC_FILE ${PROJECT_BINARY_DIR}/shark/protoc-gen-tml)
+#set(SHAR_EXEC_FILE ${SK_EXE_DIR}/protoc-gen-sk)
+message(STATUS ${SHARK_TML_EXEC_FILE})
+include(kmcmake_cc_tml)
+
+#find_package(shark REQUIRED)
+
+set(SHARK_IDL_TEST_FILES
+        example.proto
+)
+kmcmake_cc_tml(
+        NAME example_gen
+        PROTOS
+        ${SHARK_IDL_TEST_FILES}
+        OUTDIR
+        ${PROJECT_SOURCE_DIR}
+)
+
+
 kmcmake_cc_binary(
-        NAME foo_ex
-        SOURCES foo_ex.cc
-        DEPS ${PROJECT_NAME}::foo ${KMCMAKE_DEPS_LINK}
-        COPTS ${USER_CXX_FLAGS}
+        NAMESPACE ${PROJECT_NAME}
+        NAME example_gen_lib
+        SOURCES
+        ${example_gen_SRCS}
+        example.cc
+        CXXOPTS
+        ${KMCMAKE_CXX_OPTIONS}
+        LINKS
+        ${KMCMAKE_DEPS_LINK}
 )

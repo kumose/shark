@@ -1,0 +1,64 @@
+// Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto2";
+
+import "shark/idl/shark_options.proto";
+option (shark.idl.shark_file) = {
+  runtime_namespace: "my::base"
+  cpp_includes: ["turbo/container/flat_hash_map.h"]
+  sk_stand: CXX_20
+};
+
+package base.optional;
+
+enum BaseEnum {
+  B1 = 0;
+  B2 = 1;
+  B3 = 2;
+}
+
+message Base {
+  optional BaseEnum benum = 1;
+  required BaseEnum require_benum = 2;
+  optional bool bbool = 3;
+  required bool required_bbool = 4;
+  optional int32 age = 5;
+  required int32 required_age = 6;
+  optional int64 int64_val = 7;
+  required int64 required_int64 = 8;
+  optional uint32 uint32_val = 9;
+  required uint32 required_uint32 = 10;
+  optional uint64 uint64_val = 11;
+  required uint64 required_uint64 = 12;
+  optional sint32 sint32_val = 13;
+  required sint32 required_sint32 = 14;
+  optional sint64 sint64_val = 15;
+  required sint64 required_sint64 = 16;
+  optional fixed32 fixed32_val = 17;
+  required fixed32 required_fixed32 = 18;
+  optional fixed64 fixed64_val = 19;
+  required fixed64 required_fixed64 = 20;
+  optional sfixed32 sfixed32_val = 21;
+  required sfixed32 required_sfixed32 = 22;
+  optional sfixed64 sfixed64_val = 23;
+  required sfixed64 required_sfixed64 = 24;
+  optional float float_val = 25;
+  required float required_float = 26;
+  optional double double_val = 27;
+  required double required_double = 28;
+  optional string string_val = 29;
+  required string required_string = 30;
+}

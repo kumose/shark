@@ -1,0 +1,62 @@
+// Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+syntax = "proto2";
+
+import "shark/idl/shark_options.proto";
+
+import "tests/require/enum_global.proto";
+
+option (shark.idl.shark_file) = {
+  runtime_namespace: "brpc"
+  cpp_includes: ["turbo/container/flat_hash_map.h"]
+  sk_stand: CXX_20
+};
+
+package brpc.pb;
+
+enum RpcErr {
+  RPC_SUCC = 0;
+  RPC_INNER = 1;
+  RPC_CONNECT_FAIL = 2;
+}
+/// BaseRepeat tests repeated fields for all scalar types supported by TOML.
+message BaseRepeat {
+  // === Basic examples (already provided) ===
+  /// name: optional string with default.
+  repeated RpcErr err = 1 ;
+  /// age: repeated int32, marked as required.
+  repeated RpcErr required_err = 2 [(shark.idl.shark_field) = {is_required : true}];
+  repeated global.pb.Errno gerr = 3 ;
+  /// age: repeated int32, marked as required.
+  repeated global.pb.Errno required_gerr = 4 [(shark.idl.shark_field) = {is_required : true}];
+  enum MyFriut {
+    APPLE = 0;
+    PEAR = 1;
+    BANANA = 3;
+  }
+  repeated MyFriut fruit = 5 ;
+  /// age: repeated int32, marked as required.
+  repeated MyFriut required_fruit = 6 [(shark.idl.shark_field) = {is_required : true}];
+  /// single
+  optional RpcErr s_err = 10 ;
+  required RpcErr required_s_err = 11 ;
+
+  optional global.pb.Errno s_gerr = 12 ;
+  required global.pb.Errno required_s_gerr = 13 ;
+
+  optional MyFriut s_fruit = 14 ;
+  required MyFriut required_s_fruit = 15 ;
+}
