@@ -38,7 +38,14 @@ namespace shark {
 
     std::string field_uri_without_namespace(const google::protobuf::FieldDescriptor *field);
 
-    std::string message_type(const google::protobuf::Descriptor *descriptor);
+    std::string get_message_type(const google::protobuf::Descriptor *descriptor);
+
+    std::string get_enum_type(const google::protobuf::EnumDescriptor *descriptor);
+
+    std::string get_enum_type_parse_func(const google::protobuf::EnumDescriptor *descriptor);
+
+    std::string get_enum_type_domain(const google::protobuf::EnumDescriptor *descriptor);
+    std::string get_enum_type_to_string_domain(const google::protobuf::EnumDescriptor *descriptor);
 
     std::string message_type(const google::protobuf::Descriptor *descriptor, const std::string &suffix);
 

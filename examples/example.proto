@@ -1,0 +1,112 @@
+// Copyright (C) 2026 Kumo inc. and its affiliates. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto2";
+
+import "shark/idl/shark_options.proto";
+
+option (shark.idl.shark_file) = {
+  runtime_namespace: "demo::gateway"
+  cpp_includes: ["turbo/container/flat_hash_map.h"]
+  sk_stand: CXX_20
+};
+
+package demo.gateway;
+
+/// LogLevel defines the severity of logging.
+enum LogLevel {
+  DEBUG = 0;
+  INFO = 1;
+  WARN = 2;
+  ERROR = 3;
+}
+
+/// TlsConfig holds TLS related settings.
+message TlsConfig {
+  /// Path to certificate file.
+  required string cert_file = 1;
+  /// Path to private key file.
+  required string key_file = 2;
+  /// Optional CA certificate for client verification.
+  optional string ca_file = 3;
+  /// Minimum TLS version.
+  optional string min_version = 4 [default = "1.2"];
+}
+
+/// RateLimit defines token bucket based rate limiting.
+message RateLimit {
+  /// Requests per second (steady state).
+  required int64 requests_per_sec = 1 [default = 0];
+  /// Maximum burst size.
+  required int64 burst = 2 [default = 1];
+}
+
+/// Backend describes an upstream service.
+message Backend {
+  /// Unique name for the backend.
+  required string name = 1;
+  /// Address (host:port or unix socket).
+  required string address = 2;
+  /// Connection timeout in milliseconds.
+  optional int32 connect_timeout_ms = 3 [default = 1000];
+  /// Optional custom headers to inject.
+  repeated string extra_headers = 4;
+  /// Whether this backend is required to be present.
+  optional bool mandatory = 5 [(shark.idl.shark_field) = {is_required : true}];
+}
+
+/// Routing rule matching a request path.
+message Route {
+  /// Path pattern (e.g., "/api/v1/*").
+  required string pattern = 1;
+  /// Name of the target backend.
+  required string backend_name = 2;
+  /// Timeout override in milliseconds.
+  optional int32 timeout_ms = 3;
+  /// Enable compression for this route.
+  optional bool enable_compression = 4 [default = true];
+  /// Ordered list of allowed methods (GET, POST, ...). Empty = allow all.
+  repeated string allowed_methods = 5;
+}
+
+/// GatewayConfig is the top‑level configuration for the gateway service.
+message GatewayConfig {
+  /// Service name (used for discovery and logging).
+  required string service_name = 1;
+  /// Port the gateway listens on.
+  required int32 listen_port = 2 [default = 8080];
+  /// Number of worker threads. 0 means auto = CPU cores.
+  optional int32 worker_threads = 3 [default = 0];
+  /// Global log level.
+  optional LogLevel log_level = 4 [default = INFO];
+  /// Write timeout in seconds.
+  optional int32 write_timeout_sec = 5 [default = 30];
+  /// Read timeout in seconds.
+  optional int32 read_timeout_sec = 6 [default = 30];
+
+  /// TLS settings (optional, if absent server runs plain HTTP).
+  optional TlsConfig tls = 7;
+
+  /// Global rate limit (optional, if absent no global limit).
+  optional RateLimit global_rate_limit = 8;
+
+  /// List of available backends.
+  repeated Backend backends = 9;
+
+  /// List of routing rules.
+  repeated Route routes = 10;
+
+  /// Must have at least one backend (is_required on repeated).
+  repeated Backend required_backends = 11 [(shark.idl.shark_field) = {is_required : true}];
+}

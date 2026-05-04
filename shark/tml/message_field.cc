@@ -39,10 +39,10 @@ namespace shark {
         if (!_is_extern_type) {
             _variables["type"] = descriptor_->message_type()->name();
         } else {
-            _variables["type"] = message_type(descriptor_->message_type());
+            _variables["type"] = get_message_type(descriptor_->message_type());
         }
 
-        _variables["domain_type"] = message_type(descriptor->message_type());
+        _variables["domain_type"] = get_message_type(descriptor->message_type());
     }
 
     MessageFieldGenerator::~MessageFieldGenerator() {
@@ -177,8 +177,12 @@ namespace shark {
             n += it.size();
         }
         switch (descriptor_->label()) {
-            case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
-                printer->Print(_variables, "auto var = $name$.serialize_toml();\n");
+            case google::protobuf::FieldDescriptor::LABEL_REQUIRED: {
+                if (!required) {
+                    printer->Print(_variables, "auto val = $name$.serialize_toml();\n");
+                } else {
+                    printer->Print(_variables, "auto val = $name$.serialize_required_toml();\n");
+                }
                 if (n > 0) {
                     printer->Print("val.comments().push_back(\"#############################################\\n\"\n");
                     for (auto &it: fieldSourceLoc.leading_detached_comments) {
@@ -188,11 +192,12 @@ namespace shark {
                     print_toml_comment(printer, fieldSourceLoc.trailing_comments);
                     printer->Print("\"### end\\n\");\n");
                 }
-                printer->Print(_variables, "result[\"$name$\"] = var;\n");
+                printer->Print(_variables, "result[\"$name$\"] = val;\n");
                 break;
+            }
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 if (!required) {
-                    printer->Print(_variables, "auto var = $name$.serialize_toml();\n");
+                    printer->Print(_variables, "auto val = $name$.serialize_toml();\n");
                     if (n > 0) {
                         printer->Print("val.comments().push_back(\"#############################################\\n\"\n");
                         for (auto &it: fieldSourceLoc.leading_detached_comments) {
@@ -202,7 +207,7 @@ namespace shark {
                         print_toml_comment(printer, fieldSourceLoc.trailing_comments);
                         printer->Print("\"### end\\n\");\n");
                     }
-                    printer->Print(_variables, "result[\"$name$\"] = var;\n");
+                    printer->Print(_variables, "result[\"$name$\"] = val;\n");
                 }
                 break;
             case google::protobuf::FieldDescriptor::LABEL_REPEATED:
@@ -219,7 +224,11 @@ namespace shark {
                     }
                     printer->Print(_variables, "for(size_t i = 0; i < $name$.size(); ++i) {\n");
                     printer->Indent();
-                    printer->Print(_variables, "arr.push_back($name$[i].serialize_toml());\n");
+                    if (!required) {
+                        printer->Print(_variables, "arr.push_back($name$[i].serialize_toml());\n");
+                    } else {
+                        printer->Print(_variables, "arr.push_back($name$[i].serialize_required_toml());\n");
+                    }
                     printer->Outdent();
                     printer->Print("}\n");
                     printer->Print(_variables, "result[\"$name$\"] = arr;\n");

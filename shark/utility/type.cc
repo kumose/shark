@@ -211,7 +211,7 @@ namespace shark {
 
         std::string rm;
         if (relative) {
-            rm = message_type(relative) + "::";
+            rm = get_message_type(relative) + "::";
         }
         return std::string(turbo::strip_prefix(ef, rm));
     }

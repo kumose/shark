@@ -21,7 +21,7 @@ namespace shark {
     OneofFieldGeneratorBase::OneofFieldGeneratorBase(const google::protobuf::OneofDescriptor *oneof)
         : _oneof(oneof) {
         _descriptor = _oneof->containing_type();
-        _variable["domain"] = message_type(_descriptor);
+        _variable["domain"] = get_message_type(_descriptor);
         _variable["opt_comma"] = ",";
 
         _variable["oneofname"] = CamelToUpper(oneof->name());

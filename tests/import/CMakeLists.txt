@@ -1,11 +1,10 @@
-#
-# Copyright 2023 The titan-search Authors.
+# Copyright (C) Kumo inc. and its affiliates.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    https://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,33 +14,29 @@
 #
 
 
-set(SHARK_TML_EXEC_FILE ${PROJECT_BINARY_DIR}/shark/protoc-gen-tml)
-#set(SHAR_EXEC_FILE ${SK_EXE_DIR}/protoc-gen-sk)
-message(STATUS ${SHARK_TML_EXEC_FILE})
-include(kmcmake_cc_tml)
-
-#find_package(shark REQUIRED)
-
-set(SHARK_IDL_TEST_FILES
-        example.proto
+set(SHARK_IMPORT_TEST_FILES
+        base.proto
+        advance.proto
 )
 kmcmake_cc_tml(
-        NAME example_gen
+        NAME import_sk_gen
         PROTOS
-        ${SHARK_IDL_TEST_FILES}
+        ${SHARK_IMPORT_TEST_FILES}
         OUTDIR
         ${PROJECT_SOURCE_DIR}
 )
 
-
-kmcmake_cc_binary(
+kmcmake_cc_library(
         NAMESPACE ${PROJECT_NAME}
-        NAME example_gen_lib
+        NAME import_test
         SOURCES
-        ${example_gen_SRCS}
-        example.cc
+        ${import_sk_gen_SRCS}
+        PINCLUDES
+        ${PROTOBUF_INCLUDE_DIRS}
         CXXOPTS
         ${KMCMAKE_CXX_OPTIONS}
-        LINKS
+        PLINKS
         ${KMCMAKE_DEPS_LINK}
+
 )
+

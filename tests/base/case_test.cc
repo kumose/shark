@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include <fstream>
 #include <filesystem>
-#include "tests/test.tml.h"
-#include "tests/config.tml.h"
+#include "tests/base/test.tml.h"
+#include "tests/base/config.tml.h"
 #include  <turbo/log/logging.h>
 
 namespace fs = std::filesystem;

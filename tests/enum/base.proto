@@ -1,0 +1,24 @@
+syntax = "proto2";
+
+import "shark/idl/shark_options.proto";
+
+option (shark.idl.shark_file) = {
+  runtime_namespace: "my::em"
+  cpp_includes: ["turbo/container/flat_hash_map.h"]
+  sk_map_type: "absl::flat_hash_map< %s, %s>"
+  sk_vector: "absl::InlinedVector<%s, 2>"
+  sk_stand: CXX_20
+};
+
+package enum.pb;
+
+
+enum Color {
+  option (shark.idl.shark_enum) = {
+    underlying_type :ENUM_UNDERLYING_U8
+  };
+  RED = 0;
+  GREEN = 1;
+  BLUE = 2;
+}
+

@@ -12,18 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <signal.h>
-#include <stdio.h>
 
-int main(int argc, char**argv)
-{
-    if(argc !=2) {
-        fprintf(stdout, "Failed\n");
-        fflush(stdout);  /* ensure the output buffer is seen */
-        return 0;
-    }
-    fprintf(stdout, "%s\n", argv[1]);
-    fflush(stdout);  /* ensure the output buffer is seen */
-    //raise(SIGABRT);
-    return 0;
+syntax = "proto2";
+
+import "shark/idl/shark_options.proto";
+option (shark.idl.shark_file) = {
+  runtime_namespace: "global"
+  cpp_includes: ["turbo/container/flat_hash_map.h"]
+  sk_stand: CXX_20
+};
+
+package global.pb;
+
+enum Errno {
+  SUCCESS = 0;
+  INVALID_ERRNO = 2;
+  NOT_FOUND = 3;
 }

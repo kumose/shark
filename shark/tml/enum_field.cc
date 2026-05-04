@@ -19,6 +19,7 @@
 
 #include <shark/tml/enum_field.h>
 #include <shark/utility/helpers.h>
+#include <shark/utility/uri.h>
 #include <turbo/strings/str_replace.h>
 
 namespace shark {
@@ -26,19 +27,10 @@ namespace shark {
     //   repeat code between this and the other field types.
     void SetEnumVariables(const google::protobuf::FieldDescriptor *descriptor,
                           std::map<std::string, std::string> *variables) {
-        (*variables)["type"] = descriptor->enum_type()->name();
+        (*variables)["type"] = get_enum_type(descriptor->enum_type());
         std::string full = descriptor->enum_type()->full_name();
         auto n = descriptor->enum_type()->file()->package();
-        auto pre = turbo::strip_prefix(full, n + ".");
-        pre = turbo::strip_suffix(full, descriptor->enum_type()->full_name());
 
-        std::string prefix;
-        if (pre.empty()) {
-            prefix = GlobalState::instance().cnamespace + "::";
-        } else {
-            prefix = turbo::str_replace_all(pre, {{".", "::"}}) + "::";
-        }
-        (*variables)["PREFIX"] = prefix;
     }
 
     // ===================================================================
@@ -47,6 +39,11 @@ namespace shark {
     EnumFieldGenerator(const google::protobuf::FieldDescriptor *descriptor)
         : FieldNoMetaGenerator(descriptor) {
         SetEnumVariables(descriptor, &_variables);
+        _variables["parse_func"] = get_enum_type_parse_func(descriptor_->enum_type());
+        _variables["full_name"] = get_enum_type(descriptor_->enum_type());
+        auto domain = get_enum_type_domain(descriptor_->enum_type());
+        _variables["domain"] = domain ;
+        _variables["to_string_ns"] = get_enum_type_to_string_domain(descriptor_->enum_type());
     }
 
     EnumFieldGenerator::~EnumFieldGenerator() {
@@ -92,7 +89,7 @@ namespace shark {
                 printer->Print(_variables, "TURBO_MOVE_OR_RAISE(std::string str, xtoml::find_key<std::string>(config, \"$name$\"));\n");
                 printer->Print(_variables, "if (!str.empty()) {\n");
                 printer->Indent();
-                printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
+                printer->Print(_variables, "auto tmp = $parse_func$(str);\n");
                 printer->Print(_variables, "if (tmp) {\n");
                 printer->Indent();
                 printer->Print(_variables, "auto checker = xtoml::find_handler(map, uri);\n");
@@ -107,7 +104,7 @@ namespace shark {
                 printer->Indent();
                 printer->Print(
                     _variables,
-                    "return turbo::invalid_argument_error(\"field $name$ is not enum type, got\", val->as_string());\n");
+                    "return turbo::invalid_argument_error(\"field $name$ is not enum type, got\", str);\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
                 printer->Outdent();
@@ -119,7 +116,7 @@ namespace shark {
                 printer->Print(_variables, "std::string str = xtoml::find_key(config, \"$name$\", \"\");\n");
                 printer->Print(_variables, "if (!str.empty()) {\n");
                 printer->Indent();
-                printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
+                printer->Print(_variables, "auto tmp = $parse_func$(str);\n");
                 printer->Print(_variables, "if (tmp) {\n");
                 printer->Indent();
                 printer->Print(_variables, "auto checker = xtoml::find_handler(map, uri);\n");
@@ -156,7 +153,7 @@ namespace shark {
                 printer->Print(_variables, "for (size_t i =0; i < arrs.size(); ++i) {\n");
                 printer->Indent();
                 printer->Print(_variables, "xtoml::TomlUriGuard lg(uri, {xtoml::FieldKey(i)});\n");
-                printer->Print(_variables, "auto tmp = $PREIX$parse_$type$(str);\n");
+                printer->Print(_variables, "auto tmp = $parse_func$(arrs[i]);\n");
                 printer->Print(_variables, "if (tmp) {\n");
                 printer->Indent();
                 printer->Print(_variables, "if(checker) {\n");
@@ -165,20 +162,20 @@ namespace shark {
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
 
-                printer->Print(_variables, "$name$ = *tmp;\n");
+                printer->Print(_variables, "$name$.push_back(*tmp);\n");
                 printer->Outdent();
                 printer->Print(_variables, "} else {\n");
                 printer->Indent();
                 printer->Print(
                     _variables,
-                    "return turbo::invalid_argument_error(\"field $name$ is not enum type, got\", val->as_string());\n");
+                    "return turbo::invalid_argument_error(\"field $name$ is not enum type, got\", arrs[i]);\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
                 printer->Outdent();
                 printer->Print("}\n");
                 printer->Print(_variables, "if(checker) {\n");
                 printer->Indent();
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check($name$));\n");
+                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check(&$name$));\n");
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
                 printer->Outdent();
@@ -199,7 +196,7 @@ namespace shark {
         }
         switch (descriptor_->label()) {
             case google::protobuf::FieldDescriptor::LABEL_REQUIRED:
-                printer->Print(_variables, "xtoml::Value var = $PREFIX$to_string($name$);\n");
+                printer->Print(_variables, "xtoml::Value var = $to_string_ns$to_string($name$);\n");
                 if (n > 0) {
                     printer->Print("var.comments().push_back(\"#############################################\\n\"\n");
                     for (auto &it: fieldSourceLoc.leading_detached_comments) {
@@ -213,7 +210,7 @@ namespace shark {
                 break;
             case google::protobuf::FieldDescriptor::LABEL_OPTIONAL:
                 if (!required) {
-                    printer->Print(_variables, "xtoml::Value var = $PREFIX$to_string($name$);\n");
+                    printer->Print(_variables, "xtoml::Value var = $to_string_ns$to_string($name$);\n");
                     if (n > 0) {
                         printer->Print("var.comments().push_back(\"#############################################\\n\"\n");
                         for (auto &it: fieldSourceLoc.leading_detached_comments) {
@@ -240,7 +237,7 @@ namespace shark {
                     }
                     printer->Print(_variables, "for(size_t i = 0; i < $name$.size(); ++i) {\n");
                     printer->Indent();
-                    printer->Print(_variables, "arr.push_back($PREFIX$to_string($name$[i]));\n");
+                    printer->Print(_variables, "arr.push_back($to_string_ns$to_string($name$[i]));\n");
                     printer->Outdent();
                     printer->Print("}\n");
                     printer->Print(_variables, "result[\"$name$\"] = arr;\n");
@@ -258,7 +255,7 @@ namespace shark {
         if (!d) {
             return "";
         }
-        std::string enum_type_name = descriptor_->enum_type()->name();
+        std::string enum_type_name = get_enum_type(descriptor_->enum_type());
         return turbo::str_format("{%s::%s}", enum_type_name, d->name());
     }
 

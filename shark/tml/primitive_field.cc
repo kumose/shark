@@ -132,7 +132,13 @@ namespace shark {
                 printer->Print(_variables, "for(size_t i = 0; i < tmp.size(); ++i) {\n");
                 printer->Indent();
                 printer->Print(_variables, "xtoml::TomlUriGuard lg(uri, {xtoml::FieldKey(i)});\n");
-                printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check_element(i, &tmp[i]));\n");
+                if (descriptor_->type() != google::protobuf::FieldDescriptor::TYPE_BOOL) {
+                    printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check_element(i, &tmp[i]));\n");
+                } else {
+                    printer->Print(_variables, "bool bool_val = tmp[i];\n");
+                    printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check_element(i, &bool_val));\n");
+                }
+
                 printer->Outdent();
                 printer->Print(_variables, "}\n");
                 printer->Print(_variables, "TURBO_RETURN_NOT_OK(checker->check(&tmp));\n");

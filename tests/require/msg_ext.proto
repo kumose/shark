@@ -16,27 +16,32 @@
 syntax = "proto2";
 
 import "shark/idl/shark_options.proto";
-import "tests/base.proto";
+import "tests/require/msg_base.proto";
+
 option (shark.idl.shark_file) = {
-  runtime_namespace: "my::advance"
+  runtime_namespace: "msgext"
   cpp_includes: ["turbo/container/flat_hash_map.h"]
   sk_stand: CXX_20
 };
 
-package advance.optional;
+package msgext.pb;
 
-message Median {
-  optional string abc = 1;
-  optional base.optional.Base lower = 4;
+message Wine {
+  required string name = 1;
+  optional string city   =2;
 }
-message Advance {
-  optional base.optional.Base base = 4;
-  optional Median median = 6;
-  required string ad_name = 1 [default = "default_name"];
-  required int32 ad_age = 2;
-  required bool ad_enabled = 3 [default = true];
-  repeated int64 ports     = 7 [(shark.idl.shark_field) = {is_required : true}];
-  required base.optional.Base rbase = 8;
-  repeated base.optional.Base repeat_base = 9 [(shark.idl.shark_field) = {is_required : true}];
-  repeated base.optional.Base repeat_base_no_requre = 10;
+message Market {
+  required string name = 1;
+  repeated base.pb.Bear bears = 2;
+  repeated base.pb.Bear required_bears = 3 [(shark.idl.shark_field) = {is_required : true}];
+  optional Wine wine = 4;
+  required Wine required_wine = 5;
+  message Oid {
+    required int32 size = 1;
+    optional double data = 2;
+  }
+  required Oid required_oid = 10;
+  optional Oid oid = 11;
+  repeated Oid required_ids = 12 [(shark.idl.shark_field) = {is_required : true}];
+  repeated Oid ids = 13;
 }

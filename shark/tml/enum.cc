@@ -21,20 +21,29 @@
 
 #include <shark/tml/enum.h>
 #include <shark/utility/helpers.h>
+#include <shark/utility/uri.h>
 
 namespace shark {
     EnumGenerator::EnumGenerator(const google::protobuf::EnumDescriptor *descriptor,
                                  const std::string &dllexport_decl)
         : descriptor_(descriptor),
           _dllexport_decl(dllexport_decl) {
+        _variables["shortname"] = descriptor_->name();
+        _variables["parse_func"] = get_enum_type_parse_func(descriptor_);
+        _variables["full_name"] = get_enum_type(descriptor_);
+        auto domain = get_enum_type_domain(descriptor_);
+        _variables["domain"] = domain ;
+
+        KLOG(INFO)<<get_enum_type(descriptor_);
+        KLOG(INFO)<<get_enum_type(descriptor_);
+
     }
 
     EnumGenerator::~EnumGenerator() {
     }
 
     void EnumGenerator::generate_definition(google::protobuf::io::Printer *printer) {
-        std::map<std::string, std::string> vars;
-        vars["shortname"] = std::string(descriptor_->name());
+        std::map<std::string, std::string> vars = _variables;
 
         auto opt = descriptor_->options().GetExtension(idl::shark_enum);
         std::string ut = "uint32_t";
@@ -99,34 +108,27 @@ namespace shark {
 
     void EnumGenerator::generate_global_declarations(google::protobuf::io::Printer* printer,
                                              const google::protobuf::Descriptor* parent) {
-        std::map<std::string, std::string> vars;
-        vars["fullname"] =descriptor_->name();
-        printer->Print(vars, "std::optional<$fullname$> parse_$fullname$(std::string_view value);\n");
+
+        printer->Print(_variables, "std::optional<$full_name$> $parse_func$(std::string_view value);\n");
     }
 
     void EnumGenerator::generate_inline_declarations(google::protobuf::io::Printer* printer,
                                                  const google::protobuf::Descriptor* parent) {
-        std::map<std::string, std::string> vars;
-        vars["fullname"] =descriptor_->name();
-        // Global enum, no declaration needed inside a class.
-        if (parent != nullptr) {
-            printer->Print(vars, "static std::string_view to_string($fullname$ value);\n");
-            printer->Print(vars, "static std::optional<$fullname$> parse_$fullname$(std::string_view value);\n");
-        }
+        std::map<std::string, std::string> vars = _variables;
     }
 
     void EnumGenerator::generate_inline_definition(google::protobuf::io::Printer* printer,
                                                const google::protobuf::Descriptor* parent) {
-        std::map<std::string, std::string> vars;
-        vars["shortname"] = descriptor_->name();
-        std::unordered_set<std::string> dones;
-        std::string prefix;
-        if (parent != nullptr) {
-            prefix = parent->name() + "::";
-        }
-        vars["PREFIX"] = prefix;
+        std::map<std::string, std::string> vars = _variables;
 
-        printer->Print(vars, "inline std::string_view $PREFIX$to_string($PREFIX$$shortname$ value) {\n");
+        std::unordered_set<std::string> dones;
+
+        if (parent != nullptr) {
+            printer->Print(_variables, "/// $full_name$> parse func\n");
+            printer->Print(_variables, "std::optional<$full_name$> $parse_func$(std::string_view value);\n");
+        }
+
+        printer->Print(vars, "inline std::string_view to_string($domain$$shortname$ value) {\n");
         printer->Indent();
         printer->Print("switch (value) {\n");
         for (int i = 0; i < descriptor_->value_count(); ++i) {
@@ -134,7 +136,7 @@ namespace shark {
                 continue;
             }
             vars["enumerator"] = descriptor_->value(i)->name();
-            printer->Print(vars, "  case $PREFIX$$shortname$::$enumerator$: return \"$enumerator$\";\n");
+            printer->Print(vars, "  case $full_name$::$enumerator$: return \"$enumerator$\";\n");
         }
         printer->Print("  default: return \"UNKNOWN\";\n");
         printer->Print("}\n");
@@ -143,23 +145,12 @@ namespace shark {
     }
 
     void EnumGenerator::generate_implement(google::protobuf::io::Printer *printer, const google::protobuf::Descriptor *parent) {
-        std::map<std::string, std::string> vars;
+        std::map<std::string, std::string> vars  = _variables;
 
-
-        auto n = descriptor_->name();
-
-        vars["shortname"] = n;
-
-        std::string prefix;
-        if (parent != nullptr) {
-            prefix = parent->name() + "::";
-        }
-        vars["PREFIX"] = prefix;
-
-        printer->Print(vars, "std::optional<$PREFIX$$shortname$> $PREFIX$parse_$shortname$(std::string_view value) {\n");
+        printer->Print(vars, "std::optional<$full_name$> $parse_func$(std::string_view value) {\n");
         printer->Indent();
 
-        printer->Print(vars, "static turbo::flat_hash_map<std::string, $shortname$> enum_map = {\n");
+        printer->Print(vars, "static turbo::flat_hash_map<std::string, $full_name$> enum_map = {\n");
         printer->Indent();
         vars["opt_comma"] = ",";
         for (int i = 0; i < descriptor_->value_count(); ++i) {
@@ -167,7 +158,7 @@ namespace shark {
             vars["number"] = turbo::str_cat(descriptor_->value(i)->number());
             if (i + 1 == descriptor_->value_count())
                 vars["opt_comma"] = "";
-            printer->Print(vars, "{\"$enumerator$\", static_cast<$PREFIX$$shortname$>($number$)},\n");
+            printer->Print(vars, "{\"$enumerator$\", static_cast<$full_name$>($number$)},\n");
         }
 
         printer->Outdent();

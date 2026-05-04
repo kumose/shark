@@ -43,7 +43,7 @@ namespace shark {
         }
 
         _variables["name"] = varify_field_name(descriptor_);
-        _variables["domain"] = message_type(descriptor_->containing_type());
+        _variables["domain"] = get_message_type(descriptor_->containing_type());
         _variables["cnamespace"] = GlobalState::instance().cnamespace;
 
         do_initialize();

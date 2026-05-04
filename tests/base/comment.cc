@@ -5,15 +5,15 @@
 #include <fstream>
 #include <string>
 
-#include "tests/test.tml.h"      // Generated header
+#include "tests/base/test.tml.h"      // Generated header
 #include <xtoml/toml.h>          // shark::format, shark::parse, etc.
 
 int main() {
     // 1. Create and populate a Person object
     my::custom::ns::Person person;
 
-    person.name = "Lothar";                     // required field
-    person.age = 42;                            // stored as int8_t
+    person.name = "Lothar"; // required field
+    person.age = 42; // stored as int8_t
     person.emails = {"alice@example.com", "bob@example.com"};
     person.ages = {25, 30, 35};
     person.favorite_color = my::custom::ns::Color::GREEN;
@@ -42,7 +42,7 @@ int main() {
 
     // 2. Serialize to TOML string (using generated serialize_toml + shark::format)
     xtoml::Value toml_value = person.serialize_toml();
-    std::string toml_string = xtoml::format(toml_value);   // Format as TOML text
+    std::string toml_string = xtoml::format(toml_value); // Format as TOML text
 
     // 3. Print and optionally save to file
     std::cout << "=== Serialized TOML ===\n" << toml_string << "\n";
@@ -53,7 +53,7 @@ int main() {
 
     // 4. Parse back from TOML string
     my::custom::ns::Person parsed_person;
-    auto status = parsed_person.parse_toml_str(toml_string);   // or parse_toml (takes xtoml::Value)
+    auto status = parsed_person.parse_toml_str(toml_string); // or parse_toml (takes xtoml::Value)
     if (!status.ok()) {
         std::cerr << "Failed to parse TOML: " << status.message() << "\n";
         return 1;
@@ -61,12 +61,12 @@ int main() {
 
     // 5. Verify parsed data
     std::cout << "\n=== Parsed Person ===\n"
-              << "Name: " << parsed_person.name << "\n"
-              << "Age: " << static_cast<int>(parsed_person.age) << "\n"
-              << "Emails: ";
-    for (const auto& e : parsed_person.emails) std::cout << e << " ";
+            << "Name: " << parsed_person.name << "\n"
+            << "Age: " << static_cast<int>(parsed_person.age) << "\n"
+            << "Emails: ";
+    for (const auto &e: parsed_person.emails) std::cout << e << " ";
     std::cout << "\nFavorite color: " << my::custom::ns::to_string(parsed_person.favorite_color) << "\n"
-              << "Long name: " << parsed_person.long_name << "\n";
+            << "Long name: " << parsed_person.long_name << "\n";
 
 
     ////////////////////
@@ -133,7 +133,6 @@ int main() {
         // Output TOML string
         std::cout << xtoml::format(root) << std::endl;
     }
-
 
 
     return 0;

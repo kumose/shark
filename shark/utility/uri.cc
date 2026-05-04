@@ -63,7 +63,7 @@ namespace shark {
     }
 
 
-    std::string message_type(const google::protobuf::Descriptor *md) {
+    std::string get_message_type(const google::protobuf::Descriptor *md) {
         auto file = md->file();
 
         if (!file->options().HasExtension(idl::shark_file)) {
@@ -73,7 +73,6 @@ namespace shark {
         if (!ext.has_runtime_namespace() && ext.runtime_namespace().empty()) {
             KLOG(FATAL) << "file:"<<file->name()<<" must spefic runtime_namespace";
         }
-
 
         auto full_pb_type = turbo::str_replace_all(md->full_name(), {{".", "::"}});
 
@@ -86,6 +85,91 @@ namespace shark {
         auto local_cnamespace = turbo::str_replace_all(GlobalState::instance().ext_file_options.runtime_namespace(), {{".", "::"}}) + "::";
 
         return std::string(turbo::strip_prefix(full_type, local_cnamespace));
+    }
+
+    std::string get_enum_type(const google::protobuf::EnumDescriptor *ed) {
+        auto file = ed->file();
+
+        if (!file->options().HasExtension(idl::shark_file)) {
+            KLOG(FATAL) << "file:"<<file->name()<<" does not have extension idl::shark_file";
+        }
+        auto ext = file->options().GetExtension(idl::shark_file);
+        if (!ext.has_runtime_namespace() && ext.runtime_namespace().empty()) {
+            KLOG(FATAL) << "file:"<<file->name()<<" must spefic runtime_namespace";
+        }
+
+        auto full_pb_type = turbo::str_replace_all(ed->full_name(), {{".", "::"}});
+
+        auto full_pb_ns = turbo::str_replace_all(file->package(), {{".", "::"}});
+
+
+
+        auto full_type = turbo::str_replace_all(full_pb_type, {{full_pb_ns, ext.runtime_namespace()}});
+
+        auto local_cnamespace = turbo::str_replace_all(GlobalState::instance().ext_file_options.runtime_namespace(), {{".", "::"}}) + "::";
+
+        return std::string(turbo::strip_prefix(full_type, local_cnamespace));
+    }
+
+    /// Returns the parse function name for an enum.
+    /// For enums in the same proto package: "parse_Outter_Color"
+    /// For enums in a different package: "other_ns::parse_Outter_Color"
+    std::string get_enum_type_parse_func(const google::protobuf::EnumDescriptor* ed) {
+        // Step 1: current proto package
+        const std::string& current_pkg = GlobalState::instance().g_file->package();
+
+        // Step 2: enum's file and its extension
+        auto file = ed->file();
+        if (!file->options().HasExtension(idl::shark_file)) {
+            KLOG(FATAL) << "File " << file->name() << " missing shark_file extension";
+        }
+        auto ext = file->options().GetExtension(idl::shark_file);
+        const std::string& enum_ns = ext.runtime_namespace();
+        const std::string& enum_pkg = file->package();
+
+        // Step 3: build short name
+        std::string short_name = ed->full_name();
+
+        // Remove package prefix if present
+        if (!enum_pkg.empty() && short_name.size() > enum_pkg.size() + 1 &&
+            short_name.compare(0, enum_pkg.size(), enum_pkg) == 0 &&
+            short_name[enum_pkg.size()] == '.') {
+            short_name = short_name.substr(enum_pkg.size() + 1);
+            }
+
+        // Replace remaining dots with underscores (use project's utility)
+        short_name = turbo::str_replace_all(short_name, {{".", "_"}});
+
+        // Step 4: base parse function name
+        std::string base = "parse_" + short_name;
+
+        // Step 5: add namespace if needed
+        if (current_pkg == enum_pkg) {
+            return base;
+        } else {
+            return enum_ns + "::" + base;
+        }
+    }
+
+    std::string get_enum_type_domain(const google::protobuf::EnumDescriptor *ed) {
+        auto str = get_enum_type(ed);
+        if (str == ed->name()) {
+            return "";
+        }
+        auto n = str.size() - ed->name().size();
+        str.resize(n);
+        return str;
+    }
+
+    std::string get_enum_type_to_string_domain(const google::protobuf::EnumDescriptor *ed) {
+        auto file = ed->file();
+        auto ext = file->options().GetExtension(idl::shark_file);
+        const std::string& enum_ns = ext.runtime_namespace();
+        if (enum_ns == GlobalState::instance().ext_file_options.runtime_namespace()) {
+            return "";
+        } else {
+            return enum_ns + "::";
+        }
     }
 
     std::string message_type(const google::protobuf::Descriptor *des, const std::string &suffix) {
@@ -106,10 +190,10 @@ namespace shark {
     }
 
     std::string relative_message_type(const google::protobuf::Descriptor *d, const google::protobuf::Descriptor *r) {
-        auto dm = message_type(d);
+        auto dm = get_message_type(d);
         std::string rm;
         if (r) {
-            rm = message_type(r) + "::";
+            rm = get_message_type(r) + "::";
         }
         return std::string(turbo::strip_prefix(dm, rm));
     }

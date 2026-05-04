@@ -66,7 +66,7 @@ namespace shark {
         }
 
         _vars["classname"] = _descriptor->name();
-        _vars["domain"] = message_type(_descriptor);
+        _vars["domain"] = get_message_type(_descriptor);
         _vars["lcclassname"] = FullNameToLower(_descriptor->full_name(), _descriptor->file());
         _vars["ucclassname"] = FullNameToUpper(_descriptor->full_name(), _descriptor->file());
         _vars["field_count"] = turbo::str_cat(_descriptor->field_count());
@@ -156,7 +156,7 @@ namespace shark {
         if (_descriptor->containing_type() == nullptr) {
             printer->Print(_vars, "turbo::Status parse_toml_str(const std::string& path);\n\n");
             printer->Print(_vars, "turbo::Status parse_toml_file(const std::string& str);\n\n");
-            printer->Print(_vars, "void add_checker(std::unique_ptr<xtoml::BasicHandler> handler);\n\n");
+            printer->Print(_vars, "void add_checker(std::shared_ptr<xtoml::BasicHandler> handler);\n\n");
             printer->Print(_vars, "const xtoml::HandlerMap &checkers() const;\n\n");
         }
         printer->Print(
@@ -244,7 +244,7 @@ namespace shark {
             printer->Outdent();
             printer->Print(_vars, "}\n\n");
 
-            printer->Print(_vars, "void $domain$::add_checker(std::unique_ptr<xtoml::BasicHandler> handler) {\n");
+            printer->Print(_vars, "void $domain$::add_checker(std::shared_ptr<xtoml::BasicHandler> handler) {\n");
             printer->Indent();
             printer->Print(_vars, "if(!handler) {\n");
             printer->Indent();

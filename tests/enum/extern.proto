@@ -1,0 +1,28 @@
+syntax = "proto2";
+
+import "shark/idl/shark_options.proto";
+import "tests/enum/inner.proto";
+
+option (shark.idl.shark_file) = {
+  runtime_namespace: "ext"
+  cpp_includes: ["turbo/container/flat_hash_map.h"]
+  sk_map_type: "absl::flat_hash_map< %s, %s>"
+  sk_vector: "absl::InlinedVector<%s, 2>"
+  sk_stand: CXX_20
+};
+
+package ext.pb;
+
+message Extern {
+  enum Dorl {
+    option (shark.idl.shark_enum) = {
+      underlying_type :ENUM_UNDERLYING_U8
+    };
+    D1 = 0;
+    D2 = 1;
+    D3 = 2;
+  }
+  optional Dorl d = 1;
+  optional inner.pb.Outter.Color c  = 2;
+}
+
